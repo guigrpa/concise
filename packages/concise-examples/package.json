@@ -1,19 +1,24 @@
 {
-  "name": "concise-yaml",
+  "name": "concise-examples",
+  "private": true,
   "version": "0.0.0",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
-  "main": "lib/index.js",
   "scripts": {
     "compile": "yarn compile:clean && yarn compile:run",
     "compileWatch": "yarn compile:clean && yarn compile:runWatch",
-    "compile:clean": "rm -rf ./lib && ../../node_modules/.bin/flow-copy-source -i \"**/__mocks__/**\" -i \"**/__tests__/**\" src lib",
+    "compile:clean": "rm -rf ./lib",
     "compile:run": "../../node_modules/.bin/babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
     "compile:runWatch": "yarn compile:run -- --watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "babel-runtime": "^6.23.0",
-    "js-yaml": "^3.8.2",
     "concise-types": "^0.0.0"
+  },
+  "dependencies": {
+    "concise-yaml": "^0.0.0",
+    "concise": "^0.0.0",
+    "concise-json": "^0.0.0",
+    "concise-pg": "^0.0.0"
   }
 }

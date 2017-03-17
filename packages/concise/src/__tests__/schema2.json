@@ -1,0 +1,27 @@
+{
+  "models": {
+    "project": {
+      "fields": {
+        "name": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "date",
+          "time": false
+        },
+        "endDate": {
+          "type": "date",
+          "time": false
+        }
+      },
+      "relations": {
+        "creator": {
+          "model": "user",
+          "inverse": {
+            "name": "createdProjects"
+          }
+        }
+      }
+    }
+  }
+}

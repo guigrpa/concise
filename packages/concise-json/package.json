@@ -1,5 +1,5 @@
 {
-  "name": "concise-yaml",
+  "name": "concise-json",
   "version": "0.0.0",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
@@ -11,5 +11,8 @@
     "compile:run": "../../node_modules/.bin/babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
     "compile:runWatch": "yarn compile:run -- --watch"
   },
-  "dependencies": {}
+  "dependencies": {
+    "babel-runtime": "^6.23.0",
+    "concise-types": "^0.0.0"
+  }
 }

@@ -1,0 +1,42 @@
+{
+  "models": {
+    "common": {
+      "fields": {
+        "id": {
+          "type": "uuid"
+        }
+      }
+    },
+    "user": {
+      "includes": {
+        "common": true
+      },
+      "fields": {
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        }
+      }
+    },
+    "project": {
+      "includes": {
+        "common": true
+      },
+      "fields": {
+        "name": {
+          "type": "string"
+        }
+      },
+      "relations": {
+        "projectManager": {
+          "model": "user"
+        },
+        "technicalManager": {
+          "model": "user"
+        }
+      }
+    }
+  }
+}

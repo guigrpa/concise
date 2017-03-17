@@ -1,20 +1,46 @@
-// @Flow
+// @flow
 
 import fs from 'fs';
+import type { Schema, InputProcessor, OutputProcessor } from 'concise-types';
 
-const parse = async (filePath: string): Object => {
-  const raw = await load(filePath);
+type InputOptions = {
+  file?: string,
+  raw?: string,
+};
+
+type OutputOptions = {
+  prettyJson?: boolean,
+  file?: string,
+};
+
+// ====================================
+// Processors
+// ====================================
+const input: InputProcessor = async (options: InputOptions) => {
+  let raw: string;
+  if (options.raw) {
+    raw = options.raw;
+  } else if (options.file) {
+    raw = fs.readFileSync(options.file, 'utf8');
+  } else {
+    throw new Error('Specify either `raw` or `file`');
+  }
   return JSON.parse(raw);
 };
 
-const load = (filePath: string): Promise<string> => new Promise((resolve, reject) => {
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    if (err) {
-      reject(err);
-      return;
-    }
-    resolve(data);
-  });
-});
+const output: OutputProcessor = async (
+  schema: Schema,
+  options: OutputOptions,
+) => {
+  const { prettyJson = true } = options;
+  const raw = prettyJson
+    ? JSON.stringify(schema, null, 2)
+    : JSON.stringify(schema);
+  if (options.file) fs.writeFileSync(options.file, raw, 'utf8');
+  return raw;
+};
 
-export default parse;
+// ====================================
+// Public
+// ====================================
+export { input, output };

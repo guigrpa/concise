@@ -1,0 +1,35 @@
+models:
+  common:
+    includeOnly: true
+    fields:
+      id:
+        type: 'uuid'
+        primaryKey: true
+  user:
+    description: 'A user of the platform'
+    includes:
+      common: true
+    fields:
+      name:
+        description: 'Name of the user'
+        type: 'string'
+        validations:
+          required: true
+      surname: { type: 'string' }
+      aBoolean:
+        type: 'boolean'
+        validations:
+          required: true
+        default: false
+  project:
+    includes:
+      common: true
+    fields:
+      name: { type: 'string' }
+    relations:
+      projectManager:
+        model: 'user'
+        validations:
+          required: true
+      technicalManager:
+        model: 'user'

@@ -38,27 +38,27 @@
     "release": "oao publish"
   },
   "devDependencies": {
-    "babel-cli": "6.22.2",
-    "babel-core": "6.22.1",
+    "babel-cli": "^6.24.0",
+    "babel-core": "^6.24.0",
     "babel-eslint": "7.1.1",
     "babel-jest": "^19.0.0",
-    "babel-polyfill": "6.22.0",
-    "babel-preset-es2015": "6.22.0",
-    "babel-preset-react": "6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.0",
+    "babel-preset-react": "^6.23.0",
     "babel-preset-stage-2": "6.22.0",
-    "coveralls": "2.11.16",
-    "cross-env": "3.1.4",
-    "eslint": "3.15.0",
+    "coveralls": "^2.12.0",
+    "eslint": "^3.17.1",
     "eslint-config-airbnb": "14.1.0",
-    "eslint-plugin-flowtype": "2.30.0",
+    "eslint-plugin-flowtype": "^2.30.3",
     "eslint-plugin-import": "2.2.0",
     "eslint-plugin-jsx-a11y": "4.0.0",
-    "eslint-plugin-react": "6.9.0",
+    "eslint-plugin-react": "^6.10.0",
+    "flow-bin": "^0.41.0",
     "flow-copy-source": "^1.1.0",
-    "jest": "^19.0.0",
-    "nyc": "10.1.2",
-    "oao": "^0.7.1",
-    "xxl": "^1.0.1"
+    "jest": "^19.0.2",
+    "nyc": "^10.1.2",
+    "oao": "^0.8.0",
+    "xxl": "^1.2.0"
   },
   "jest": {
     "clearMocks": true,
@@ -75,5 +75,6 @@
       "!**/__tests__/**",
       "!**/__mocks__/**"
     ]
-  }
+  },
+  "dependencies": {}
 }

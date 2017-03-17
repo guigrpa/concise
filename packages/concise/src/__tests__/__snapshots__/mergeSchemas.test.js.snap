@@ -1,0 +1,60 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`mergeSchemas should correctly merge two schemas 1`] = `
+Object {
+  "models": Object {
+    "common": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "uuid",
+        },
+      },
+    },
+    "project": Object {
+      "fields": Object {
+        "endDate": Object {
+          "time": false,
+          "type": "date",
+        },
+        "name": Object {
+          "type": "string",
+        },
+        "startDate": Object {
+          "time": false,
+          "type": "date",
+        },
+      },
+      "includes": Object {
+        "common": true,
+      },
+      "relations": Object {
+        "creator": Object {
+          "inverse": Object {
+            "name": "createdProjects",
+          },
+          "model": "user",
+        },
+        "projectManager": Object {
+          "model": "user",
+        },
+        "technicalManager": Object {
+          "model": "user",
+        },
+      },
+    },
+    "user": Object {
+      "fields": Object {
+        "name": Object {
+          "type": "string",
+        },
+        "surname": Object {
+          "type": "string",
+        },
+      },
+      "includes": Object {
+        "common": true,
+      },
+    },
+  },
+}
+`;
