@@ -8,6 +8,7 @@ import type { Schema, OutputProcessor } from 'concise-types';
 
 type OutputOptions = {
   file?: string,
+  schema?: string,
 };
 
 // ====================================
@@ -18,11 +19,14 @@ const output: OutputProcessor = async (
   options: OutputOptions,
 ) => {
   const preprocessedSchema = preprocess(schema);
-  const raw = schemaToSql(preprocessedSchema, options);
+  const raw = writeSchema(preprocessedSchema, options);
   if (options.file) fs.writeFileSync(options.file, raw, 'utf8');
   return raw;
 };
 
+// ====================================
+// Preprocessor
+// ====================================
 const preprocess = schema => {
   const models = {};
 
@@ -68,15 +72,25 @@ const preprocess = schema => {
   return { models };
 };
 
-const schemaToSql = ({ models }, options) => {
+// ====================================
+// SQL writer
+// ====================================
+const writeSchema = ({ models }, options) => {
   let out = '';
+
+  // Write table definitions
   Object.keys(models).forEach(modelName => {
-    out += sqlTable(models, modelName, options);
+    out += writeTable(models, modelName, options);
+  });
+
+  // Add foreign key constraints
+  Object.keys(models).forEach(modelName => {
+    out += writeForeignKeyConstraints(models, modelName, options);
   });
   return out;
 };
 
-const sqlTable = (models, modelName, options) => {
+const writeTable = (models, modelName, options) => {
   let sqlFields = [];
   let sqlConstraints = [];
   const sqlComments = [];
@@ -111,6 +125,35 @@ const sqlTable = (models, modelName, options) => {
     '\n';
 };
 
+const writeForeignKeyConstraints = (models, modelName, options) => {
+  let tableName = `"${modelName}"`;
+  if (options.schema) tableName = `"${options.schema}".${tableName}`;
+  const constraints = [];
+  const { relations } = models[modelName];
+  Object.keys(relations || {}).forEach(relationName => {
+    const relation = relations[relationName];
+    const fieldName = `${relationName}Id`;
+
+    // Discard polymorphic relationships (TBC)
+    if (Array.isArray(relation.model)) return;
+
+    let remoteTableName = `"${relation.model}"`;
+    if (options.schema) remoteTableName = `"${options.schema}".${remoteTableName}`;
+    constraints.push(
+      `ALTER TABLE ${tableName}\n` +
+      `  ADD CONSTRAINT "${modelName}_fk_${fieldName}"\n` +
+      `  FOREIGN KEY (${fieldName})\n` +
+      `  REFERENCES ${remoteTableName}\n` +
+      '  ON UPDATE CASCADE ON DELETE NO ACTION;'
+        // ON UPDATE CASCADE: when the PK changes, change the FK
+        // ON DELETE NO ACTION: referencing rows are not altered;
+        // but if there are referencing rows at the time the referenced row must be deleted,
+        // the operation will fail
+    );
+  });
+  return constraints.join('\n');
+};
+
 const writeField = (models, modelName, tableName, fieldName) => {
   const field = models[modelName].fields[fieldName];
   const segments = [`"${fieldName}"`, writeFieldType(field)];
@@ -124,10 +167,12 @@ const writeField = (models, modelName, tableName, fieldName) => {
     } else {
       segments.push(`DEFAULT '${defVal}'`);
     }
+  } else if (field.type === 'uuid') {
+    segments.push('DEFAULT uuid_generate_v1mc()');
   }
   const sqlField = segments.join(' ');
   const sqlFieldComment = field.description
-    ? writeComment('FIELD', `${tableName}."${fieldName}"`, field.description)
+    ? writeComment('COLUMN', `${tableName}."${fieldName}"`, field.description)
     : undefined;
   const sqlFieldConstraints = [];
   if (field.primaryKey) {
@@ -141,6 +186,8 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
   const fieldName = `${relationName}Id`;
   const sqlFields = [];
   const required = relation.validations && relation.validations.required;
+  const polymorphic = Array.isArray(relation.model);
+  if (polymorphic) return { sqlFields: [], sqlFieldComment: undefined };
 
   // Foreign key
   let segments;
@@ -148,12 +195,12 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
   if (required) segments.push('NOT NULL');
   sqlFields.push(segments.join(' '));
 
-  // For polymorphic relationships, additional qualifier
-  if (relation.polymorphic) {
-    segments = [`"${relationName}Type"`, writeFieldType({ type: 'string' })];
-    if (required) segments.push('NOT NULL');
-    sqlFields.push(segments.join(' '));
-  }
+  // // For polymorphic relationships, additional qualifier
+  // if (polymorphic) {
+  //   segments = [`"${relationName}Type"`, writeFieldType({ type: 'string' })];
+  //   if (required) segments.push('NOT NULL');
+  //   sqlFields.push(segments.join(' '));
+  // }
 
   const sqlFieldComment = relation.description
     ? writeComment('FIELD', `${tableName}."${fieldName}"`, relation.description)

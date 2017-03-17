@@ -47,16 +47,15 @@ export type FieldValidations = {
 export type Relation = {
   description?: Description,
   validations: FieldValidations,
-  model: ModelName,
+
+  // Plural means polymorphic
+  model: ModelName | Array<ModelName>,
 
   // By default, the reverse relation will be defined; use `null` to indicate otherwise
   inverse?: null | {
     description?: Description,
     name?: FieldName,
     singular?: boolean, // by default, plural
-  },
-  polymorphic?: {
-    targets: Array<ModelName>,
   },
 };
 
