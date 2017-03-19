@@ -176,7 +176,14 @@ const writeField = (models, modelName, tableName, fieldName) => {
     : undefined;
   const sqlFieldConstraints = [];
   if (field.primaryKey) {
-    sqlFieldConstraints.push(`CONSTRAINT "${modelName}_pk" PRIMARY KEY (${fieldName})`);
+    sqlFieldConstraints.push(
+      `CONSTRAINT "${modelName}_${fieldName}_pk" PRIMARY KEY ("${fieldName}")`,
+    );
+  }
+  if (field.validations && field.validations.unique) {
+    sqlFieldConstraints.push(
+      `CONSTRAINT "${modelName}_${fieldName}_unique" UNIQUE ("${fieldName}")`,
+    );
   }
   return { sqlField, sqlFieldComment, sqlFieldConstraints };
 };

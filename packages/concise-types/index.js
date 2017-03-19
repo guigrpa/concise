@@ -37,6 +37,7 @@ export type FieldBase = {
 };
 export type FieldValidations = {
   required?: boolean,
+  unique?: boolean,
   // TBW...
 };
 
