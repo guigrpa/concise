@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PG output schema1.yaml + schema2.yaml -> pg 1`] = `
+"CREATE TABLE \\"user\\" (
+  \\"id\\" uuid DEFAULT uuid_generate_v1mc(),
+  \\"notes\\" text,
+  \\"name\\" character varying(255) NOT NULL,
+  \\"surname\\" character varying(255),
+  \\"aBoolean\\" boolean NOT NULL DEFAULT false,
+  CONSTRAINT \\"user_pk_id\\" PRIMARY KEY (\\"id\\"),
+  CONSTRAINT \\"user_unique_name\\" UNIQUE (\\"name\\")
+);
+COMMENT ON TABLE \\"user\\" IS 'A user of the platform';
+COMMENT ON COLUMN \\"user\\".\\"name\\" IS 'Name of the user';
+
+CREATE TABLE \\"project\\" (
+  \\"id\\" uuid DEFAULT uuid_generate_v1mc(),
+  \\"notes\\" text,
+  \\"name\\" character varying(255),
+  \\"startDate\\" timestamp with time zone,
+  \\"endDate\\" timestamp with time zone,
+  \\"projectManagerId\\" uuid NOT NULL,
+  \\"technicalManagerId\\" uuid,
+  \\"creatorId\\" uuid,
+  CONSTRAINT \\"project_pk_id\\" PRIMARY KEY (\\"id\\")
+);
+
+ALTER TABLE \\"project\\"
+  ADD CONSTRAINT \\"project_fk_projectManagerId\\"
+  FOREIGN KEY (projectManagerId)
+  REFERENCES \\"user\\"
+  ON UPDATE CASCADE ON DELETE NO ACTION;
+ALTER TABLE \\"project\\"
+  ADD CONSTRAINT \\"project_fk_technicalManagerId\\"
+  FOREIGN KEY (technicalManagerId)
+  REFERENCES \\"user\\"
+  ON UPDATE CASCADE ON DELETE NO ACTION;
+ALTER TABLE \\"project\\"
+  ADD CONSTRAINT \\"project_fk_creatorId\\"
+  FOREIGN KEY (creatorId)
+  REFERENCES \\"user\\"
+  ON UPDATE CASCADE ON DELETE NO ACTION;"
+`;
+
+exports[`PG output schema1.yaml -> pg 1`] = `
+"CREATE TABLE \\"user\\" (
+  \\"id\\" uuid DEFAULT uuid_generate_v1mc(),
+  \\"notes\\" text,
+  \\"name\\" character varying(255) NOT NULL,
+  \\"surname\\" character varying(255),
+  \\"aBoolean\\" boolean NOT NULL DEFAULT false,
+  CONSTRAINT \\"user_pk_id\\" PRIMARY KEY (\\"id\\"),
+  CONSTRAINT \\"user_unique_name\\" UNIQUE (\\"name\\")
+);
+COMMENT ON TABLE \\"user\\" IS 'A user of the platform';
+COMMENT ON COLUMN \\"user\\".\\"name\\" IS 'Name of the user';
+
+CREATE TABLE \\"project\\" (
+  \\"id\\" uuid DEFAULT uuid_generate_v1mc(),
+  \\"notes\\" text,
+  \\"name\\" character varying(255),
+  \\"projectManagerId\\" uuid NOT NULL,
+  \\"technicalManagerId\\" uuid,
+  CONSTRAINT \\"project_pk_id\\" PRIMARY KEY (\\"id\\")
+);
+
+ALTER TABLE \\"project\\"
+  ADD CONSTRAINT \\"project_fk_projectManagerId\\"
+  FOREIGN KEY (projectManagerId)
+  REFERENCES \\"user\\"
+  ON UPDATE CASCADE ON DELETE NO ACTION;
+ALTER TABLE \\"project\\"
+  ADD CONSTRAINT \\"project_fk_technicalManagerId\\"
+  FOREIGN KEY (technicalManagerId)
+  REFERENCES \\"user\\"
+  ON UPDATE CASCADE ON DELETE NO ACTION;"
+`;

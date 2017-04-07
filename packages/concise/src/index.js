@@ -2,6 +2,7 @@
 
 import type { Schema, InputProcessor, OutputProcessor } from 'concise-types';
 import mergeSchemas from './mergeSchemas';
+import preprocessSchema from './preprocessSchema';
 
 class Concise {
   schema: Schema;
@@ -28,7 +29,8 @@ class Concise {
   }
 
   async output(processor: OutputProcessor, options: Object = {}) {
-    return processor(this.schema, options);
+    const utils = { preprocess: preprocessSchema };
+    return processor(this.schema, options, utils);
   }
 }
 

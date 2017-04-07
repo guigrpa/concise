@@ -5,6 +5,9 @@ models:
       id:
         type: 'uuid'
         primaryKey: true
+      notes:
+        type: 'string'
+        long: true
   user:
     description: 'A user of the platform'
     includes:

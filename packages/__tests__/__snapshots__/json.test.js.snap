@@ -1,0 +1,216 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`JSON in/out json -> json 1`] = `
+"{
+  \\"models\\": {
+    \\"common\\": {
+      \\"includeOnly\\": true,
+      \\"fields\\": {
+        \\"id\\": {
+          \\"type\\": \\"uuid\\",
+          \\"primaryKey\\": true
+        },
+        \\"notes\\": {
+          \\"type\\": \\"string\\",
+          \\"long\\": true
+        }
+      }
+    },
+    \\"user\\": {
+      \\"description\\": \\"A user of the platform\\",
+      \\"includes\\": {
+        \\"common\\": true
+      },
+      \\"fields\\": {
+        \\"name\\": {
+          \\"description\\": \\"Name of the user\\",
+          \\"type\\": \\"string\\",
+          \\"validations\\": {
+            \\"required\\": true,
+            \\"unique\\": true
+          }
+        },
+        \\"surname\\": {
+          \\"type\\": \\"string\\"
+        },
+        \\"aBoolean\\": {
+          \\"type\\": \\"boolean\\",
+          \\"validations\\": {
+            \\"required\\": true
+          },
+          \\"default\\": false
+        }
+      }
+    },
+    \\"project\\": {
+      \\"includes\\": {
+        \\"common\\": true
+      },
+      \\"fields\\": {
+        \\"name\\": {
+          \\"type\\": \\"string\\"
+        }
+      },
+      \\"relations\\": {
+        \\"projectManager\\": {
+          \\"model\\": \\"user\\",
+          \\"validations\\": {
+            \\"required\\": true
+          }
+        },
+        \\"technicalManager\\": {
+          \\"model\\": \\"user\\"
+        }
+      }
+    }
+  }
+}"
+`;
+
+exports[`JSON in/out schema1.yaml + schema2.yaml -> json 1`] = `
+"{
+  \\"models\\": {
+    \\"common\\": {
+      \\"includeOnly\\": true,
+      \\"fields\\": {
+        \\"id\\": {
+          \\"type\\": \\"uuid\\",
+          \\"primaryKey\\": true
+        },
+        \\"notes\\": {
+          \\"type\\": \\"string\\",
+          \\"long\\": true
+        }
+      }
+    },
+    \\"user\\": {
+      \\"description\\": \\"A user of the platform\\",
+      \\"includes\\": {
+        \\"common\\": true
+      },
+      \\"fields\\": {
+        \\"name\\": {
+          \\"description\\": \\"Name of the user\\",
+          \\"type\\": \\"string\\",
+          \\"validations\\": {
+            \\"required\\": true,
+            \\"unique\\": true
+          }
+        },
+        \\"surname\\": {
+          \\"type\\": \\"string\\"
+        },
+        \\"aBoolean\\": {
+          \\"type\\": \\"boolean\\",
+          \\"validations\\": {
+            \\"required\\": true
+          },
+          \\"default\\": false
+        }
+      }
+    },
+    \\"project\\": {
+      \\"includes\\": {
+        \\"common\\": true
+      },
+      \\"fields\\": {
+        \\"name\\": {
+          \\"type\\": \\"string\\"
+        },
+        \\"startDate\\": {
+          \\"type\\": \\"date\\",
+          \\"time\\": false
+        },
+        \\"endDate\\": {
+          \\"type\\": \\"date\\",
+          \\"time\\": false
+        }
+      },
+      \\"relations\\": {
+        \\"projectManager\\": {
+          \\"model\\": \\"user\\",
+          \\"validations\\": {
+            \\"required\\": true
+          }
+        },
+        \\"technicalManager\\": {
+          \\"model\\": \\"user\\"
+        },
+        \\"creator\\": {
+          \\"model\\": \\"user\\",
+          \\"inverse\\": {
+            \\"name\\": \\"createdProjects\\"
+          }
+        }
+      }
+    }
+  }
+}"
+`;
+
+exports[`JSON in/out schema1.yaml -> json 1`] = `
+"{
+  \\"models\\": {
+    \\"common\\": {
+      \\"includeOnly\\": true,
+      \\"fields\\": {
+        \\"id\\": {
+          \\"type\\": \\"uuid\\",
+          \\"primaryKey\\": true
+        },
+        \\"notes\\": {
+          \\"type\\": \\"string\\",
+          \\"long\\": true
+        }
+      }
+    },
+    \\"user\\": {
+      \\"description\\": \\"A user of the platform\\",
+      \\"includes\\": {
+        \\"common\\": true
+      },
+      \\"fields\\": {
+        \\"name\\": {
+          \\"description\\": \\"Name of the user\\",
+          \\"type\\": \\"string\\",
+          \\"validations\\": {
+            \\"required\\": true,
+            \\"unique\\": true
+          }
+        },
+        \\"surname\\": {
+          \\"type\\": \\"string\\"
+        },
+        \\"aBoolean\\": {
+          \\"type\\": \\"boolean\\",
+          \\"validations\\": {
+            \\"required\\": true
+          },
+          \\"default\\": false
+        }
+      }
+    },
+    \\"project\\": {
+      \\"includes\\": {
+        \\"common\\": true
+      },
+      \\"fields\\": {
+        \\"name\\": {
+          \\"type\\": \\"string\\"
+        }
+      },
+      \\"relations\\": {
+        \\"projectManager\\": {
+          \\"model\\": \\"user\\",
+          \\"validations\\": {
+            \\"required\\": true
+          }
+        },
+        \\"technicalManager\\": {
+          \\"model\\": \\"user\\"
+        }
+      }
+    }
+  }
+}"
+`;

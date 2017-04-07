@@ -19,6 +19,7 @@
     "concise-yaml": "^0.0.0",
     "concise": "^0.0.0",
     "concise-json": "^0.0.0",
-    "concise-pg": "^0.0.0"
+    "concise-pg": "^0.0.0",
+    "concise-flow": "^0.0.0"
   }
 }

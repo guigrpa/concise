@@ -5,7 +5,7 @@
 import path from 'path';
 import Concise from 'concise';
 import { input } from 'concise-yaml';
-import { output } from 'concise-pg';
+import { output } from 'concise-flow';
 
 const run = async () => {
   try {

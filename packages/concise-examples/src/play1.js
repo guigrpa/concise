@@ -8,10 +8,10 @@ import { output } from 'concise-json';
 const run = async (name) => {
   const concise = new Concise();
   await concise.input(input, {
-    file: path.join(__dirname, `../fixtures/${name}.yaml`),
+    file: path.join(__dirname, `../../__tests__/fixtures/${name}.yaml`),
   });
   await concise.output(output, {
-    file: path.join(__dirname, `../fixtures/${name}.json`),
+    file: path.join(__dirname, `../../__tests__/fixtures/${name}.json`),
   });
 };
 

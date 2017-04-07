@@ -21,15 +21,25 @@ export type Model = {
 };
 
 export type FieldName = string;
-export type FieldType = 'string' | 'boolean' | 'uuid' | 'json' | 'number' | 'date';
+export type FieldType =
+  | 'string'
+  | 'boolean'
+  | 'uuid'
+  | 'json'
+  | 'number'
+  | 'date';
 export type Field =
-| (FieldBase & { type: 'string', long?: boolean, default?: string })
-| (FieldBase & { type: 'boolean', default?: boolean })
-| (FieldBase & { type: 'uuid', default?: string })
-| (FieldBase & { type: 'json', default?: any })
-| (FieldBase & { type: 'number', float?: boolean, default?: number })
-| (FieldBase & { type: 'date', noDate?: boolean, noTime?: boolean, default?: Object })
-;
+  | (FieldBase & { type: 'string', long?: boolean, default?: string })
+  | (FieldBase & { type: 'boolean', default?: boolean })
+  | (FieldBase & { type: 'uuid', default?: string })
+  | (FieldBase & { type: 'json', default?: any })
+  | (FieldBase & { type: 'number', float?: boolean, default?: number })
+  | (FieldBase & {
+    type: 'date',
+    noDate?: boolean,
+    noTime?: boolean,
+    default?: Object,
+  });
 export type FieldBase = {
   primaryKey?: boolean,
   description?: Description,
@@ -41,23 +51,24 @@ export type FieldValidations = {
   // TBW...
 };
 
-// Relations are defined exactly as fields, and only on the side having the FK
-// (the inverse relation can be canceled specifying `null` in the `inverse` field,
-// or configured as needed).
-// The relation's name is the field name minus `Id`. Several options can be defined
+// Relations are defined whenever a FK should appear. The FK field will have the name
+// of the relation + `Id`, and the type of the referenced PK (hence, no `type` should
+// be specified).
+// Inverse relations (useful in many cases to define the way to traverse a 1 -> N relationship)
+// are created by default. Specify `inverse` if you want to disable the inverse
+// relation (`inverse: null`) or you want to configure some of its parameters
 export type Relation = {
   description?: Description,
   validations: FieldValidations,
-
-  // Plural means polymorphic
-  model: ModelName | Array<ModelName>,
-
+  model: ModelName,
   // By default, the reverse relation will be defined; use `null` to indicate otherwise
-  inverse?: null | {
-    description?: Description,
-    name?: FieldName,
-    singular?: boolean, // by default, plural
-  },
+  inverse?:
+    | null
+    | {
+        name?: FieldName,
+        description?: Description,
+        singular?: boolean, // by default, plural
+      },
 };
 
 // ====================================
@@ -69,4 +80,12 @@ type Description = string;
 // Processors
 // ====================================
 export type InputProcessor = (options: Object) => Promise<Schema>;
-export type OutputProcessor = (schema: Schema, options: Object) => Promise<any>;
+export type OutputProcessor = (
+  schema: Schema,
+  options: Object,
+  utils: SchemaUtils,
+) => Promise<any>;
+
+export type SchemaUtils = {
+  preprocess: (schema: Schema) => Schema,
+};
