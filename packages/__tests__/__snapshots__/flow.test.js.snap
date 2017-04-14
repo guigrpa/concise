@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Flow output schema1.yaml + schema2.yaml -> flow 1`] = `
+"// User
+// A user of the platform
+type User = {
+  id?: string,
+  notes?: string,
+  name: string,  // Name of the user
+  surname?: string,
+  aBoolean: boolean,
+};
+
+// Project
+type Project = {
+  id?: string,
+  notes?: string,
+  name?: string,
+  startDate?: Date,
+  endDate?: Date,
+  projectManager: string,
+  technicalManager?: string,
+  creator?: string,
+};
+
+"
+`;
+
+exports[`Flow output schema1.yaml -> flow 1`] = `
+"// User
+// A user of the platform
+type User = {
+  id?: string,
+  notes?: string,
+  name: string,  // Name of the user
+  surname?: string,
+  aBoolean: boolean,
+};
+
+// Project
+type Project = {
+  id?: string,
+  notes?: string,
+  name?: string,
+  projectManager: string,
+  technicalManager?: string,
+};
+
+"
+`;
