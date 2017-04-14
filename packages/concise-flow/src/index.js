@@ -8,7 +8,6 @@ import upperFirst from 'lodash.upperfirst';
 
 type OutputOptions = {
   file?: string,
-  schema?: string,
 };
 
 // ====================================
