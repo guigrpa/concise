@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`GraphQL schema output schema1.yaml + schema2.yaml -> GraphQL 1`] = `
+"# User
+# A user of the platform
+type User {
+  id: ID!
+  notes: String
+  name: String!  # Name of the user
+  surname: String
+  aBoolean: Boolean!
+  projects: [Project]
+  createdProjects: [Project]
+}
+
+# Project
+type Project {
+  id: ID!
+  notes: String
+  name: String
+  startDate: String
+  endDate: String
+  projectManager: User!
+  technicalManager: User
+  creator: User
+}
+
+"
+`;
+
+exports[`GraphQL schema output schema1.yaml -> GraphQL 1`] = `
+"# User
+# A user of the platform
+type User {
+  id: ID!
+  notes: String
+  name: String!  # Name of the user
+  surname: String
+  aBoolean: Boolean!
+  projects: [Project]
+}
+
+# Project
+type Project {
+  id: ID!
+  notes: String
+  name: String
+  projectManager: User!
+  technicalManager: User
+}
+
+"
+`;
