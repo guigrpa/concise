@@ -29,16 +29,16 @@ export type FieldType =
   | 'number'
   | 'date';
 export type Field =
-  | (FieldBase & { type: 'string', long?: boolean, default?: string })
-  | (FieldBase & { type: 'boolean', default?: boolean })
-  | (FieldBase & { type: 'uuid', default?: string })
-  | (FieldBase & { type: 'json', default?: any })
-  | (FieldBase & { type: 'number', float?: boolean, default?: number })
+  | (FieldBase & { type: 'string', long?: boolean, defaultValue?: string })
+  | (FieldBase & { type: 'boolean', defaultValue?: boolean })
+  | (FieldBase & { type: 'uuid', defaultValue?: string })
+  | (FieldBase & { type: 'json', defaultValue?: any })
+  | (FieldBase & { type: 'number', float?: boolean, defaultValue?: number })
   | (FieldBase & {
     type: 'date',
     noDate?: boolean,
     noTime?: boolean,
-    default?: Date,
+    defaultValue?: Date,
   });
 export type FieldBase = {
   primaryKey?: boolean,

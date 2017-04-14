@@ -109,12 +109,14 @@ const writeField = (models, modelName, tableName, fieldName) => {
   if (field.validations && field.validations.required) {
     segments.push('NOT NULL');
   }
-  const { default: defVal } = field;
-  if (defVal != null) {
-    if (defVal === true || defVal === false) {
-      segments.push(`DEFAULT ${defVal}`);
+  const { defaultValue } = field;
+  if (defaultValue != null) {
+    if (defaultValue === true || defaultValue === false) {
+      segments.push(`DEFAULT ${String(defaultValue)}`);
+    } else if (defaultValue instanceof Date) {
+      segments.push(`DEFAULT '${defaultValue.toISOString()}'`);
     } else {
-      segments.push(`DEFAULT '${defVal}'`);
+      segments.push(`DEFAULT '${defaultValue}'`);
     }
   } else if (field.type === 'uuid') {
     segments.push('DEFAULT uuid_generate_v1mc()');
@@ -154,7 +156,7 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
   return { sqlFields, sqlFieldComment };
 };
 
-const writeFieldType = field => {
+const writeFieldType = (field: any) => {
   const { type } = field;
   if (type === 'string') return field.long ? 'text' : 'character varying(255)';
   if (type === 'number') return field.float ? 'double precision' : 'integer';
