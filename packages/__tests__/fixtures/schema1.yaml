@@ -24,7 +24,7 @@ models:
         type: 'boolean'
         validations:
           required: true
-        default: false
+        defaultValue: false
   project:
     includes:
       common: true
@@ -37,3 +37,4 @@ models:
           required: true
       technicalManager:
         model: 'user'
+        inverse: null
