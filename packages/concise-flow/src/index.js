@@ -59,8 +59,18 @@ const writeType = (models, modelName) => {
     `type ${upperModelName} = {${contents}};\n\n`;
 };
 
-const writeField = (fieldName, fieldSpecs) => {
-  return `${fieldName}: `;
+const writeField = (name, specs: any) => {
+  const required = specs.validations && specs.validations.required ? '' : '?';
+  const typeStr = writeFieldType(specs.type);
+  const comment = specs.description ? `  // ${specs.description}` : '';
+  return `${name}${required}: ${typeStr},${comment}`;
+};
+
+const writeFieldType = type => {
+  if (type === 'uuid') return 'string';
+  if (type === 'json') return 'any';
+  if (type === 'date') return 'Date';
+  return type;
 };
 
 // ====================================

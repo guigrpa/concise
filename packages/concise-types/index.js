@@ -38,7 +38,7 @@ export type Field =
     type: 'date',
     noDate?: boolean,
     noTime?: boolean,
-    default?: Object,
+    default?: Date,
   });
 export type FieldBase = {
   primaryKey?: boolean,
