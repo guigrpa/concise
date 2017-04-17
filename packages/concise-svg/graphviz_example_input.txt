@@ -1,0 +1,26 @@
+digraph db {
+graph [ranksep = 1]
+  subgraph clusterperson {
+    label = "person";
+    structperson [label="{<person__id>id|<person__name>name}",shape=record];
+  }
+  subgraph clusteraddress {
+    label = "address";
+    structaddress [label="{<address__id>id|<address__line1>line1|<address__line2>line2|<address__person>person|<address__link>link}",shape=record];
+  }
+  subgraph clusterorder {
+    label = "order";
+    structorder [label="{<order__address>address}",shape=record];
+  }
+  subgraph clustera {
+    label = "a";
+    structa [label="{<a__letter>letter}",shape=record];
+  }
+  subgraph clusterb {
+    label = "b";
+    structb [label="{<b__id>id|<b__something>something}",shape=record];
+  }
+  structaddress:address__link -> structperson:person__id
+  structorder:order__address -> structaddress:address__id
+  structa:a__letter -> structperson:person__name
+}

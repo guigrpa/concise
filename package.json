@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
-  "description": "Tools for managing concise schemas",
+  "description": "A tool belt for concise schemas",
   "keywords": [
     "schema",
     "pg",

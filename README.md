@@ -1,17 +1,39 @@
-# concise :package: [![Build Status](https://travis-ci.org/guigrpa/concise.svg?branch=master)](https://travis-ci.org/guigrpa/concise) [![Coverage Status](https://coveralls.io/repos/github/guigrpa/concise/badge.svg?branch=master)](https://coveralls.io/github/guigrpa/concise?branch=master) [![npm version](https://img.shields.io/npm/v/concise.svg)](https://www.npmjs.com/package/concise)
+# concise :clipboard: [![Build Status](https://travis-ci.org/guigrpa/concise.svg?branch=master)](https://travis-ci.org/guigrpa/concise) [![Coverage Status](https://coveralls.io/repos/github/guigrpa/concise/badge.svg?branch=master)](https://coveralls.io/github/guigrpa/concise?branch=master) [![npm version](https://img.shields.io/npm/v/concise.svg)](https://www.npmjs.com/package/concise)
 
-A Yarn-based, opinionated monorepo management tool.
+A tool belt for concise schemas.
 
 
 ## Why? :sparkles:
 
-TBW
+* Write your schema once, concisely (using e.g. YAML or JSON)
+* If it's too large, divide it into manageable chunks
+* Use plugins to import it into Concise and then export it again in whatever format you need:
+    - YAML (`concise-yaml`)
+    - JSON (`concise-json`)
+    - PostgreSQL SQL (`concise-pg`)
+    - Flow types (`concise-flow`)
+    - GraphQL schema language (`concise-graphql`)
+    - Sequelize (*coming up!*)
+    - Firebase database rules (*coming up!*)
+* Update your schema in one place!
+
 
 ## Installation
 
-TBW
+You will need to install `concise` and the input/output plugins you need. For example:
+
+```bash
+$ npm install concise concise-yaml concise-pg
+```
+
 
 ## Usage
+
+### Concise input/output
+
+TBW
+
+### Concise schema reference
 
 TBW
 
