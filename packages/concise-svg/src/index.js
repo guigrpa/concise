@@ -4,6 +4,7 @@
 
 import fs from 'fs';
 import Viz from 'viz.js';
+import { addDefaults } from 'timm';
 import type {
   Schema,
   OutputProcessor,
@@ -17,6 +18,11 @@ type OutputOptions = {
   filterEdges?: (
     { from: ModelName, to: ModelName, as: FieldName, required: boolean },
   ) => boolean,
+  edgeLabels?: boolean,
+};
+
+const DEFAULT_OPTIONS = {
+  edgeLabels: true,
 };
 
 // ====================================
@@ -28,7 +34,10 @@ const output: OutputProcessor = async (
   utils: SchemaUtils,
 ) => {
   const preprocessedSchema = utils.preprocess(schema);
-  const vizInput = writeDiagram(preprocessedSchema, options);
+  const vizInput = writeDiagram(
+    preprocessedSchema,
+    addDefaults(options, DEFAULT_OPTIONS),
+  );
   const svg = Viz(vizInput);
   if (options.file) {
     fs.writeFileSync(options.file, svg, 'utf8');
@@ -39,11 +48,18 @@ const output: OutputProcessor = async (
 // ====================================
 // Flow writer
 // ====================================
-const writeDiagram = ({ models }, { filterEdges }) => {
+const writeDiagram = ({ models }, { filterEdges, edgeLabels }) => {
   // Object.keys(models).forEach(modelName => {
   //   out += writeType(models, modelName);
   // });
   const modelNames = Object.keys(models);
+  const nodes = [];
+  modelNames.forEach(modelName => {
+    // const spec = models[modelName];
+    // const fieldNames = ['id'].concat(Object.keys(spec.relations || {})).map(o => `<${o}> ${o}`);
+    // nodes.push(`${modelName} [label="{${modelName} | ${fieldNames.join('|')}}"]`);
+    nodes.push(modelName);
+  });
   const edges = [];
   modelNames.forEach(modelName => {
     const { relations } = models[modelName];
@@ -61,14 +77,18 @@ const writeDiagram = ({ models }, { filterEdges }) => {
       ) {
         return;
       }
-      let edge = `${modelName} -> ${specs.model}`;
+      // let edge = `${modelName}:${fieldName} -> ${specs.model}:id [label="${fieldName}"]`;
+      const edgeLabel = edgeLabels && fieldName !== specs.model
+        ? ` [label="${fieldName}"]`
+        : '';
+      let edge = `${modelName} -> ${specs.model}${edgeLabel}`;
       if (!required) edge += ' [style=dotted]';
       edges.push(edge);
     });
   });
   return 'digraph {\n' +
     '  node [shape=box];\n' +
-    modelNames.map(o => `  ${o};\n`).join('') +
+    nodes.map(o => `  ${o};\n`).join('') +
     edges.map(o => `  ${o};\n`).join('') +
     '}\n';
 };
