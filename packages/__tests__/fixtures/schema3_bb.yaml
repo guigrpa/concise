@@ -1,0 +1,304 @@
+models:
+  common:
+    includeOnly:          true
+    fields:
+      id:
+        primaryKey:       true
+      isDeleted:
+        type:             'boolean'
+        defaultValue:     false
+        validations:
+          required:       true
+      _ver:
+        description:      'Version number'
+        type:             'number'
+        defaultValue:     1
+        validations:
+          required:       true
+      createdAt:
+        type:             'date'
+    relations:
+      creator:
+        model:            'user'
+        inverse:          null
+
+  # -----------------------------------------------
+  appConfig:
+    relations:
+      project:            true
+  # -----------------------------------------------
+  coreLogEntry:
+    includes:
+      common:             true
+    fields:
+      action:
+        type:             'string'
+        validations:
+          required:       true
+      url:
+        type:             'string'
+      result:
+        type:             'string'
+      ip:
+        type:             'string'
+      details:
+        type:             'json'
+    relations:
+      user:               true
+  # -----------------------------------------------
+  user:
+    includes:
+      common:             true
+    fields:
+      login:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+          unique:         true
+      hash:
+        type:             'string'
+  # -----------------------------------------------
+  xUserRole:
+    relations:
+      user:
+        validations: { required: true }
+      role:
+        validations: { required: true }
+  # -----------------------------------------------
+  role:
+    includes:
+      common:             true
+    fields:
+      name:
+        type:             'string'
+        validations:
+          unique:         true
+      notes:
+        type:             'string'
+        long:             true
+  # -----------------------------------------------
+  project:
+    includes:
+      common:             true
+    fields:
+      name:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+      acronym:
+        type:             'string'
+      t0:
+        description:      "When the project started (reference for delta times, used e.g. for milestones)"
+        type:             'date'
+        noTime:           true
+      proposalDate:
+        type:             'date'
+        noTime:           true
+      dossier:
+        type:             'string'
+      ot:
+        description:      "Orden de trabajo (dossier ID)"
+        type:             'string'
+      emailSignature:
+        type:             'string'
+        long:             true
+      aDateAndTime:
+        type:             'date'
+    relations:
+      projectManager:
+        model:            'person'
+        description:      "Person managing the project, DA BOSS"
+        inverse:          null
+      technicalManager:
+        model:            'person'
+        description:      "Person coordinating all technical matters of the project"
+        inverse:          null
+  # -----------------------------------------------
+  company:
+    includes:
+      common:             true
+    fields:
+      name:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+      address:
+        type:             'string'
+      cityForMeetings:
+        type:             'string'
+      notes:
+        type:             'string'
+        long:             true
+      acronym:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+      pmRate:
+        type:             'number'
+        float:            true
+    relations:
+      project:
+        validations: { required: true }
+        inverse:
+          description:    'All companies in the project'
+
+  # -----------------------------------------------
+  person:
+    includes:
+      common:             true
+    fields:
+      name:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+      department:
+        type:             'string'
+      position:
+        type:             'string'
+      phone:
+        type:             'string'
+      mobilePhone:
+        type:             'string'
+      email:
+        type:             'string'
+        validations:
+          email:          true
+      notes:
+        type:             'string'
+        long:             true
+      acronym:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+    relations:
+      project:
+        validations: { required: true }
+        inverse:
+          description:    'All people in the project'
+      company:
+        description:      'Company the person belongs to.'
+        inverse:
+          description:    'All people in the company'
+  # -----------------------------------------------
+  membership:
+    includes:
+      common:             true
+    relations:
+      person:
+        validations:
+          required:       true
+      peopleGroup:
+        validations:
+          required:       true
+  # -----------------------------------------------
+  peopleGroup:
+    includes:
+      common:             true
+    fields:
+      name:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+    relations:
+      project:
+        validations: { required: true }
+  # -----------------------------------------------
+  workPackage:
+    includes:
+      common:             true
+    fields:
+      acronym:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+      title:
+        type:             'string'
+      isHeader:
+        type:             'boolean'
+        defaultValue:     false
+        validations:
+          required:       true
+      version:
+        type:             'string'
+      objectives:
+        type:             'string'
+      notes:
+        type:             'string'
+      assumptions:
+        type:             'string'
+      parentId:
+        type:             'number'
+    relations:
+      project:
+        validations: { required: true }
+      parent:
+        model:            'workPackage'
+        inverse:
+          name:           'children'
+      leaderCompany:
+        model:            'company'
+        inverse:          null
+      leaderPerson:
+        model:            'person'
+        inverse:          null
+      startMilestone:
+        model:            'milestone'
+        inverse:          null
+      endMilestone:
+        model:            'milestone'
+        inverse:          null
+
+  # -----------------------------------------------
+  milestone:
+    includes:
+      common:             true
+    fields:
+      name:
+        type:             'string'
+      acronym:
+        type:             'string'
+        validations:
+          required:       true
+          notBlank:       true
+      plannedDelta:
+        type:             'number'
+        float:            true
+      actualDate:
+        type:             'date'
+        noTime:           true
+      isPaymentMilestone:
+        type:             'boolean'
+        defaultValue:     false
+        validations:
+          required:       true
+      isAchieved:
+        type:             'boolean'
+        defaultValue:     false
+        validations:
+          required:       true
+      closureJustification:
+        type:             'string'
+        long:             true
+    relations:
+      project:
+        validations: { required: true }
+  # -----------------------------------------------
+  annex:
+    includes:
+      common:             true
+    fields:
+      type:
+        type:             'string'
+      location:
+        type:             'string'
+    relations:
+      project:            true
+      milestone:          true
