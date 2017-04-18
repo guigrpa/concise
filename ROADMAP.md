@@ -1,5 +1,5 @@
 - concise-types: model relation shortcuts: replace everything by `true`, omit the relation model...
-
+- plugin docs: include it via doc-extractor
 - `dontPublish`
 - `dontMassAssign`
 - `dontSave`

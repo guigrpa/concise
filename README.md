@@ -13,6 +13,7 @@ A tool belt for concise schemas.
     - PostgreSQL SQL (`concise-pg`)
     - Flow types (`concise-flow`)
     - GraphQL schema language (`concise-graphql`)
+    - Entity-relationship diagram in SVG format (`concise-svg`)
     - Sequelize (*coming up!*)
     - Firebase database rules (*coming up!*)
 * Update your schema in one place!

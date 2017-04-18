@@ -10,7 +10,13 @@
     "pg",
     "postgres",
     "postgresql",
-    "yaml"
+    "yaml",
+    "flowtype",
+    "flow",
+    "svg",
+    "diagram",
+    "graphql",
+    "erd"
   ],
   "homepage": "https://github.com/guigrpa/concise#readme",
   "bugs": {
