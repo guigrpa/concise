@@ -4,4 +4,4 @@
 - `dontMassAssign`
 - `dontSave`
 - `clientOnly`, `serverOnly`, etc
-- More validations: `oneOf`, etc (see giu)
+- More validations: `oneOf`, `notBlank`, etc (see giu)
