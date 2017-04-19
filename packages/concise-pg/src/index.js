@@ -93,14 +93,14 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
       `  ADD CONSTRAINT "${modelName}_fk_${fieldName}"\n` +
       `  FOREIGN KEY (${fieldName})\n` +
       `  REFERENCES ${remoteTableName}\n` +
-      '  ON UPDATE CASCADE ON DELETE NO ACTION;'
+      '  ON UPDATE CASCADE ON DELETE NO ACTION;\n'
         // ON UPDATE CASCADE: when the PK changes, change the FK
         // ON DELETE NO ACTION: referencing rows are not altered;
         // but if there are referencing rows at the time the referenced row must be deleted,
         // the operation will fail
     );
   });
-  return constraints.join('\n');
+  return constraints.join('');
 };
 
 const writeField = (models, modelName, tableName, fieldName) => {
