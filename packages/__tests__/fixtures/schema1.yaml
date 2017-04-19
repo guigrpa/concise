@@ -37,4 +37,4 @@ models:
           required: true
       technicalManager:
         model: 'user'
-        inverse: null
+        inverse: false

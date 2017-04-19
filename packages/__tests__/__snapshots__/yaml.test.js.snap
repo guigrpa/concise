@@ -48,7 +48,7 @@ exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
           required: true
       technicalManager:
         model: user
-        inverse: null
+        inverse: false
       creator:
         model: user
         inverse:
@@ -98,6 +98,6 @@ exports[`YAML in/out schema1.yaml -> yaml 1`] = `
           required: true
       technicalManager:
         model: user
-        inverse: null
+        inverse: false
 "
 `;

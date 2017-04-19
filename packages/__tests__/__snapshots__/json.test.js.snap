@@ -135,7 +135,7 @@ exports[`JSON in/out schema1.yaml + schema2.yaml -> json 1`] = `
         },
         \\"technicalManager\\": {
           \\"model\\": \\"user\\",
-          \\"inverse\\": null
+          \\"inverse\\": false
         },
         \\"creator\\": {
           \\"model\\": \\"user\\",
@@ -209,7 +209,7 @@ exports[`JSON in/out schema1.yaml -> json 1`] = `
         },
         \\"technicalManager\\": {
           \\"model\\": \\"user\\",
-          \\"inverse\\": null
+          \\"inverse\\": false
         }
       }
     }

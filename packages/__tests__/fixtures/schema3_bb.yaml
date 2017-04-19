@@ -21,7 +21,7 @@ models:
     relations:
       creator:
         model:            'user'
-        inverse:          null
+        inverse:          false
 
   # -----------------------------------------------
   appConfig:
@@ -112,11 +112,11 @@ models:
       projectManager:
         model:            'person'
         description:      "Person managing the project, DA BOSS"
-        inverse:          null
+        inverse:          false
       technicalManager:
         model:            'person'
         description:      "Person coordinating all technical matters of the project"
-        inverse:          null
+        inverse:          false
   # -----------------------------------------------
   company:
     includes:
@@ -247,16 +247,16 @@ models:
           name:           'children'
       leaderCompany:
         model:            'company'
-        inverse:          null
+        inverse:          false
       leaderPerson:
         model:            'person'
-        inverse:          null
+        inverse:          false
       startMilestone:
         model:            'milestone'
-        inverse:          null
+        inverse:          false
       endMilestone:
         model:            'milestone'
-        inverse:          null
+        inverse:          false
 
   # -----------------------------------------------
   milestone:
