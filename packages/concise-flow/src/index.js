@@ -47,7 +47,7 @@ const writeType = (models, modelName) => {
     allSpecs.push(writeField(fieldName, fields[fieldName]));
   });
   Object.keys(relations).forEach(fieldName => {
-    allSpecs.push(writeField(fieldName, relations[fieldName]));
+    allSpecs.push(writeField(`${fieldName}Id`, relations[fieldName]));
   });
   const contents = allSpecs.length
     ? `\n  ${allSpecs.join('\n  ')}\n`

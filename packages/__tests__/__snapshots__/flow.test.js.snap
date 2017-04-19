@@ -18,9 +18,9 @@ type Project = {
   name?: string,
   startDate?: Date,
   endDate?: Date,
-  projectManager: string,
-  technicalManager?: string,
-  creator?: string,
+  projectManagerId: string,
+  technicalManagerId?: string,
+  creatorId?: string,
 };
 
 "
@@ -42,8 +42,8 @@ type Project = {
   id?: string,
   notes?: string,
   name?: string,
-  projectManager: string,
-  technicalManager?: string,
+  projectManagerId: string,
+  technicalManagerId?: string,
 };
 
 "
