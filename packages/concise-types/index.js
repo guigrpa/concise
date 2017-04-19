@@ -1,26 +1,47 @@
 // @flow
 
-export type Schema = {
-  models: { [key: ModelName]: Model },
+export type MapOf<A,B> = { [key: A]: B };
 
-  // some additional specs maybe (e.g. the name and type of the `id` field?)
+// User-provided schema
+export type Schema = {
+  models: MapOf<ModelName, Model>,
+  // can have additional specs
 };
+
+// Preprocessed schema (required by some plugins)
+export type ProcessedSchema = {
+  models: MapOf<ModelName, ProcessedModel>,
+};
+
 
 // ====================================
 // Model
 // ====================================
 export type ModelName = string;
-export type Model = {
-  description?: Description,
-  includes: { [key: ModelName]: boolean },
-  fields: { [key: FieldName]: Field },
-  relations: { [key: FieldName]: Relation },
 
-  // Only to be used as part of other models
+export type Model = {
+  ...ProcessedModel,
+
+  fields?: MapOf<FieldName, Field>,
+  relations?: MapOf<FieldName, Relation>,
+
+  // Include other models in this one
+  includes?: MapOf<ModelName, boolean>,
+  // This model is only for inclusion in other models
   includeOnly?: boolean,
 };
 
+export type ProcessedModel = {
+  description?: Description,
+  fields: MapOf<FieldName, ProcessedField>,
+  relations: MapOf<FieldName, ProcessedRelation>,
+};
+
+// ====================================
+// Field
+// ====================================
 export type FieldName = string;
+
 export type FieldType =
   | 'string'
   | 'boolean'
@@ -28,6 +49,7 @@ export type FieldType =
   | 'json'
   | 'number'
   | 'date';
+
 export type Field =
   | (FieldBase & { type: 'string', long?: boolean, defaultValue?: string })
   | (FieldBase & { type: 'boolean', defaultValue?: boolean })
@@ -40,35 +62,50 @@ export type Field =
     noTime?: boolean,
     defaultValue?: Date,
   });
+
 export type FieldBase = {
   primaryKey?: boolean,
   description?: Description,
   validations: FieldValidations,
 };
+
 export type FieldValidations = {
   required?: boolean,
   unique?: boolean,
   // TBW...
 };
 
+export type ProcessedField = Field;
+
+// ====================================
+// Relation
+// ====================================
 // Relations are defined whenever a FK should appear. The FK field will have the name
 // of the relation + `Id`, and the type of the referenced PK (hence, no `type` should
 // be specified).
 // Inverse relations (useful in many cases to define the way to traverse a 1 -> N relationship)
 // are created by default. Specify `inverse` if you want to disable the inverse
 // relation (`inverse: null`) or you want to configure some of its parameters
-export type Relation = {
+export type Relation = true | {
+  ...ProcessedRelation,  // all attributes become optional
+  // By default, the inverse relation will be defined; use `false` to indicate otherwise
+  inverse?: boolean | {
+    ...ProcessedInverseRelation, // all attributes become optional
+  }
+};
+
+export type ProcessedRelation = {
   description?: Description,
-  validations: FieldValidations,
+  validations?: FieldValidations,
+  type: FieldType,
   model: ModelName,
-  // By default, the reverse relation will be defined; use `null` to indicate otherwise
-  inverse?:
-    | null
-    | {
-        name?: FieldName,
-        description?: Description,
-        singular?: boolean, // by default, plural
-      },
+  inverse: false | ProcessedInverseRelation,
+};
+
+export type ProcessedInverseRelation = {
+  name: FieldName,
+  description?: Description,
+  singular: boolean, // by default, plural
 };
 
 // ====================================
@@ -87,5 +124,5 @@ export type OutputProcessor = (
 ) => Promise<any>;
 
 export type SchemaUtils = {
-  preprocess: (schema: Schema) => Schema,
+  preprocess: (schema: Schema) => ProcessedSchema,
 };
