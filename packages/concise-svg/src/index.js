@@ -49,16 +49,17 @@ const output: OutputProcessor = async (
 // Flow writer
 // ====================================
 const writeDiagram = ({ models }, { filterEdges, edgeLabels }) => {
-  // Object.keys(models).forEach(modelName => {
-  //   out += writeType(models, modelName);
-  // });
   const modelNames = Object.keys(models);
-  const nodes = [];
-  modelNames.forEach(modelName => {
-    // const spec = models[modelName];
-    // const fieldNames = ['id'].concat(Object.keys(spec.relations || {})).map(o => `<${o}> ${o}`);
-    // nodes.push(`${modelName} [label="{${modelName} | ${fieldNames.join('|')}}"]`);
-    nodes.push(modelName);
+  const nodes = modelNames.map(modelName => {
+    let node = modelName;
+    const { description } = models[modelName];
+    const props = [];
+    if (description) {
+      props.push(`comment="${description}"`);
+      props.push(`tooltip="${description}"`);
+    }
+    if (props.length) node += ` [${props.join(', ')}]`;
+    return node;
   });
   const edges = [];
   modelNames.forEach(modelName => {
@@ -77,17 +78,19 @@ const writeDiagram = ({ models }, { filterEdges, edgeLabels }) => {
       ) {
         return;
       }
-      // let edge = `${modelName}:${fieldName} -> ${specs.model}:id [label="${fieldName}"]`;
-      const edgeLabel = edgeLabels && fieldName !== specs.model
-        ? ` [label="${fieldName}"]`
-        : '';
-      let edge = `${modelName} -> ${specs.model}${edgeLabel}`;
-      if (!required) edge += ' [style=dotted]';
+      const props = [];
+      if (edgeLabels && fieldName !== specs.model) {
+        props.push(`label=${fieldName}`);
+      }
+      if (!required) props.push('style=dotted');
+      let edge = `${modelName} -> ${specs.model}`;
+      if (props.length) edge += ` [${props.join(', ')}]`;
       edges.push(edge);
     });
   });
-  return 'digraph {\n' +
-    '  node [shape=box];\n' +
+  return 'digraph "" {\n' +  // `""` removes the background tooltip
+    '  node [shape=box, fontname="sans-serif"];\n' +
+    '  edge [fontsize=9, fontname="sans-serif"];\n' +
     nodes.map(o => `  ${o};\n`).join('') +
     edges.map(o => `  ${o};\n`).join('') +
     '}\n';
