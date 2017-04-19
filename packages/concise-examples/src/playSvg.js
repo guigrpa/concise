@@ -5,7 +5,7 @@
 import path from 'path';
 import Concise from 'concise';
 import { input } from 'concise-yaml';
-import { output } from 'concise-svg';
+import { output } from 'concise-diagram';
 
 const run = async () => {
   try {

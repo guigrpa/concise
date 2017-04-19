@@ -13,7 +13,7 @@ A tool belt for concise schemas.
     - PostgreSQL SQL (`concise-pg`)
     - Flow types (`concise-flow`)
     - GraphQL schema language (`concise-graphql`)
-    - Entity-relationship diagram in SVG format (`concise-svg`)
+    - Entity-relationship diagram (`concise-diagram`)
     - Sequelize (*coming up!*)
     - Firebase database rules (*coming up!*)
 * Update your schema in one place!
@@ -85,9 +85,9 @@ models:
 
 This simple schema already illustrates some of concise's features:
 
-* **Includes**: common fields (and relations) can be extracted from models. Models marked as `includeOnly` may have special treatment in some plugins, e.g. `concise-pg` will not generate tables for them, `concise-svg` will omit them in diagrams, etc.
+* **Includes**: common fields (and relations) can be extracted from models. Models marked as `includeOnly` may have special treatment in some plugins, e.g. `concise-pg` will not generate tables for them, `concise-diagram` will omit them in diagrams, etc.
 
-* **Comments**: `description` attributes can be set on models, fields and relations. They are *strongly recommended* and are taken into account in all built-in plugins: `concise-graphql` includes them in schema (so they can be shown in the great GraphiQL tool), `concise-svg` shows them as tooltips in diagrams, `concise-pg` generates `COMMENT` SQL statements for them, etc.
+* **Comments**: `description` attributes can be set on models, fields and relations. They are *strongly recommended* and are taken into account in all built-in plugins: `concise-graphql` includes them in schema (so they can be shown in the great GraphiQL tool), `concise-diagram` shows them as tooltips in diagrams, `concise-pg` generates `COMMENT` SQL statements for them, etc.
 
 * **Relations** are defined at the model that contains the foreign key (e.g. in a *1:N* relation, at the *1* end). In the example above, a `person` belongs to a `project`.
 
@@ -132,9 +132,9 @@ Output options:
 
 [[[./packages/concise-graphql/src/index.js]]]
 
-#### concise-svg
+#### concise-diagram
 
-[[[./packages/concise-svg/src/index.js]]]
+[[[./packages/concise-diagram/src/index.js]]]
 
 
 ## Examples
