@@ -38,6 +38,35 @@ TBW
 
 TBW
 
+### Plugin options
+
+#### Common options
+
+TBW
+
+#### concise-yaml
+
+
+
+#### concise-json
+
+
+
+#### concise-pg
+
+
+
+#### concise-flow
+
+
+
+#### concise-graphql
+
+
+
+#### concise-svg
+
+
 
 ## [Changelog](https://github.com/guigrpa/concise/blob/master/CHANGELOG.md) :scroll:
 
