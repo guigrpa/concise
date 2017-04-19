@@ -5,7 +5,6 @@
 import fs from 'fs';
 import type { Schema, OutputProcessor, SchemaUtils } from 'concise-types';
 import upperFirst from 'lodash.upperfirst';
-import { pluralize } from 'inflection';
 
 type OutputOptions = {
   file?: string,
@@ -88,13 +87,11 @@ const getInverseRelations = (models, targetModel) => {
     Object.keys(relations).forEach(relationName => {
       const relation = relations[relationName];
       if (relation.model !== targetModel) return;
-      let { inverse } = relation;
-      if (inverse === null) return;  // explicit `null`
-      if (inverse == null) inverse = {};
-      const { singular } = inverse;
+      const { inverse } = relation;
+      if (inverse === false) return;
+      const { name: relationFieldName, singular } = inverse;
       let type = singular ? upperModelName : `[${upperModelName}]`;
       if (singular && relation.validations && relation.validations.required) type += '!';
-      const relationFieldName = inverse.name || (singular ? modelName : pluralize(modelName));
       out.push(`${relationFieldName}: ${type}`);
     });
   });
