@@ -3,6 +3,7 @@ models:
     includeOnly:          true
     fields:
       id:
+        type:             'string'
         primaryKey:       true
       isDeleted:
         type:             'boolean'
@@ -47,6 +48,7 @@ models:
       user:               true
   # -----------------------------------------------
   user:
+    description:          'A user of the application'
     includes:
       common:             true
     fields:
@@ -182,7 +184,7 @@ models:
         inverse:
           description:    'All people in the project'
       company:
-        description:      'Company the person belongs to.'
+        description:      'Company the person belongs to'
         inverse:
           description:    'All people in the company'
   # -----------------------------------------------
