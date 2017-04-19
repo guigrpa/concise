@@ -1,7 +1,13 @@
 - concise-types: model relation shortcuts: replace everything by `true`, omit the relation model...
-- plugin docs: include it via doc-extractor
-- `dontPublish`
-- `dontMassAssign`
-- `dontSave`
-- `clientOnly`, `serverOnly`, etc
+- Improve docs
 - More validations: `oneOf`, `notBlank`, etc (see giu)
+- Schema validation?
+- First release
+- concise-firebase
+- concise-sequelize
+
+- Schema refinements: consider...
+    - `dontPublish`
+    - `dontMassAssign`
+    - `dontSave`
+    - `clientOnly`, `serverOnly`, etc
