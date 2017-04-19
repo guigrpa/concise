@@ -21,8 +21,8 @@ const preprocess = (schema: Schema): ProcessedSchema => {
       }
       const { fields, relations } = include;
       model = merge(model, {
-        fields: fields ? merge(fields, model.fields) : {},
-        relations: relations ? merge(relations, model.relations) : {},
+        fields: merge({}, fields, model.fields),
+        relations: merge({}, relations, model.relations),
       });
     });
     delete model.includes;
