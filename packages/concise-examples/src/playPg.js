@@ -11,11 +11,14 @@ const run = async () => {
   try {
     const concise = new Concise();
     await concise.input(input, {
-      file: path.join(__dirname, '../../__tests__/fixtures/schema1.yaml'),
+      file: path.join(__dirname, '../../__tests__/fixtures/schema3_bb.yaml'),
     });
-    await concise.input(input, {
-      file: path.join(__dirname, '../../__tests__/fixtures/schema2.yaml'),
-    });
+    // await concise.input(input, {
+    //   file: path.join(__dirname, '../../__tests__/fixtures/schema1.yaml'),
+    // });
+    // await concise.input(input, {
+    //   file: path.join(__dirname, '../../__tests__/fixtures/schema2.yaml'),
+    // });
     console.log(await concise.output(output));
   } catch (err) {
     console.error(err);
