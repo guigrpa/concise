@@ -39,7 +39,8 @@ ALTER TABLE \\"project\\"
   ADD CONSTRAINT \\"project_fk_creatorId\\"
   FOREIGN KEY (creatorId)
   REFERENCES \\"user\\"
-  ON UPDATE CASCADE ON DELETE NO ACTION;"
+  ON UPDATE CASCADE ON DELETE NO ACTION;
+"
 `;
 
 exports[`PG output schema1.yaml -> pg 1`] = `
@@ -73,5 +74,6 @@ ALTER TABLE \\"project\\"
   ADD CONSTRAINT \\"project_fk_technicalManagerId\\"
   FOREIGN KEY (technicalManagerId)
   REFERENCES \\"user\\"
-  ON UPDATE CASCADE ON DELETE NO ACTION;"
+  ON UPDATE CASCADE ON DELETE NO ACTION;
+"
 `;
