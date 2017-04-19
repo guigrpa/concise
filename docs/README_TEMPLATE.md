@@ -80,7 +80,7 @@ models:
           required: true
       technicalManager:
         model: user
-        inverse: null
+        inverse: false
 ```
 
 This simple schema already illustrates some of concise's features:
@@ -91,7 +91,7 @@ This simple schema already illustrates some of concise's features:
 
 * **Relations** are defined at the model that contains the foreign key (e.g. in a *1:N* relation, at the *1* end). In the example above, a `person` belongs to a `project`.
 
-* **Bidirectional relations**: relations are bidirectional by default, and the *inverse* relation (in the previous example, from `project` to `person`) is plural by default. The inverse relation can be fully customised and even removed.
+* **Bidirectional relations**: relations are bidirectional by default, and the *inverse* relation (in the previous example, from `project` to `person`) is plural by default. The inverse relation can be fully customised and even removed (set to `false`).
 
 * **Validation rules** can be applied to both model fields and relations.
 
