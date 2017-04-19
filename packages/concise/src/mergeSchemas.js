@@ -13,7 +13,7 @@ const mergeSchemas = (a: Schema, b: Schema): Schema => {
   let models = out.models;
   Object.keys(b.models).forEach(modelName => {
     let model = models[modelName];
-    const bModel = b.models[modelName];
+    const bModel: Object = b.models[modelName];
 
     // Models from b that didn't exist in a
     if (!model) {
