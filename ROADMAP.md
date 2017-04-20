@@ -1,3 +1,4 @@
+- Rethink Flow, GraphQL output: input types?
 - concise-types: model relation shortcuts: replace everything by `true`, omit the relation model...
 - Improve docs
 - More validations: `oneOf`, `notBlank`, etc (see giu)
