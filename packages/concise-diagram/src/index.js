@@ -64,8 +64,9 @@ const writeDiagram = ({ models }, { filterEdges, edgeLabels }) => {
   const edges = [];
   modelNames.forEach(modelName => {
     const { relations } = models[modelName];
-    Object.keys(relations || {}).forEach(fieldName => {
+    Object.keys(relations).forEach(fieldName => {
       const specs = relations[fieldName];
+      if (specs.isInverse) return;
       const required = specs.validations && specs.validations.required === true;
       if (
         filterEdges &&

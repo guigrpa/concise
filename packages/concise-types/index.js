@@ -1,6 +1,6 @@
 // @flow
 
-export type MapOf<A,B> = { [key: A]: B };
+export type MapOf<A, B> = { [key: A]: B };
 
 // User-provided schema
 export type Schema = {
@@ -13,20 +13,18 @@ export type ProcessedSchema = {
   models: MapOf<ModelName, ProcessedModel>,
 };
 
-
 // ====================================
 // Model
 // ====================================
 export type ModelName = string;
 
 export type Model = {
-  ...ProcessedModel,
-
+  description?: Description,
   fields?: MapOf<FieldName, Field>,
   relations?: MapOf<FieldName, Relation>,
 
   // Include other models in this one
-  includes?: MapOf<ModelName, boolean>,
+  includes?: MapOf<ModelName, true>,
   // This model is only for inclusion in other models
   includeOnly?: boolean,
 };
@@ -66,7 +64,7 @@ export type Field =
 export type FieldBase = {
   primaryKey?: boolean,
   description?: Description,
-  validations: FieldValidations,
+  validations?: FieldValidations,
 };
 
 export type FieldValidations = {
@@ -86,26 +84,31 @@ export type ProcessedField = Field;
 // Inverse relations (useful in many cases to define the way to traverse a 1 -> N relationship)
 // are created by default. Specify `inverse` if you want to disable the inverse
 // relation (`inverse: null`) or you want to configure some of its parameters
-export type Relation = true | {
-  ...ProcessedRelation,  // all attributes become optional
-  // By default, the inverse relation will be defined; use `false` to indicate otherwise
-  inverse?: boolean | {
-    ...ProcessedInverseRelation, // all attributes become optional
-  }
-};
+export type Relation =
+  | true
+  | {
+      description?: Description,
+      validations?: FieldValidations,
+      model?: ModelName, // default: relation name
+      plural?: boolean, // default: false
+      fkName?: string,
+      inverse?:  // default: true
+        | boolean
+        | {
+            description?: Description,
+            plural?: boolean, // default: true
+            name?: FieldName, // default: inferred from model name + plural field
+          },
+    };
 
 export type ProcessedRelation = {
   description?: Description,
   validations?: FieldValidations,
   type: FieldType,
   model: ModelName,
-  inverse: false | ProcessedInverseRelation,
-};
-
-export type ProcessedInverseRelation = {
-  name: FieldName,
-  description?: Description,
-  singular: boolean, // by default, plural
+  plural: boolean,
+  fkName: string,
+  isInverse: boolean,
 };
 
 // ====================================

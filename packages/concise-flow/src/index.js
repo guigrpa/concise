@@ -47,7 +47,9 @@ const writeType = (models, modelName) => {
     allSpecs.push(writeField(fieldName, fields[fieldName]));
   });
   Object.keys(relations).forEach(fieldName => {
-    allSpecs.push(writeField(`${fieldName}Id`, relations[fieldName]));
+    const relation = relations[fieldName];
+    if (relation.isInverse) return;
+    allSpecs.push(writeField(relation.fkName, relation));
   });
   const contents = allSpecs.length
     ? `\n  ${allSpecs.join('\n  ')}\n`
@@ -60,7 +62,8 @@ const writeType = (models, modelName) => {
 
 const writeField = (name, specs: any) => {
   const required = specs.validations && specs.validations.required ? '' : '?';
-  const typeStr = writeFieldType(specs.type);
+  let typeStr = writeFieldType(specs.type);
+  if (specs.plural) typeStr = `Array<${typeStr}>`;
   const comment = specs.description ? `  // ${specs.description}` : '';
   return `${name}${required}: ${typeStr},${comment}`;
 };

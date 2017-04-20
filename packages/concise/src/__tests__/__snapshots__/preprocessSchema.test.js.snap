@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`preprocessSchema should complete a shorthand relation 1`] = `
+Object {
+  "models": Object {
+    "person": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+        "name": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "posts": Object {
+          "fkName": "postIds",
+          "isInverse": true,
+          "model": "post",
+          "plural": true,
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+    "post": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+        "title": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "person": Object {
+          "fkName": "personId",
+          "isInverse": false,
+          "model": "person",
+          "plural": false,
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`preprocessSchema should process included fields 1`] = `
+Object {
+  "models": Object {
+    "person": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+        "name": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {},
+    },
+  },
+}
+`;
+
+exports[`preprocessSchema should respect unknown schema attributes 1`] = `
+Object {
+  "models": Object {
+    "person": Object {
+      "fields": Object {
+        "name": Object {
+          "foo": 3,
+          "type": "string",
+        },
+      },
+      "foo": 3,
+      "relations": Object {},
+    },
+  },
+  "schemaFoo": 5,
+}
+`;

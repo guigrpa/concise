@@ -36,27 +36,21 @@ const writeTypes = ({ models }) => {
 };
 
 const writeType = (models, modelName) => {
-  const {
-    description,
-    fields = {},
-    relations = {},
-  } = models[modelName];
+  const { description, fields = {}, relations = {} } = models[modelName];
   const upperModelName: string = upperFirst(modelName);
-  let allSpecs = [];
+  const allSpecs = [];
   Object.keys(fields).forEach(fieldName => {
     allSpecs.push(writeField(fieldName, fields[fieldName]));
   });
   Object.keys(relations).forEach(fieldName => {
     allSpecs.push(writeField(fieldName, relations[fieldName]));
   });
-  allSpecs = allSpecs.concat(getInverseRelations(models, modelName));
-  const contents = allSpecs.length
-    ? `\n  ${allSpecs.join('\n  ')}\n`
-    : '';
-  return '' +
+  const contents = allSpecs.length ? `\n  ${allSpecs.join('\n  ')}\n` : '';
+  return (
     `# ${upperModelName}\n` +
     (description ? `# ${description}\n` : '') +
-    `type ${upperModelName} {${contents}}\n\n`;
+    `type ${upperModelName} {${contents}}\n\n`
+  );
 };
 
 const writeField = (name, specs: any) => {
@@ -66,35 +60,15 @@ const writeField = (name, specs: any) => {
 };
 
 const writeFieldType = specs => {
-  const { type, model, primaryKey, validations } = specs;
+  const { type, model, primaryKey, validations, plural } = specs;
   let out;
   if (primaryKey) out = 'ID';
   else if (model) out = upperFirst(model);
   else if (type === 'boolean') out = 'Boolean';
   else if (type === 'number') out = specs.float ? 'Float' : 'Int';
   else out = 'String';
+  if (plural) out = `[${out}]`;
   if (primaryKey || (validations && validations.required)) out += '!';
-  return out;
-};
-
-const getInverseRelations = (models, targetModel) => {
-  const out = [];
-  Object.keys(models).forEach(modelName => {
-    if (modelName === targetModel) return;
-    const { relations } = models[modelName];
-    if (!relations) return;
-    const upperModelName: string = upperFirst(modelName);
-    Object.keys(relations).forEach(relationName => {
-      const relation = relations[relationName];
-      if (relation.model !== targetModel) return;
-      const { inverse } = relation;
-      if (inverse === false) return;
-      const { name: relationFieldName, singular } = inverse;
-      let type = singular ? upperModelName : `[${upperModelName}]`;
-      if (singular && relation.validations && relation.validations.required) type += '!';
-      out.push(`${relationFieldName}: ${type}`);
-    });
-  });
   return out;
 };
 

@@ -64,6 +64,7 @@ const writeTable = (models, modelName, options) => {
     if (sqlFieldConstraints) sqlConstraints = sqlConstraints.concat(sqlFieldConstraints);
   });
   Object.keys(relations).forEach(relationName => {
+    if (relations[relationName].isInverse) return;
     const { sqlFields: someSqlFields, sqlFieldComment } =
       writeForeignKey(models, modelName, tableName, relationName, options);
     if (someSqlFields) sqlFields = sqlFields.concat(someSqlFields);
@@ -82,8 +83,9 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
   if (options.schema) tableName = `"${options.schema}".${tableName}`;
   const constraints = [];
   const { relations } = models[modelName];
-  Object.keys(relations || {}).forEach(relationName => {
+  Object.keys(relations).forEach(relationName => {
     const relation = relations[relationName];
+    if (relation.isInverse) return;
     const fieldName = `${relationName}Id`;
 
     let remoteTableName = `"${relation.model}"`;
