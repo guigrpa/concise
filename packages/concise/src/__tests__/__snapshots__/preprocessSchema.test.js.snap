@@ -9,6 +9,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "people",
       "relations": Object {
         "createdPosts": Object {
           "fkName": "createdPostIds",
@@ -20,6 +21,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "person",
     },
     "post": Object {
       "fields": Object {
@@ -27,6 +29,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "posts",
       "relations": Object {
         "person": Object {
           "fkName": "personId",
@@ -38,6 +41,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "post",
     },
   },
 }
@@ -52,6 +56,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "addresses",
       "relations": Object {
         "person": Object {
           "fkName": "personId",
@@ -63,6 +68,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "address",
     },
     "person": Object {
       "fields": Object {
@@ -70,6 +76,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "people",
       "relations": Object {
         "address": Object {
           "fkName": "addressId",
@@ -81,6 +88,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "person",
     },
   },
 }
@@ -95,7 +103,9 @@ Object {
           "type": "string",
         },
       },
+      "plural": "people",
       "relations": Object {},
+      "singular": "person",
     },
     "post": Object {
       "fields": Object {
@@ -103,6 +113,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "posts",
       "relations": Object {
         "person": Object {
           "fkName": "personId",
@@ -114,6 +125,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "post",
     },
   },
 }
@@ -128,6 +140,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "people",
       "relations": Object {
         "posts": Object {
           "fkName": "postIds",
@@ -139,6 +152,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "person",
     },
     "post": Object {
       "fields": Object {
@@ -146,6 +160,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "posts",
       "relations": Object {
         "author": Object {
           "fkName": "authorId",
@@ -159,6 +174,7 @@ Object {
           },
         },
       },
+      "singular": "post",
     },
   },
 }
@@ -173,6 +189,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "people",
       "relations": Object {
         "posts": Object {
           "fkName": "postIds",
@@ -184,6 +201,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "person",
     },
     "post": Object {
       "fields": Object {
@@ -191,6 +209,7 @@ Object {
           "type": "string",
         },
       },
+      "plural": "posts",
       "relations": Object {
         "person": Object {
           "fkName": "personId",
@@ -202,6 +221,7 @@ Object {
           "validations": Object {},
         },
       },
+      "singular": "post",
     },
   },
 }
@@ -219,7 +239,9 @@ Object {
           "type": "string",
         },
       },
+      "plural": "people",
       "relations": Object {},
+      "singular": "person",
     },
   },
 }
@@ -236,7 +258,9 @@ Object {
         },
       },
       "foo": 3,
+      "plural": "people",
       "relations": Object {},
+      "singular": "person",
     },
   },
   "schemaFoo": 5,

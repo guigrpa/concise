@@ -34,6 +34,8 @@ const processIncludes = models => {
 const processIncludesInModel = (model, models, modelName) => {
   const out = merge(
     {
+      singular: modelName,
+      plural: pluralize(modelName),
       fields: {},
       relations: {},
     },

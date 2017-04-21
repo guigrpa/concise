@@ -30,6 +30,8 @@ export type Model = {
 };
 
 export type ProcessedModel = {
+  singular: string,
+  plural: string,
   description?: Description,
   fields: MapOf<FieldName, ProcessedField>,
   relations: MapOf<FieldName, ProcessedRelation>,
