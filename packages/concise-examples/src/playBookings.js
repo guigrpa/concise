@@ -20,6 +20,7 @@ const run = async () => {
   await concise.output(outputGraphql, {
     file: path.join(__dirname, 'playBookings.graphql'),
     relay: true,
+    storyboard: true,
   });
   await concise.output(outputPg, {
     file: path.join(__dirname, 'playBookings.sql'),

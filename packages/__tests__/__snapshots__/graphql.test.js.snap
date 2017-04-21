@@ -1,7 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`GraphQL schema output schema1.yaml + schema2.yaml -> GraphQL 1`] = `
-"# User: A user of the platform
+"# Root query
+type Query {
+  users: [User]
+  projects: [Project]
+}
+
+# User: A user of the platform
 type User {
   id: ID!
   notes: String
@@ -11,6 +17,33 @@ type User {
   aBoolean: Boolean!
   projects: [Project]
   createdProjects: [Project]
+}
+
+input UserCreateInput {
+  notes: String
+  name: String!
+  surname: String
+  aBoolean: Boolean!
+  clientMutationId: String
+}
+
+type UserCreatePayload {
+  user: User
+  clientMutationId: String
+}
+
+input UserUpdateInput {
+  id: ID!
+  notes: String
+  name: String
+  surname: String
+  aBoolean: Boolean
+  clientMutationId: String
+}
+
+type UserUpdatePayload {
+  user: User
+  clientMutationId: String
 }
 
 # Project
@@ -25,17 +58,57 @@ type Project {
   creator: User
 }
 
-# Root query
-type Query {
-  users: [User]
-  projects: [Project]
+input ProjectCreateInput {
+  notes: String
+  name: String
+  startDate: String
+  endDate: String
+  projectManagerId: ID!
+  technicalManagerId: ID
+  creatorId: ID
+  clientMutationId: String
+}
+
+type ProjectCreatePayload {
+  project: Project
+  clientMutationId: String
+}
+
+input ProjectUpdateInput {
+  id: ID!
+  notes: String
+  name: String
+  startDate: String
+  endDate: String
+  projectManagerId: ID
+  technicalManagerId: ID
+  creatorId: ID
+  clientMutationId: String
+}
+
+type ProjectUpdatePayload {
+  project: Project
+  clientMutationId: String
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): CreateUserPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  createProject(input: CreateProjectInput!): CreateProjectPayload
+  updateProject(input: UpdateProjectInput!): UpdateProjectPayload
 }
 
 "
 `;
 
 exports[`GraphQL schema output schema1.yaml -> GraphQL 1`] = `
-"# User: A user of the platform
+"# Root query
+type Query {
+  users: [User]
+  projects: [Project]
+}
+
+# User: A user of the platform
 type User {
   id: ID!
   notes: String
@@ -44,6 +117,33 @@ type User {
   surname: String
   aBoolean: Boolean!
   projects: [Project]
+}
+
+input UserCreateInput {
+  notes: String
+  name: String!
+  surname: String
+  aBoolean: Boolean!
+  clientMutationId: String
+}
+
+type UserCreatePayload {
+  user: User
+  clientMutationId: String
+}
+
+input UserUpdateInput {
+  id: ID!
+  notes: String
+  name: String
+  surname: String
+  aBoolean: Boolean
+  clientMutationId: String
+}
+
+type UserUpdatePayload {
+  user: User
+  clientMutationId: String
 }
 
 # Project
@@ -55,10 +155,38 @@ type Project {
   technicalManager: User
 }
 
-# Root query
-type Query {
-  users: [User]
-  projects: [Project]
+input ProjectCreateInput {
+  notes: String
+  name: String
+  projectManagerId: ID!
+  technicalManagerId: ID
+  clientMutationId: String
+}
+
+type ProjectCreatePayload {
+  project: Project
+  clientMutationId: String
+}
+
+input ProjectUpdateInput {
+  id: ID!
+  notes: String
+  name: String
+  projectManagerId: ID
+  technicalManagerId: ID
+  clientMutationId: String
+}
+
+type ProjectUpdatePayload {
+  project: Project
+  clientMutationId: String
+}
+
+type Mutation {
+  createUser(input: CreateUserInput!): CreateUserPayload
+  updateUser(input: UpdateUserInput!): UpdateUserPayload
+  createProject(input: CreateProjectInput!): CreateProjectPayload
+  updateProject(input: UpdateProjectInput!): UpdateProjectPayload
 }
 
 "
