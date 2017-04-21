@@ -1,0 +1,61 @@
+models:
+  common:
+    isIncludeOnly: true
+    fields:
+      id:
+        type: uuid
+        isPrimaryKey: true
+  user:
+    includes: { common: true }
+    fields:
+      name:
+        type: string
+        validations: { isRequired: true }
+      username:
+        type: string
+        validations: { isRequired: true }
+      password:
+        type: string
+        validations: { isRequired: true }
+  space:
+    includes: { common: true }
+    fields:
+      name:
+        type: string
+        validations: { isRequired: true }
+    relations:
+      owner:
+        model: user
+        description: "The responsible for this space"
+        inverse: false
+        validations: { isRequired: true }
+      users:
+        model: user
+        isPlural: true
+  band:
+    includes: { common: true }
+    description: "A time interval that repeats itself every day"
+    fields:
+      name:
+        type: string
+        validations: { isRequired: true }
+      timeStart:
+        type: date
+        noDate: true
+      timeEnd:
+        type: date
+        noDate: true
+    relations:
+      space:
+        validations: { isRequired: true }
+  reservation:
+    includes: { common: true }
+    fields:
+      date:
+        type: date
+        noTime: true
+    relations:
+      band:
+        validations: { isRequired: true }
+      user:
+        validations: { isRequired: true }

@@ -1,6 +1,6 @@
 // @flow
 
-import { addDefaults, merge, omit, set as timmSet, setIn } from 'timm';
+import { clone, addDefaults, merge, omit } from 'timm';
 import type { Schema, ProcessedSchema } from 'concise-types';
 import { singularize, pluralize } from 'inflection';
 
@@ -25,7 +25,7 @@ const processIncludes = models => {
   const out = {};
   Object.keys(models).forEach(modelName => {
     const model = models[modelName];
-    if (model.includeOnly) return;
+    if (model.isIncludeOnly) return;
     out[modelName] = processIncludesInModel(model, models, modelName);
   });
   return out;
@@ -53,9 +53,9 @@ const processIncludesInModel = (model, models, modelName) => {
   return out;
 };
 
-const getFkName = (relationName, plural) => {
-  const base = plural ? singularize(relationName) : relationName;
-  return `${base}${plural ? 'Ids' : 'Id'}`;
+const getFkName = (relationName, isPlural) => {
+  const base = isPlural ? singularize(relationName) : relationName;
+  return `${base}${isPlural ? 'Ids' : 'Id'}`;
 };
 
 // In-place (down to `relations` level, which has already been re-created by processIncludes())
@@ -64,18 +64,19 @@ const processRelations = models => {
     const { relations } = models[modelName];
     Object.keys(relations).forEach(relationName => {
       // Relation shorthand
-      if (relations[relationName] === true) relations[relationName] = {};
-      let relation = relations[relationName];
+      let relation = relations[relationName] === true
+        ? {}
+        : clone(relations[relationName]);
       if (relation.isInverse) return;
       // Relation defaults
       const fkName = getFkName(
         relationName,
-        relation.plural != null ? relation.plural : false,
+        relation.isPlural != null ? relation.isPlural : false,
       );
       relation = addDefaults(relation, {
         model: relationName,
         fkName,
-        plural: false,
+        isPlural: false,
         validations: {},
         isInverse: false,
       });
@@ -93,35 +94,40 @@ const processRelations = models => {
           `ID_FIELD_NOT_FOUND ${modelName}/${relationName}/${relatedModelName}`,
         );
       }
-      relation = timmSet(relation, 'type', idField.type);
+      relation.type = idField.type;
 
       // Create inverse relation, if needed
       const { inverse } = relation;
       if (inverse !== false) {
         let inverseRelation = inverse == null || inverse === true
           ? {} // inverse shorthand
-          : omit(inverse, ['name']);
+          : omit(clone(inverse), ['name']);
         inverseRelation = addDefaults(inverseRelation, {
           model: modelName,
-          plural: true,
+          isPlural: true,
           validations: {},
           isInverse: true,
+          inverseName: relationName,
         });
         const idField2 = models[modelName].fields.id;
         if (!idField2) throw new Error(`ID_FIELD_NOT_FOUND ${modelName}`);
-        inverseRelation = timmSet(inverseRelation, 'type', idField2.type);
-        const { plural } = inverseRelation;
+        inverseRelation.type = idField2.type;
+        const { isPlural } = inverseRelation;
         const inverseName =
           (inverse && inverse.name) ||
-          (plural ? pluralize(modelName) : modelName);
+          (isPlural ? pluralize(modelName) : modelName);
         const inverseFkName = getFkName(
           inverseName,
-          inverseRelation.plural != null ? inverseRelation.plural : true,
+          inverseRelation.isPlural != null ? inverseRelation.isPlural : true,
         );
-        inverseRelation = timmSet(inverseRelation, 'fkName', inverseFkName);
+        inverseRelation.fkName = inverseFkName;
         relatedModel.relations[inverseName] = inverseRelation;
+        relation.inverseName = inverseName;
+      } else {
+        relation.inverseName = null;
       }
-      relations[relationName] = omit(relation, ['inverse']);
+      delete relation.inverse;
+      relations[relationName] = relation;
     });
   });
 };

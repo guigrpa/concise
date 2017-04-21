@@ -41,14 +41,14 @@ Here is an example schema written in YAML:
 ```
 models:
   common:
-    includeOnly: true
+    isIncludeOnly: true
     fields:
       id:
         type: uuid
-        primaryKey: true
+        isPrimaryKey: true
       notes:
         type: string
-        long: true
+        isLong: true
 
   person:
     description: A project member
@@ -58,13 +58,13 @@ models:
         description: Name of the user
         type: string
         validations:
-          required: true
-          unique: true
+          isRequired: true
+          isUnique: true
       surname: { type: string }
       aBoolean:
         type: boolean
         validations:
-          required: true
+          isRequired: true
         defaultValue: false
     relations:
       project: true
@@ -77,7 +77,7 @@ models:
       projectManager:
         model: user
         validations:
-          required: true
+          isRequired: true
       technicalManager:
         model: user
         inverse: false
@@ -85,7 +85,7 @@ models:
 
 This simple schema already illustrates some of concise's features:
 
-* **Includes**: common fields (and relations) can be extracted from models. Models marked as `includeOnly` may have special treatment in some plugins, e.g. `concise-pg` will not generate tables for them, `concise-diagram` will omit them in diagrams, etc.
+* **Includes**: common fields (and relations) can be extracted from models. Models marked as `isIncludeOnly` may have special treatment in some plugins, e.g. `concise-pg` will not generate tables for them, `concise-diagram` will omit them in diagrams, etc.
 
 * **Comments**: `description` attributes can be set on models, fields and relations. They are *strongly recommended* and are taken into account in all built-in plugins: `concise-graphql` includes them in schema (so they can be shown in the great GraphiQL tool), `concise-diagram` shows them as tooltips in diagrams, `concise-pg` generates `COMMENT` SQL statements for them, etc.
 
@@ -114,27 +114,45 @@ Output options:
 
 #### concise-yaml
 
+Input/output.
 
+No specific options.
 
 #### concise-json
 
+Input/output.
 
+Output options:
+* `prettyJson?` (`boolean` = `false`): prettify JSON output
 
 #### concise-pg
 
+Output-only.
 
+Output options:
+* `schema?` (`string`): PostgreSQL schema; if unspecified, no schema is used
+  in the SQL definitions (which corresponds to the `public` schema)
 
 #### concise-flow
 
+Output-only.
 
+No specific options.
 
 #### concise-graphql
 
+Output-only.
 
+No specific options.
 
 #### concise-diagram
 
+Output-only.
 
+Output options:
+* `filterEdges?` (`{ from: ModelName, to: ModelName, as: FieldName, isRequired: boolean } => boolean`):
+  return `true` if a given edge must be shown. Default: all edges are shown
+* `edgeLabels?` (`boolean` = `true`): show edge labels
 
 
 ## Examples

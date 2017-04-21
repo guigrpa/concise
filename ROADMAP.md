@@ -1,5 +1,5 @@
 - Rethink Flow, GraphQL output: input types?
-- concise-types: model relation shortcuts: replace everything by `true`, omit the relation model...
+- GraphQL - relay support: mutations
 - Improve docs
 - More validations: `oneOf`, `notBlank`, etc (see giu)
 - Schema validation?
@@ -12,3 +12,7 @@
     - `dontMassAssign`
     - `dontSave`
     - `clientOnly`, `serverOnly`, etc
+
+- v2:
+    - Auth
+    - Embedded models via relations (for noSQL databases)

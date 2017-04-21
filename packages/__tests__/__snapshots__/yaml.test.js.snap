@@ -3,14 +3,14 @@
 exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
 "models:
   common:
-    includeOnly: true
+    isIncludeOnly: true
     fields:
       id:
         type: uuid
-        primaryKey: true
+        isPrimaryKey: true
       notes:
         type: string
-        long: true
+        isLong: true
   user:
     description: A user of the platform
     includes:
@@ -20,14 +20,14 @@ exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
         description: Name of the user
         type: string
         validations:
-          required: true
-          unique: true
+          isRequired: true
+          isUnique: true
       surname:
         type: string
       aBoolean:
         type: boolean
         validations:
-          required: true
+          isRequired: true
         defaultValue: false
   project:
     includes:
@@ -45,7 +45,7 @@ exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
       projectManager:
         model: user
         validations:
-          required: true
+          isRequired: true
       technicalManager:
         model: user
         inverse: false
@@ -59,14 +59,14 @@ exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
 exports[`YAML in/out schema1.yaml -> yaml 1`] = `
 "models:
   common:
-    includeOnly: true
+    isIncludeOnly: true
     fields:
       id:
         type: uuid
-        primaryKey: true
+        isPrimaryKey: true
       notes:
         type: string
-        long: true
+        isLong: true
   user:
     description: A user of the platform
     includes:
@@ -76,14 +76,14 @@ exports[`YAML in/out schema1.yaml -> yaml 1`] = `
         description: Name of the user
         type: string
         validations:
-          required: true
-          unique: true
+          isRequired: true
+          isUnique: true
       surname:
         type: string
       aBoolean:
         type: boolean
         validations:
-          required: true
+          isRequired: true
         defaultValue: false
   project:
     includes:
@@ -95,7 +95,7 @@ exports[`YAML in/out schema1.yaml -> yaml 1`] = `
       projectManager:
         model: user
         validations:
-          required: true
+          isRequired: true
       technicalManager:
         model: user
         inverse: false

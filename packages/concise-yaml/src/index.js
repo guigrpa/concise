@@ -4,6 +4,11 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import type { Schema, InputProcessor, OutputProcessor } from 'concise-types';
 
+/* --
+Input/output.
+
+No specific options.
+-- */
 type InputOptions = {
   file?: string,
   raw?: string,

@@ -6,6 +6,11 @@ import fs from 'fs';
 import type { Schema, OutputProcessor, SchemaUtils } from 'concise-types';
 import upperFirst from 'lodash.upperfirst';
 
+/* --
+Output-only.
+
+No specific options.
+-- */
 type OutputOptions = {
   file?: string,
 };
@@ -61,11 +66,11 @@ const writeType = (models, modelName) => {
 };
 
 const writeField = (name, specs: any) => {
-  const required = specs.validations && specs.validations.required ? '' : '?';
+  const isRequired = specs.validations && specs.validations.isRequired ? '' : '?';
   let typeStr = writeFieldType(specs.type);
-  if (specs.plural) typeStr = `Array<${typeStr}>`;
+  if (specs.isPlural) typeStr = `Array<${typeStr}>`;
   const comment = specs.description ? `  // ${specs.description}` : '';
-  return `${name}${required}: ${typeStr},${comment}`;
+  return `${name}${isRequired}: ${typeStr},${comment}`;
 };
 
 const writeFieldType = type => {

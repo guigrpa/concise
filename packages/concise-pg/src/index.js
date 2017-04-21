@@ -5,6 +5,13 @@
 import fs from 'fs';
 import type { Schema, OutputProcessor, SchemaUtils } from 'concise-types';
 
+/* --
+Output-only.
+
+Output options:
+* `schema?` (`string`): PostgreSQL schema; if unspecified, no schema is used
+  in the SQL definitions (which corresponds to the `public` schema)
+-- */
 type OutputOptions = {
   file?: string,
   schema?: string,
@@ -64,7 +71,10 @@ const writeTable = (models, modelName, options) => {
     if (sqlFieldConstraints) sqlConstraints = sqlConstraints.concat(sqlFieldConstraints);
   });
   Object.keys(relations).forEach(relationName => {
-    if (relations[relationName].isInverse) return;
+    if (
+      relations[relationName].isInverse ||
+      relations[relationName].isPlural
+    ) return;
     const { sqlFields: someSqlFields, sqlFieldComment } =
       writeForeignKey(models, modelName, tableName, relationName, options);
     if (someSqlFields) sqlFields = sqlFields.concat(someSqlFields);
@@ -86,6 +96,7 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
   Object.keys(relations).forEach(relationName => {
     const relation = relations[relationName];
     if (relation.isInverse) return;
+    if (relation.isInverse || relation.isPlural) return;
     const fieldName = `${relationName}Id`;
 
     let remoteTableName = `"${relation.model}"`;
@@ -108,7 +119,7 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
 const writeField = (models, modelName, tableName, fieldName) => {
   const field = models[modelName].fields[fieldName];
   const segments = [`"${fieldName}"`, writeFieldType(field)];
-  if (field.validations && field.validations.required) {
+  if (field.validations && field.validations.isRequired) {
     segments.push('NOT NULL');
   }
   const { defaultValue } = field;
@@ -128,12 +139,12 @@ const writeField = (models, modelName, tableName, fieldName) => {
     ? writeComment('COLUMN', `${tableName}."${fieldName}"`, field.description)
     : undefined;
   const sqlFieldConstraints = [];
-  if (field.primaryKey) {
+  if (field.isPrimaryKey) {
     sqlFieldConstraints.push(
       `CONSTRAINT "${modelName}_pk_${fieldName}" PRIMARY KEY ("${fieldName}")`,
     );
   }
-  if (field.validations && field.validations.unique) {
+  if (field.validations && field.validations.isUnique) {
     sqlFieldConstraints.push(
       `CONSTRAINT "${modelName}_unique_${fieldName}" UNIQUE ("${fieldName}")`,
     );
@@ -145,11 +156,11 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
   const relation = models[modelName].relations[relationName];
   const fieldName = `${relationName}Id`;
   const sqlFields = [];
-  const required = relation.validations && relation.validations.required;
+  const isRequired = relation.validations && relation.validations.isRequired;
 
   // Foreign key
   const segments = [`"${fieldName}"`, writeFieldType(relation)];
-  if (required) segments.push('NOT NULL');
+  if (isRequired) segments.push('NOT NULL');
   sqlFields.push(segments.join(' '));
 
   const sqlFieldComment = relation.description
@@ -160,8 +171,8 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
 
 const writeFieldType = (field: any) => {
   const { type } = field;
-  if (type === 'string') return field.long ? 'text' : 'character varying(255)';
-  if (type === 'number') return field.float ? 'double precision' : 'integer';
+  if (type === 'string') return field.isLong ? 'text' : 'character varying(255)';
+  if (type === 'number') return field.isFloat ? 'double precision' : 'integer';
   if (type === 'date') return 'timestamp with time zone';
   if (type === 'json') return 'jsonb';
   return field.type;

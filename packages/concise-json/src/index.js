@@ -3,6 +3,12 @@
 import fs from 'fs';
 import type { Schema, InputProcessor, OutputProcessor } from 'concise-types';
 
+/* --
+Input/output.
+
+Output options:
+* `prettyJson?` (`boolean` = `false`): prettify JSON output
+-- */
 type InputOptions = {
   file?: string,
   raw?: string,

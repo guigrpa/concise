@@ -26,7 +26,7 @@ export type Model = {
   // Include other models in this one
   includes?: MapOf<ModelName, true>,
   // This model is only for inclusion in other models
-  includeOnly?: boolean,
+  isIncludeOnly?: boolean,
 };
 
 export type ProcessedModel = {
@@ -49,11 +49,11 @@ export type FieldType =
   | 'date';
 
 export type Field =
-  | (FieldBase & { type: 'string', long?: boolean, defaultValue?: string })
+  | (FieldBase & { type: 'string', isLong?: boolean, defaultValue?: string })
   | (FieldBase & { type: 'boolean', defaultValue?: boolean })
   | (FieldBase & { type: 'uuid', defaultValue?: string })
   | (FieldBase & { type: 'json', defaultValue?: any })
-  | (FieldBase & { type: 'number', float?: boolean, defaultValue?: number })
+  | (FieldBase & { type: 'number', isFloat?: boolean, defaultValue?: number })
   | (FieldBase & {
     type: 'date',
     noDate?: boolean,
@@ -62,14 +62,14 @@ export type Field =
   });
 
 export type FieldBase = {
-  primaryKey?: boolean,
+  isPrimaryKey?: boolean,
   description?: Description,
   validations?: FieldValidations,
 };
 
 export type FieldValidations = {
-  required?: boolean,
-  unique?: boolean,
+  isRequired?: boolean,
+  isUnique?: boolean,
   // TBW...
 };
 
@@ -90,14 +90,14 @@ export type Relation =
       description?: Description,
       validations?: FieldValidations,
       model?: ModelName, // default: relation name
-      plural?: boolean, // default: false
+      isPlural?: boolean, // default: false
       fkName?: string,
       inverse?:  // default: true
         | boolean
         | {
             description?: Description,
-            plural?: boolean, // default: true
-            name?: FieldName, // default: inferred from model name + plural field
+            isPlural?: boolean, // default: true
+            name?: FieldName, // default: inferred from model name + isPlural field
           },
     };
 
@@ -106,9 +106,10 @@ export type ProcessedRelation = {
   validations?: FieldValidations,
   type: FieldType,
   model: ModelName,
-  plural: boolean,
+  isPlural: boolean,
   fkName: string,
   isInverse: boolean,
+  inverseName: ?FieldName,
 };
 
 // ====================================

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`preprocessSchema should complete a shorthand relation 1`] = `
+exports[`preprocessSchema allows custom inverse relations (name) 1`] = `
 Object {
   "models": Object {
     "person": Object {
@@ -8,16 +8,14 @@ Object {
         "id": Object {
           "type": "string",
         },
-        "name": Object {
-          "type": "string",
-        },
       },
       "relations": Object {
-        "posts": Object {
-          "fkName": "postIds",
+        "createdPosts": Object {
+          "fkName": "createdPostIds",
+          "inverseName": "person",
           "isInverse": true,
+          "isPlural": true,
           "model": "post",
-          "plural": true,
           "type": "string",
           "validations": Object {},
         },
@@ -28,16 +26,14 @@ Object {
         "id": Object {
           "type": "string",
         },
-        "title": Object {
-          "type": "string",
-        },
       },
       "relations": Object {
         "person": Object {
           "fkName": "personId",
+          "inverseName": "createdPosts",
           "isInverse": false,
+          "isPlural": false,
           "model": "person",
-          "plural": false,
           "type": "string",
           "validations": Object {},
         },
@@ -47,7 +43,171 @@ Object {
 }
 `;
 
-exports[`preprocessSchema should process included fields 1`] = `
+exports[`preprocessSchema allows custom inverse relations (singular) 1`] = `
+Object {
+  "models": Object {
+    "address": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "person": Object {
+          "fkName": "personId",
+          "inverseName": "address",
+          "isInverse": false,
+          "isPlural": false,
+          "model": "person",
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+    "person": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "address": Object {
+          "fkName": "addressId",
+          "inverseName": "person",
+          "isInverse": true,
+          "isPlural": false,
+          "model": "address",
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`preprocessSchema allows disabling inverse relations 1`] = `
+Object {
+  "models": Object {
+    "person": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {},
+    },
+    "post": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "person": Object {
+          "fkName": "personId",
+          "inverseName": null,
+          "isInverse": false,
+          "isPlural": false,
+          "model": "person",
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`preprocessSchema completes custom relations 1`] = `
+Object {
+  "models": Object {
+    "person": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "posts": Object {
+          "fkName": "postIds",
+          "inverseName": "author",
+          "isInverse": true,
+          "isPlural": true,
+          "model": "post",
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+    "post": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "author": Object {
+          "fkName": "authorId",
+          "inverseName": "posts",
+          "isInverse": false,
+          "isPlural": false,
+          "model": "person",
+          "type": "string",
+          "validations": Object {
+            "required": true,
+          },
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`preprocessSchema processes a shorthand relation 1`] = `
+Object {
+  "models": Object {
+    "person": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "posts": Object {
+          "fkName": "postIds",
+          "inverseName": "person",
+          "isInverse": true,
+          "isPlural": true,
+          "model": "post",
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+    "post": Object {
+      "fields": Object {
+        "id": Object {
+          "type": "string",
+        },
+      },
+      "relations": Object {
+        "person": Object {
+          "fkName": "personId",
+          "inverseName": "posts",
+          "isInverse": false,
+          "isPlural": false,
+          "model": "person",
+          "type": "string",
+          "validations": Object {},
+        },
+      },
+    },
+  },
+}
+`;
+
+exports[`preprocessSchema processes included fields 1`] = `
 Object {
   "models": Object {
     "person": Object {
@@ -65,7 +225,7 @@ Object {
 }
 `;
 
-exports[`preprocessSchema should respect unknown schema attributes 1`] = `
+exports[`preprocessSchema respects unknown schema attributes 1`] = `
 Object {
   "models": Object {
     "person": Object {

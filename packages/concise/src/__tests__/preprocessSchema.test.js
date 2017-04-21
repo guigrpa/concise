@@ -3,7 +3,7 @@
 import preprocessSchema from '../preprocessSchema';
 
 describe('preprocessSchema', () => {
-  it('should respect unknown schema attributes', () => {
+  it('respects unknown schema attributes', () => {
     const processedSchema = preprocessSchema({
       models: {
         person: {
@@ -18,14 +18,12 @@ describe('preprocessSchema', () => {
     expect(processedSchema).toMatchSnapshot();
   });
 
-  it('should process included fields', () => {
+  it('processes included fields', () => {
     const processedSchema = preprocessSchema({
       models: {
         common: {
-          includeOnly: true,
-          fields: {
-            id: { type: 'string' },
-          },
+          isIncludeOnly: true,
+          fields: { id: { type: 'string' } },
         },
         person: {
           includes: { common: true },
@@ -38,22 +36,100 @@ describe('preprocessSchema', () => {
     expect(processedSchema).toMatchSnapshot();
   });
 
-  it('should complete a shorthand relation', () => {
+  it('processes a shorthand relation', () => {
+    const schema = {
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+        },
+        post: {
+          fields: { id: { type: 'string' } },
+          relations: {
+            person: true,
+          },
+        },
+      },
+    };
+    const processedSchema = preprocessSchema(schema);
+    expect(processedSchema).toMatchSnapshot();
+    // Alternatively, the relation can be defined as an empty object
+    schema.models.post.relations.person = {};
+    expect(preprocessSchema(schema)).toEqual(processedSchema);
+  });
+
+  it('completes custom relations', () => {
+    const schema = {
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+        },
+        post: {
+          fields: { id: { type: 'string' } },
+          relations: {
+            author: {
+              model: 'person',
+              validations: { required: true },
+            },
+          },
+        },
+      },
+    };
+    const processedSchema = preprocessSchema(schema);
+    expect(processedSchema).toMatchSnapshot();
+    // must be immutable!
+    expect(processedSchema).not.toBe(schema);
+  });
+
+  it('allows disabling inverse relations', () => {
     const processedSchema = preprocessSchema({
       models: {
         person: {
-          fields: {
-            id: { type: 'string' },
-            name: { type: 'string' },
-          },
+          fields: { id: { type: 'string' } },
         },
         post: {
-          fields: {
-            id: { type: 'string' },
-            title: { type: 'string' },
-          },
+          fields: { id: { type: 'string' } },
           relations: {
-            person: true,
+            person: {
+              inverse: false,
+            },
+          },
+        },
+      },
+    });
+    expect(processedSchema).toMatchSnapshot();
+  });
+
+  it('allows custom inverse relations (name)', () => {
+    const processedSchema = preprocessSchema({
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+        },
+        post: {
+          fields: { id: { type: 'string' } },
+          relations: {
+            person: {
+              inverse: { name: 'createdPosts' },
+            },
+          },
+        },
+      },
+    });
+    expect(processedSchema).toMatchSnapshot();
+  });
+
+  it('allows custom inverse relations (singular)', () => {
+    const processedSchema = preprocessSchema({
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+        },
+        address: {
+          fields: { id: { type: 'string' } },
+          relations: {
+            person: {
+              inverse: { isPlural: false },
+            },
           },
         },
       },

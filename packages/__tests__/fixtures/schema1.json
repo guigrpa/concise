@@ -1,15 +1,15 @@
 {
   "models": {
     "common": {
-      "includeOnly": true,
+      "isIncludeOnly": true,
       "fields": {
         "id": {
           "type": "uuid",
-          "primaryKey": true
+          "isPrimaryKey": true
         },
         "notes": {
           "type": "string",
-          "long": true
+          "isLong": true
         }
       }
     },
@@ -23,8 +23,8 @@
           "description": "Name of the user",
           "type": "string",
           "validations": {
-            "required": true,
-            "unique": true
+            "isRequired": true,
+            "isUnique": true
           }
         },
         "surname": {
@@ -33,7 +33,7 @@
         "aBoolean": {
           "type": "boolean",
           "validations": {
-            "required": true
+            "isRequired": true
           },
           "default": false
         }
@@ -52,7 +52,7 @@
         "projectManager": {
           "model": "user",
           "validations": {
-            "required": true
+            "isRequired": true
           }
         },
         "technicalManager": {
