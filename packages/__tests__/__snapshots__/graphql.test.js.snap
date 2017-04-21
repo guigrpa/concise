@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`GraphQL schema output schema1.yaml + schema2.yaml -> GraphQL 1`] = `
-"# User
-# A user of the platform
+"# User: A user of the platform
 type User {
   id: ID!
   notes: String
-  name: String!  # Name of the user
+  # Name of the user
+  name: String!
   surname: String
   aBoolean: Boolean!
   projects: [Project]
@@ -25,16 +25,22 @@ type Project {
   creator: User
 }
 
+# Root query
+type Query {
+  users: [User]
+  projects: [Project]
+}
+
 "
 `;
 
 exports[`GraphQL schema output schema1.yaml -> GraphQL 1`] = `
-"# User
-# A user of the platform
+"# User: A user of the platform
 type User {
   id: ID!
   notes: String
-  name: String!  # Name of the user
+  # Name of the user
+  name: String!
   surname: String
   aBoolean: Boolean!
   projects: [Project]
@@ -47,6 +53,12 @@ type Project {
   name: String
   projectManager: User!
   technicalManager: User
+}
+
+# Root query
+type Query {
+  users: [User]
+  projects: [Project]
 }
 
 "

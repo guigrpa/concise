@@ -10,8 +10,8 @@ import upperFirst from 'lodash.upperfirst';
 Output-only.
 
 Output options:
-* `relay?` (`boolean` = `false`): include `Node` interface,
-  define connections, etc.
+* `relay?` (`boolean` = `false`): include `Node` interface
+  and `node` root field, define connections, etc.
 -- */
 type OutputOptions = {
   file?: string,
@@ -39,7 +39,7 @@ const writeTypes = ({ models }, options) => {
   let out = '';
   const relay = options.relay;
   if (relay) {
-    out += (
+    out +=
       '# An object with an ID\n' +
       'interface Node {\n' +
       '  # The id of the object\n' +
@@ -55,15 +55,26 @@ const writeTypes = ({ models }, options) => {
       '  startCursor: String\n' +
       '  # When paginating forwards, the cursor to continue\n' +
       '  endCursor: String\n' +
-      '}\n\n'
-    );
+      '}\n\n';
   }
   Object.keys(models).forEach(modelName => {
     out += writeType(models, modelName, options);
   });
-  if (relay) {
-    out += writeRelayConnections(models);
-  }
+  const querySpecs = Object.keys(models).map(modelName => {
+    const { plural } = models[modelName];
+    const typeStr = relay
+      ? `${upperFirst(modelName)}Connection`
+      : `[${upperFirst(modelName)}]`;
+    return `  ${plural}: ${typeStr}\n`;
+  });
+  if (relay) querySpecs.unshift('  node: Node\n')
+  out += (
+    '# Root query\n' +
+    'type Query {\n' +
+    querySpecs.join('') +
+    '}\n\n'
+  );
+  if (relay) out += writeRelayConnections(models);
   return out;
 };
 
@@ -71,25 +82,28 @@ const writeType = (models, modelName, options) => {
   const { description, fields = {}, relations = {} } = models[modelName];
   const upperModelName: string = upperFirst(modelName);
   const implementsStr = options.relay ? ' implements Node' : '';
-  const allSpecs = [];
+  let allSpecs = [];
   Object.keys(fields).forEach(fieldName => {
-    allSpecs.push(writeField(fieldName, fields[fieldName], options));
+    allSpecs = allSpecs.concat(writeField(fieldName, fields[fieldName], options));
   });
   Object.keys(relations).forEach(fieldName => {
-    allSpecs.push(writeField(fieldName, relations[fieldName], options));
+    allSpecs = allSpecs.concat(writeField(fieldName, relations[fieldName], options));
   });
   const contents = allSpecs.length ? `\n  ${allSpecs.join('\n  ')}\n` : '';
+  let comment = `# ${upperModelName}`;
+  if (description) comment += `: ${description}`;
   return (
-    `# ${upperModelName}\n` +
-    (description ? `# ${description}\n` : '') +
+    `${comment}\n` +
     `type ${upperModelName}${implementsStr} {${contents}}\n\n`
   );
 };
 
 const writeField = (name, specs: any, options) => {
   const typeStr = writeFieldType(specs, options);
-  const comment = specs.description ? `  # ${specs.description}` : '';
-  return `${name}: ${typeStr}${comment}`;
+  const out = [];
+  if (specs.description) out.push(`# ${specs.description}`);
+  out.push(`${name}: ${typeStr}`);
+  return out;
 };
 
 const writeFieldType = (specs, options) => {
@@ -107,7 +121,7 @@ const writeFieldType = (specs, options) => {
   return out;
 };
 
-const writeRelayConnections = (models) => {
+const writeRelayConnections = models => {
   let out = '';
   const keys = {};
   Object.keys(models).forEach(modelName => {
@@ -117,7 +131,7 @@ const writeRelayConnections = (models) => {
       if (!relation.isPlural || keys[relation.model]) return;
       keys[relation.model] = true;
       const upperModelName: string = upperFirst(relation.model);
-      out += (
+      out +=
         `type ${upperModelName}Connection {\n` +
         '  pageInfo: PageInfo!\n' +
         `  edges: [${upperModelName}Edge]\n` +
@@ -125,8 +139,7 @@ const writeRelayConnections = (models) => {
         `type ${upperModelName}Edge {\n` +
         `  node: ${upperModelName}\n` +
         '  cursor: String!\n' +
-        '}\n\n'
-      );
+        '}\n\n';
     });
   });
   return out;
