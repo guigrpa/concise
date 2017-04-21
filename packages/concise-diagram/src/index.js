@@ -123,7 +123,7 @@ const writeEdge = (
     props.push(`headtooltip="${description}"`);
     props.push(`labeltooltip="${description}"`);
   }
-  props.push(`arrowhead=${isPlural ? 'crow' : 'normal'}`);
+  props.push(`arrowhead=${isPlural ? 'empty' : 'normal'}`);
   if (inverseName != null) {
     const inverse = models[relation.model].relations[inverseName];
     if (!inverse) {
@@ -132,7 +132,7 @@ const writeEdge = (
       );
     }
     props.push('dir=both');
-    props.push(`arrowtail=${inverse.isPlural ? 'crow' : 'normal'}`);
+    props.push(`arrowtail=${inverse.isPlural ? 'empty' : 'normal'}`);
   }
   if (!isRequired) props.push('style=dotted');
   let edge = `${modelName} -> ${relation.model}`;
