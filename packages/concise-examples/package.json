@@ -16,6 +16,8 @@
     "concise-types": "^0.0.0"
   },
   "dependencies": {
+    "graphql": "^0.9.3",
+    "graphql-tools": "^0.11.0",
     "concise-yaml": "^0.0.0",
     "concise": "^0.0.0",
     "concise-json": "^0.0.0",
