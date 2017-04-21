@@ -19,7 +19,7 @@ const run = async () => {
   });
   await concise.output(outputGraphql, {
     file: path.join(__dirname, 'playBookings.graphql'),
-    useRelayConventions: true,
+    relay: true,
   });
   await concise.output(outputPg, {
     file: path.join(__dirname, 'playBookings.sql'),
