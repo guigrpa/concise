@@ -51,20 +51,22 @@ export type FieldType =
   | 'date';
 
 export type Field =
-  | (FieldBase & { type: 'string', isLong?: boolean, defaultValue?: string })
-  | (FieldBase & { type: 'boolean', defaultValue?: boolean })
-  | (FieldBase & { type: 'uuid', defaultValue?: string })
-  | (FieldBase & { type: 'json', defaultValue?: any })
-  | (FieldBase & { type: 'number', isFloat?: boolean, defaultValue?: number })
-  | (FieldBase & {
+  | { ...FieldBase, type: 'string', isLong?: boolean, defaultValue?: string }
+  | { ...FieldBase, type: 'boolean', defaultValue?: boolean }
+  | { ...FieldBase, type: 'uuid', defaultValue?: string }
+  | { ...FieldBase, type: 'json', defaultValue?: any }
+  | { ...FieldBase, type: 'number', isFloat?: boolean, defaultValue?: number }
+  | {
+    ...FieldBase,
     type: 'date',
     noDate?: boolean,
     noTime?: boolean,
     defaultValue?: Date,
-  });
+  };
 
 export type FieldBase = {
   isPrimaryKey?: boolean,
+  isAutoIncrement?: boolean,
   description?: Description,
   validations?: FieldValidations,
 };

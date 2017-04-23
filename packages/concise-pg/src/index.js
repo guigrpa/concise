@@ -129,7 +129,7 @@ const writeField = (models, modelName, tableName, fieldName) => {
     } else if (defaultValue instanceof Date) {
       segments.push(`DEFAULT '${defaultValue.toISOString()}'`);
     } else {
-      segments.push(`DEFAULT '${defaultValue}'`);
+      segments.push(`DEFAULT '${String(defaultValue)}'`);
     }
   } else if (field.type === 'uuid') {
     segments.push('DEFAULT uuid_generate_v1mc()');
