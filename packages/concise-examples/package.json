@@ -18,12 +18,15 @@
   "dependencies": {
     "graphql": "^0.9.3",
     "graphql-tools": "^0.11.0",
+    "pg": "^6.1.5",
+    "sequelize": "^3.30.4",
     "concise-yaml": "^0.0.0",
     "concise": "^0.0.0",
     "concise-json": "^0.0.0",
     "concise-pg": "^0.0.0",
     "concise-flow": "^0.0.0",
     "concise-graphql": "^0.0.0",
-    "concise-diagram": "^0.0.0"
+    "concise-diagram": "^0.0.0",
+    "concise-sequelize": "^0.0.0"
   }
 }
