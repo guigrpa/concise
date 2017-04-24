@@ -66,15 +66,35 @@ export type Field =
 
 export type FieldBase = {
   isPrimaryKey?: boolean,
-  isAutoIncrement?: boolean,
+  isAutoIncremented?: boolean,
+  isMassAssigned?: boolean,  // default: true
+  isPublic?: boolean,  // default: true
+  existsInServer?: boolean,  // default: true
+  existsInClient?: boolean,  // default: true
   description?: Description,
   validations?: FieldValidations,
 };
 
 export type FieldValidations = {
+  // Generic
   isRequired?: boolean,
   isUnique?: boolean,
-  // TBW...
+  isOneOf?: Array<any>,
+  // Strings
+  hasAtLeastChars?: number,
+  hasAtMostChars?: number,
+  hasLengthWithinRange?: [number, number],  // min, max
+  isEmail?: boolean,
+  isUrl?: boolean,
+  isIp?: boolean,  // v4/v6
+  isCreditCard?: boolean,
+  matchesPattern?: [string, string],  // pattern, modifiers
+  // Numbers
+  isGte?: number,
+  isLte?: number,
+  isWithinRange?: [number, number],  // min, max
+  // Custom, e.g. `val => { if (val === 3) throw new Error('Val must be 3!'); }`
+  satisfies?: string,  // SECURITY NOTICE: HANDLE CAREFULLY
 };
 
 export type ProcessedField = Field;
@@ -103,6 +123,11 @@ export type Relation =
             isPlural?: boolean, // default: true
             name?: FieldName, // default: inferred from model name + isPlural field
           },
+      // Disable referential integrity in Sequelize?
+      // Needed due to Sequelize limitation, which cannot handle two tables
+      // with FKs to one other
+      // See http://docs.sequelizejs.com/en/latest/docs/associations/#foreign-keys_1
+      sequelizeSkipReferentialIntegrity?: boolean,
     };
 
 export type ProcessedRelation = {
@@ -114,6 +139,8 @@ export type ProcessedRelation = {
   fkName: string,
   isInverse: boolean,
   inverseName: ?FieldName,
+  // See above
+  sequelizeSkipReferentialIntegrity?: boolean,
 };
 
 // ====================================

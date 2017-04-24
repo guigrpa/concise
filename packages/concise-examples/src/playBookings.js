@@ -31,6 +31,7 @@ const run = async () => {
     file: path.join(__dirname, 'playBookings.sql'),
   });
   await concise.output(outputSequelize, {
+    Sequelize,
     sequelize: new Sequelize('postgres://postgres@localhost:5432/example'),
   });
 };

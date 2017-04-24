@@ -1,10 +1,10 @@
 models:
   common:
-    isIncludeOnly:          true
+    isIncludeOnly:        true
     fields:
       id:
         type:             'string'
-        isPrimaryKey:       true
+        isPrimaryKey:     true
       isDeleted:
         type:             'boolean'
         defaultValue:     false
@@ -56,8 +56,8 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
-          isUnique:         true
+          hasAtLeastChars: 1
+          isUnique:       true
       hash:
         type:             'string'
   # -----------------------------------------------
@@ -75,7 +75,7 @@ models:
       name:
         type:             'string'
         validations:
-          isUnique:         true
+          isUnique:       true
       notes:
         type:             'string'
         isLong:           true
@@ -88,7 +88,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
       acronym:
         type:             'string'
       t0:
@@ -113,10 +113,12 @@ models:
         model:            'person'
         description:      "Person managing the project, DA BOSS"
         inverse:          false
+        sequelizeSkipReferentialIntegrity: true
       technicalManager:
         model:            'person'
         description:      "Person coordinating all technical matters of the project"
         inverse:          false
+        sequelizeSkipReferentialIntegrity: true
   # -----------------------------------------------
   company:
     includes:
@@ -126,7 +128,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
       address:
         type:             'string'
       cityForMeetings:
@@ -138,7 +140,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
       pmRate:
         type:             'number'
         isFloat:          true
@@ -157,7 +159,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
       department:
         type:             'string'
       position:
@@ -169,7 +171,7 @@ models:
       email:
         type:             'string'
         validations:
-          email:          true
+          isEmail:        true
       notes:
         type:             'string'
         isLong:           true
@@ -177,7 +179,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
     relations:
       project:
         validations: { isRequired: true }
@@ -207,7 +209,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
     relations:
       project:
         validations: { isRequired: true }
@@ -220,7 +222,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
       title:
         type:             'string'
       isHeader:
@@ -236,8 +238,6 @@ models:
         type:             'string'
       assumptions:
         type:             'string'
-      parentId:
-        type:             'number'
     relations:
       project:
         validations: { isRequired: true }
@@ -269,7 +269,7 @@ models:
         type:             'string'
         validations:
           isRequired:     true
-          notBlank:       true
+          hasAtLeastChars: 1
       plannedDelta:
         type:             'number'
         isFloat:          true
