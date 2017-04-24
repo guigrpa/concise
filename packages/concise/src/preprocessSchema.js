@@ -112,19 +112,20 @@ const processRelations = models => {
           inverseName: relationName,
         });
         const idField2 = models[modelName].fields.id;
-        if (!idField2) throw new Error(`ID_FIELD_NOT_FOUND ${modelName}`);
-        inverseRelation.type = idField2.type;
-        const { isPlural } = inverseRelation;
-        const inverseName =
-          (inverse && inverse.name) ||
-          (isPlural ? pluralize(modelName) : modelName);
-        const inverseFkName = getFkName(
-          inverseName,
-          inverseRelation.isPlural != null ? inverseRelation.isPlural : true,
-        );
-        inverseRelation.fkName = inverseFkName;
-        relatedModel.relations[inverseName] = inverseRelation;
-        relation.inverseName = inverseName;
+        if (idField2) {
+          inverseRelation.type = idField2.type;
+          const { isPlural } = inverseRelation;
+          const inverseName =
+            (inverse && inverse.name) ||
+            (isPlural ? pluralize(modelName) : modelName);
+          const inverseFkName = getFkName(
+            inverseName,
+            inverseRelation.isPlural != null ? inverseRelation.isPlural : true,
+          );
+          inverseRelation.fkName = inverseFkName;
+          relatedModel.relations[inverseName] = inverseRelation;
+          relation.inverseName = inverseName;
+        }
       } else {
         relation.inverseName = null;
       }
