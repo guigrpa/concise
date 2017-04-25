@@ -6,6 +6,7 @@ import { singularize, pluralize } from 'inflection';
 
 const preprocess = (schema: Schema): ProcessedSchema => {
   const out: Object = {};
+  out.authRules = [];
   Object.keys(schema).forEach(key => {
     let val = schema[key];
     if (key === 'models') val = processModels(val);

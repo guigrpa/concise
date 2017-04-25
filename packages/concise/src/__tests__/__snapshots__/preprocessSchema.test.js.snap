@@ -2,6 +2,7 @@
 
 exports[`preprocessSchema allows custom inverse relations (name) 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "person": Object {
       "fields": Object {
@@ -49,6 +50,7 @@ Object {
 
 exports[`preprocessSchema allows custom inverse relations (singular) 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "address": Object {
       "fields": Object {
@@ -96,6 +98,7 @@ Object {
 
 exports[`preprocessSchema allows disabling inverse relations 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "person": Object {
       "fields": Object {
@@ -133,6 +136,7 @@ Object {
 
 exports[`preprocessSchema completes custom relations 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "person": Object {
       "fields": Object {
@@ -182,6 +186,7 @@ Object {
 
 exports[`preprocessSchema processes a shorthand relation 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "person": Object {
       "fields": Object {
@@ -229,6 +234,7 @@ Object {
 
 exports[`preprocessSchema processes included fields 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "person": Object {
       "fields": Object {
@@ -249,6 +255,7 @@ Object {
 
 exports[`preprocessSchema respects unknown schema attributes 1`] = `
 Object {
+  "authRules": Array [],
   "models": Object {
     "person": Object {
       "fields": Object {

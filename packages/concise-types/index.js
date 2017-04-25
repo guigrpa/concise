@@ -5,12 +5,14 @@ export type MapOf<A, B> = { [key: A]: B };
 // User-provided schema
 export type Schema = {
   models: MapOf<ModelName, Model>,
+  authRules?: Array<AuthRule>,
   // can have additional specs
 };
 
 // Preprocessed schema (required by some plugins)
 export type ProcessedSchema = {
   models: MapOf<ModelName, ProcessedModel>,
+  authRules: Array<AuthRule>,
 };
 
 // ====================================
@@ -57,25 +59,23 @@ export type Field =
   | { ...FieldBase, type: 'json', defaultValue?: any }
   | { ...FieldBase, type: 'number', isFloat?: boolean, defaultValue?: number }
   | {
-    ...FieldBase,
-    type: 'date',
-    noDate?: boolean,
-    noTime?: boolean,
-    defaultValue?: Date,
-  };
+      ...FieldBase,
+      type: 'date',
+      noDate?: boolean,
+      noTime?: boolean,
+      defaultValue?: Date,
+    };
 
 export type FieldBase = {
+  description?: Description,
+  validations?: Validations,
+  existsInServer?: boolean, // default: true
+  existsInClient?: boolean, // default: true
   isPrimaryKey?: boolean,
   isAutoIncremented?: boolean,
-  isMassAssigned?: boolean,  // default: true
-  isPublic?: boolean,  // default: true
-  existsInServer?: boolean,  // default: true
-  existsInClient?: boolean,  // default: true
-  description?: Description,
-  validations?: FieldValidations,
 };
 
-export type FieldValidations = {
+export type Validations = {
   // Generic
   isRequired?: boolean,
   isUnique?: boolean,
@@ -83,18 +83,18 @@ export type FieldValidations = {
   // Strings
   hasAtLeastChars?: number,
   hasAtMostChars?: number,
-  hasLengthWithinRange?: [number, number],  // min, max
+  hasLengthWithinRange?: [number, number], // min, max
   isEmail?: boolean,
   isUrl?: boolean,
-  isIp?: boolean,  // v4/v6
+  isIp?: boolean, // v4/v6
   isCreditCard?: boolean,
-  matchesPattern?: [string, string],  // pattern, modifiers
+  matchesPattern?: [string, string], // pattern, modifiers
   // Numbers
   isGte?: number,
   isLte?: number,
-  isWithinRange?: [number, number],  // min, max
+  isWithinRange?: [number, number], // min, max
   // Custom, e.g. `val => { if (val === 3) throw new Error('Val must be 3!'); }`
-  satisfies?: string,  // SECURITY NOTICE: HANDLE CAREFULLY
+  satisfies?: string, // SECURITY NOTICE: HANDLE CAREFULLY
 };
 
 export type ProcessedField = Field;
@@ -112,7 +112,7 @@ export type Relation =
   | true
   | {
       description?: Description,
-      validations?: FieldValidations,
+      validations?: Validations,
       model?: ModelName, // default: relation name
       isPlural?: boolean, // default: false
       fkName?: string,
@@ -132,7 +132,7 @@ export type Relation =
 
 export type ProcessedRelation = {
   description?: Description,
-  validations?: FieldValidations,
+  validations?: Validations,
   type: FieldType,
   model: ModelName,
   isPlural: boolean,
@@ -142,6 +142,54 @@ export type ProcessedRelation = {
   // See above
   sequelizeSkipReferentialIntegrity?: boolean,
 };
+
+// ====================================
+// AuthRule
+// ====================================
+// Notes:
+// - The first matching rule wins
+// - If there is no matching rule, the operation is rejected
+// Custom `can` may receive (depending on the plugin):
+// - `isClientSide`
+// - `operation`
+// - `user`, `userId`, `roleNames`
+// - `baseType`, `baseNode`
+// - `fieldName`, `fieldArgs`, `fieldType`, `fieldId`
+// - `fieldValue`, `newFieldValue`
+// - `godQuery`, `checkRouteToNode`
+// - `db`
+// ...and returns `boolean | null | Promise<boolean|null>`
+// (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
+export type AuthRule = {
+  isClientSide?: AuthRuleSingularValue<boolean>,
+  operation?: AuthRuleSingularValue<AuthOperation>,
+  userId?: AuthRuleSingularValue<any>,
+  roleNames?: AuthRulePluralValue<any>,
+  baseType?: null | AuthRuleSingularValue<string>,  // null when request has no prior info (null -> node in a graph)
+  fieldName?: AuthRuleSingularValue<string>,  // a 'field' here may be a model, a model attribute (field) or a relation name (think graph-wise)
+  fieldType?: AuthRuleSingularValue<string>,
+  fieldId?: AuthRuleSingularValue<any>,
+  fieldValue?: AuthRuleSingularValue<any>,
+  newFieldValue?: AuthRuleSingularValue<any>,
+  canIfSatisfiesCheckUserIdFromNode?: string | Array<string>, // e.g. `project|users|edges|node|id` (from a Company instance)
+  canIfSatisfiesCheckNodeIdFromUser?: string | Array<string>, // e.g. `id` (from a User instance)
+  can: boolean | string /* custom fn (see above) */,
+};
+
+export type AuthOperation = 'read' | 'write';
+
+export type AuthRuleSingularValue<T> =
+  | T
+  | { $is: T }
+  | { $isnt: T }
+  | { $in: Array<T> }
+  | { $notIn: Array<T> };
+
+export type AuthRulePluralValue<T> =
+  | { $include: T }
+  | { $dontInclude: T }
+  | { $includeAny: Array<T> }
+  | { $dontIncludeAny: Array<T> };
 
 // ====================================
 // Helper types
