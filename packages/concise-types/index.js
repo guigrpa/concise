@@ -150,36 +150,48 @@ export type ProcessedRelation = {
 // - The first matching rule wins
 // - If there is no matching rule, the operation is rejected
 // Custom `can` may receive (depending on the plugin):
-// - `isClientSide`
+// - `viewer`, `viewerId`, `roleNames`
 // - `operation`
-// - `user`, `userId`, `roleNames`
-// - `baseType`, `baseNode`
-// - `fieldName`, `fieldArgs`, `fieldType`, `fieldId`
-// - `fieldValue`, `newFieldValue`
+// - `baseModel`, `base`
+// - `targetName`, `targetArgs`, `targetType`, `targetId`
+// - `targetBefore`, `targetAfter`
+// - `isClientSide`
 // - `godQuery`, `checkRouteToNode`
 // - `db`
 // ...and returns `boolean | null | Promise<boolean|null>`
 // (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
 export type AuthRule = {
-  isClientSide?: AuthRuleSingularValue<boolean>,
-  operation?: AuthRuleSingularValue<AuthOperation>,
-  userId?: AuthRuleSingularValue<any>,
+  // who?
+  viewerId?: AuthRuleSingularValue<any>,
   roleNames?: AuthRulePluralValue<any>,
-  baseType?: null | AuthRuleSingularValue<string>,  // null when request has no prior info (null -> node in a graph)
-  fieldName?: AuthRuleSingularValue<string>,  // a 'field' here may be a model, a model attribute (field) or a relation name (think graph-wise)
-  fieldType?: AuthRuleSingularValue<string>,  // only applicable for null -> node
-  fieldId?: AuthRuleSingularValue<any>,  // only applicable for null -> node
-  // Think about a better classification
-  // - null -> node
-  // - node -> field/relation name
-  fieldValue?: AuthRuleSingularValue<any>,
-  newFieldValue?: AuthRuleSingularValue<any>,
-  canIfSatisfiesCheckUserIdFromNode?: string | Array<string>, // e.g. `project|users|edges|node|id` (from a Company instance)
-  canIfSatisfiesCheckNodeIdFromUser?: string | Array<string>, // e.g. `id` (from a User instance)
+
+  // what?
+  operation?: 'read' | 'write',
+  baseModel?: null | AuthRuleSingularValue<string>,  // `null` for "null -> node"
+  targetName?: AuthRuleSingularValue<string>,  // a model or a field/relation (think graph-wise)
+  targetType?: AuthRuleSingularValue<ModelName>,  // [only for "null -> node"] model name
+  targetId?: AuthRuleSingularValue<any>,  // [only for "null -> node"] model instance ID (node ID)
+  targetBefore?: AuthRuleSingularValue<any>,
+  targetAfter?: AuthRuleSingularValue<any>, // [only for `write`s]
+
+  // where?
+  isClientSide?: AuthRuleSingularValue<boolean>,
+
+  // can? (route checking) - various cases:
+  // - Check that we reach the viewer ID following a certain route from the target
+  //   (e.g. `project|users|edges|node|id` (from a Company instance))
+  // - Check that we reach the target ID following a certain route from the viewer
+  //   (e.g. `_id`, when the user wants to edit his own account)
+  // - Check that we reach the viewer ID following a certain route from the root
+  //   (e.g. `adminIds`, think Firebase)
+  canIfFindsViewerIdFromTargetBefore?: string | Array<string>, // when array: AND'd
+  canIfFindsViewerIdFromTargetAfter?: string | Array<string>, // when array: AND'd
+  canIfFindsTargetIdFromViewer?: string | Array<string>, // when array: AND'd
+  canIfFindsViewerIdFromRoot?: string | Array<string>, // when array: AND'd
+
+  // can? (generic case)
   can: boolean | string /* custom fn (see above) */,
 };
-
-export type AuthOperation = 'read' | 'write';
 
 export type AuthRuleSingularValue<T> =
   | T
