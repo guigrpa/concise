@@ -167,8 +167,11 @@ export type AuthRule = {
   roleNames?: AuthRulePluralValue<any>,
   baseType?: null | AuthRuleSingularValue<string>,  // null when request has no prior info (null -> node in a graph)
   fieldName?: AuthRuleSingularValue<string>,  // a 'field' here may be a model, a model attribute (field) or a relation name (think graph-wise)
-  fieldType?: AuthRuleSingularValue<string>,
-  fieldId?: AuthRuleSingularValue<any>,
+  fieldType?: AuthRuleSingularValue<string>,  // only applicable for null -> node
+  fieldId?: AuthRuleSingularValue<any>,  // only applicable for null -> node
+  // Think about a better classification
+  // - null -> node
+  // - node -> field/relation name
   fieldValue?: AuthRuleSingularValue<any>,
   newFieldValue?: AuthRuleSingularValue<any>,
   canIfSatisfiesCheckUserIdFromNode?: string | Array<string>, // e.g. `project|users|edges|node|id` (from a Company instance)
