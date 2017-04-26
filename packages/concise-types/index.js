@@ -150,31 +150,18 @@ export type ProcessedRelation = {
 // ====================================
 // AuthRule
 // ====================================
-// Notes:
-// - The first matching rule wins
-// - If there is no matching rule, the operation is rejected
-// Custom `can` may receive (depending on the plugin):
-// - `viewer`, `viewerId`, `roleNames`
-// - `operation`
-// - `baseModel`, `base`
-// - `targetName`, `targetArgs`, `targetType`, `targetId`
-// - `targetBefore`, `targetAfter`
-// - `isClientSide`
-// - `godQuery`, `checkRouteToNode`
-// - `db`
-// ...and returns `boolean | null | Promise<boolean|null>`
-// (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
 export type AuthRule = {
   // who?
   viewerId?: AuthRuleSingularValue<any>,
-  roleNames?: AuthRulePluralValue<any>,
+  roleNames?: AuthRulePluralValue<string>,
 
   // what?
-  operation?: 'read' | 'write',
-  baseModel?: null | AuthRuleSingularValue<string>,  // `null` for "null -> node"
-  targetName?: AuthRuleSingularValue<string>,  // a model or a field/relation (think graph-wise)
-  targetType?: AuthRuleSingularValue<ModelName>,  // [only for "null -> node"] model name
-  targetId?: AuthRuleSingularValue<any>,  // [only for "null -> node"] model instance ID (node ID)
+  operation?: AuthOperation,
+  baseId?: ?AuthRuleSingularValue<any>, // `null` for "null -> node"
+  baseType?: ?AuthRuleSingularValue<string>, // `null` for "null -> node"
+  targetName?: AuthRuleSingularValue<string>, // a model or a field/relation (think graph-wise)
+  targetId?: AuthRuleSingularValue<any>,
+  targetType?: AuthRuleSingularValue<string>,
   targetBefore?: AuthRuleSingularValue<any>,
   targetAfter?: AuthRuleSingularValue<any>, // [only for `write`s]
 
@@ -184,17 +171,41 @@ export type AuthRule = {
   // can? (route checking) - various cases:
   // - Check that we reach the viewer ID following a certain route from the target
   //   (e.g. `project|users|edges|node|id` (from a Company instance))
-  // - Check that we reach the target ID following a certain route from the viewer
-  //   (e.g. `_id`, when the user wants to edit his own account)
   // - Check that we reach the viewer ID following a certain route from the root
   //   (e.g. `adminIds`, think Firebase)
-  canIfFindsViewerIdFromTargetBefore?: string | Array<string>, // when array: AND'd
-  canIfFindsViewerIdFromTargetAfter?: string | Array<string>, // when array: AND'd
-  canIfFindsTargetIdFromViewer?: string | Array<string>, // when array: AND'd
-  canIfFindsViewerIdFromRoot?: string | Array<string>, // when array: AND'd
+  // - Check that we reach the target ID following a certain route from the viewer
+  //   (e.g. `_id`, when the user wants to edit his own account)
+  canIfFindsViewerIdFromTargetBefore?: AuthRoutes,
+  canIfFindsViewerIdFromTargetAfter?: AuthRoutes,
+  canIfFindsViewerIdFromRoot?: AuthRoutes,
+  canIfFindsTargetIdFromViewer?: AuthRoutes,
 
   // can? (generic case)
-  can: boolean | string /* custom fn (see above) */,
+  can?: boolean | string | AuthFunction /* custom fn (see above) */,
+};
+
+export type AuthRequest = {
+  // who?
+  viewerId: any,
+  viewer: any,
+  roleNames: Array<string>,
+
+  // what?
+  operation: AuthOperation,
+  baseId: ?any,
+  baseType: ?string,
+  base: ?any,
+  targetName: string,
+  targetArgs: any,
+  targetId: any,
+  targetType: string,
+  targetBefore?: any,
+  targetAfter?: any,
+
+  // where?
+  isClientSide: boolean,
+
+  // ...may have additional helpers, depending on the plugin
 };
 
 export type AuthRuleSingularValue<T> =
@@ -209,6 +220,14 @@ export type AuthRulePluralValue<T> =
   | { $dontInclude: T }
   | { $includeAny: Array<T> }
   | { $dontIncludeAny: Array<T> };
+
+// when array: AND'd (if OR is desired, repeat rule)
+export type AuthRoutes = string | Array<string>;
+export type AuthOperation = 'read' | 'write';
+
+type AuthFunction = (authRequest: AuthRequest) => AuthResult | Promise<AuthResult>;
+type AuthResult = boolean | null;
+// (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
 
 // ====================================
 // Helper types
