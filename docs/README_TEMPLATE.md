@@ -11,10 +11,10 @@ A tool belt for concise schemas.
     - YAML (`concise-yaml`)
     - JSON (`concise-json`)
     - PostgreSQL SQL (`concise-pg`)
+    - Sequelize ORM (`concise-sequelize`)
     - Flow types (`concise-flow`)
     - GraphQL schema language (`concise-graphql`)
     - Entity-relationship diagram (`concise-diagram`)
-    - Sequelize (*coming up!*)
     - Firebase database rules (*coming up!*)
 * Update your schema in one place!
 
@@ -123,6 +123,10 @@ Output options:
 #### concise-pg
 
 [[[./packages/concise-pg/src/index.js]]]
+
+#### concise-sequelize
+
+[[[./packages/concise-sequelize/src/index.js]]]
 
 #### concise-flow
 

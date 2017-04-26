@@ -11,10 +11,10 @@ A tool belt for concise schemas.
     - YAML (`concise-yaml`)
     - JSON (`concise-json`)
     - PostgreSQL SQL (`concise-pg`)
+    - Sequelize ORM (`concise-sequelize`)
     - Flow types (`concise-flow`)
     - GraphQL schema language (`concise-graphql`)
     - Entity-relationship diagram (`concise-diagram`)
-    - Sequelize (*coming up!*)
     - Firebase database rules (*coming up!*)
 * Update your schema in one place!
 
@@ -132,6 +132,18 @@ Output-only.
 Output options:
 * `schema?` (`string`): PostgreSQL schema; if unspecified, no schema is used
   in the SQL definitions (which corresponds to the `public` schema)
+
+#### concise-sequelize
+
+Output-only.
+
+Output options:
+* `Sequelize` (`Object`): the Sequelize class
+* `sequelize` (`Object`): a Sequelize instance
+* `extensions?` (`MapOf<ModelName, SequelizeExtensions>`): object that
+  associates a given model (or `$all` for all models) to a set of
+  extensions (or customizations). **Description to be completed (see
+  typedefs and tests for the time being)**
 
 #### concise-flow
 
