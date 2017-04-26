@@ -136,4 +136,30 @@ describe('preprocessSchema', () => {
     });
     expect(processedSchema).toMatchSnapshot();
   });
+
+  it('does not modify the original schema', () => {
+    const schema = {
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+        },
+        address: {
+          fields: { id: { type: 'string' } },
+          relations: { person: true },
+        },
+      },
+    };
+    preprocessSchema(schema);
+    expect(schema).toEqual({
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+        },
+        address: {
+          fields: { id: { type: 'string' } },
+          relations: { person: true },
+        },
+      },
+    });
+  });
 });

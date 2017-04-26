@@ -20,30 +20,27 @@ const preprocess = (schema: Schema): ProcessedSchema => {
   return out;
 };
 
-const processModels = models => {
-  let out = models;
-  out = processIncludesAndAddFieldDefaults(out);
-  processRelations(out);
-  return out;
+const processModels = prevModels => {
+  const nextModels = processIncludesAndAddFieldDefaults(prevModels);
+  processRelations(nextModels);
+  return nextModels;
 };
 
-const processIncludesAndAddFieldDefaults = models => {
-  const out = {};
-  Object.keys(models).forEach(modelName => {
-    let model = models[modelName];
-    if (model.isIncludeOnly) return;
-    model = processIncludesInModel(model, models, modelName);
-    addFieldDefaults(model);
-    out[modelName] = model;
+const processIncludesAndAddFieldDefaults = prevModels => {
+  const nextModels = {};
+  Object.keys(prevModels).forEach(modelName => {
+    const prevModel = prevModels[modelName];
+    if (prevModel.isIncludeOnly) return;
+    const nextModel = processIncludesInModel(prevModel, prevModels, modelName);
+    addFieldDefaults(nextModel);
+    nextModels[modelName] = nextModel;
   });
-  return out;
+  return nextModels;
 };
 
 const processIncludesInModel = (model, models, modelName) => {
   const out = merge(
     {
-      fields: {},
-      relations: {},
       existsInServer: true,
       existsInClient: true,
       singular: modelName,
@@ -51,6 +48,8 @@ const processIncludesInModel = (model, models, modelName) => {
     },
     model,
   );
+  out.fields = merge({}, model.fields);
+  out.relations = merge({}, model.relations);
   const includes: any = out.includes != null ? out.includes : {};
   Object.keys(includes).forEach(includeName => {
     const include = models[includeName];
@@ -65,7 +64,7 @@ const processIncludesInModel = (model, models, modelName) => {
   return out;
 };
 
-const addFieldDefaults = (model) => {
+const addFieldDefaults = model => {
   const { fields } = model;
   Object.keys(fields).forEach(fieldName => {
     fields[fieldName] = addDefaults(fields[fieldName], {
