@@ -24,6 +24,8 @@ export type Model = {
   description?: Description,
   fields?: MapOf<FieldName, Field>,
   relations?: MapOf<FieldName, Relation>,
+  existsInServer?: boolean, // default: true
+  existsInClient?: boolean, // default: true
 
   // Include other models in this one
   includes?: MapOf<ModelName, true>,
@@ -32,11 +34,13 @@ export type Model = {
 };
 
 export type ProcessedModel = {
-  singular: string,
-  plural: string,
   description?: Description,
   fields: MapOf<FieldName, ProcessedField>,
   relations: MapOf<FieldName, ProcessedRelation>,
+  existsInServer: boolean, // default: true
+  existsInClient: boolean, // default: true
+  singular: string,
+  plural: string,
 };
 
 // ====================================

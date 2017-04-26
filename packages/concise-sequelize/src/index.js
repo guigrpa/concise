@@ -2,11 +2,16 @@
 
 /* eslint-disable prefer-template, no-param-reassign */
 
+import { merge, addLast } from 'timm';
 import type {
   Schema,
   OutputProcessor,
   SchemaUtils,
+  ProcessedSchema,
+  ProcessedModel,
   ProcessedField,
+  MapOf,
+  ModelName,
 } from 'concise-types';
 import upperFirst from 'lodash.upperfirst';
 
@@ -16,10 +21,37 @@ Output-only.
 Output options:
 * `Sequelize` (`Object`): the Sequelize class
 * `sequelize` (`Object`): a Sequelize instance
+* `extensions?` (`MapOf<ModelName, SequelizeExtensions>`): object that
+  associates a given model (or `$all` for all models) to a set of
+  extensions (or customizations). **Description to be completed (see
+  typedefs and tests for the time being)**
 -- */
 type OutputOptions = {
   Sequelize: Object,
   sequelize: Object,
+  extensions?: MapOf<ModelName, SequelizeExtensions>,
+};
+
+type SequelizeExtensions = {
+  validate: (context: SequelizeExtensionContext) => MapOf<string, Function>,
+  indexes: (context: SequelizeExtensionContext) => Array<Object>,
+  classMethods: (context: SequelizeExtensionContext) => MapOf<string, Function>,
+  instanceMethods: (
+    context: SequelizeExtensionContext,
+  ) => MapOf<string, Function>,
+  hooks: (context: SequelizeExtensionContext) => MapOf<string, Function>,
+};
+
+type SequelizeExtensionContext = {
+  db: {
+    sequelize: Object,
+    Sequelize: Object,
+    /* + all models... */
+  },
+  model: ProcessedModel,
+  modelName: ModelName,
+  className: string,
+  schema: ProcessedSchema,
 };
 
 // ====================================
@@ -33,26 +65,37 @@ const output: OutputProcessor = async (
   const preprocessedSchema = utils.preprocess(schema);
   const { Sequelize, sequelize } = options;
   const db = { Sequelize, sequelize };
-  defineModels(db, preprocessedSchema);
+  defineModels(db, preprocessedSchema, options);
   defineRelations(db, preprocessedSchema);
   return db;
 };
 
 // ====================================
-// Spec builders
+// Define models
 // ====================================
-const defineModels = (db, schema) => {
-  const { models } = schema;
-  Object.keys(models).forEach(modelName => {
-    // console.log(`${modelName}`);
-    const model = models[modelName];
-    const className = upperFirst(modelName);
-    db[className] = db.sequelize.define(modelName, defineFields(db, model), {
-      validate: {},
-      classMethods: {},
-      instanceMethods: {},
-    });
+const defineModels = (db, schema, options) => {
+  Object.keys(schema.models).forEach(modelName => {
+    defineModel(db, schema, modelName, options);
   });
+};
+
+const defineModel = (db, schema, modelName, options) => {
+  // console.log(`${modelName}`);
+  const model = schema.models[modelName];
+  if (!model.existsInServer) return;
+  const className = upperFirst(modelName);
+  const definitionOptions = {
+    validate: {},
+    indexes: [],
+    classMethods: {},
+    instanceMethods: {},
+    hooks: {},
+  };
+  const context = { db, model, modelName, className, schema };
+  addDefinitionOptions(definitionOptions, '$all', options, context);
+  addDefinitionOptions(definitionOptions, modelName, options, context);
+  const fields = defineFields(db, model);
+  db[className] = db.sequelize.define(modelName, fields, definitionOptions);
 };
 
 const defineFields = (db, model) => {
@@ -60,6 +103,7 @@ const defineFields = (db, model) => {
   const out = {};
   Object.keys(fields).forEach(fieldName => {
     const field = fields[fieldName];
+    if (!field.existsInServer) return;
     const newField = {};
     const { isPrimaryKey, isAutoIncremented, defaultValue } = field;
     const sequelizeType = getFieldType(field);
@@ -74,35 +118,85 @@ const defineFields = (db, model) => {
   return out;
 };
 
+const addDefinitionOptions = (
+  definitionOptions,
+  modelName,
+  options,
+  context,
+) => {
+  const extensions =
+    options && options.extensions && options.extensions[modelName];
+  if (!extensions) return;
+  if (extensions.validate) {
+    definitionOptions.validate = merge(
+      definitionOptions.validate,
+      extensions.validate(context),
+    );
+  }
+  if (extensions.indexes) {
+    definitionOptions.indexes = addLast(
+      definitionOptions.indexes,
+      extensions.indexes(context),
+    );
+  }
+  if (extensions.classMethods) {
+    definitionOptions.classMethods = merge(
+      definitionOptions.classMethods,
+      extensions.classMethods(context),
+    );
+  }
+  if (extensions.instanceMethods) {
+    definitionOptions.instanceMethods = merge(
+      definitionOptions.instanceMethods,
+      extensions.instanceMethods(context),
+    );
+  }
+  if (extensions.hooks) {
+    definitionOptions.hooks = merge(
+      definitionOptions.hooks,
+      extensions.hooks(context),
+    );
+  }
+};
+
+// ====================================
+// Define relations
+// ====================================
 const defineRelations = (db, schema) => {
   const { models } = schema;
   Object.keys(models).forEach(modelName => {
-    const model = models[modelName];
-    const classTail = upperFirst(modelName);
-    const { relations } = model;
+    const { relations } = models[modelName];
     Object.keys(relations).forEach(relationName => {
-      const relation = relations[relationName];
-      const classHead = upperFirst(relation.model);
-      const options = {};
-      let relationType;
-      if (relation.isInverse) {
-        relationType = relation.isPlural ? 'hasMany' : 'hasOne';
-      } else {
-        if (relation.isPlural) {
-          /* eslint-disable no-console */
-          console.warn(`Direct plural relation (${modelName} -> ${relation.model}) is not supported`);
-          console.warn('Use a cross table instead');
-          /* eslint-enable no-console */
-          return;
-        }
-        if (relationName !== relation.model) options.as = relationName;
-        if (relation.sequelizeSkipReferentialIntegrity) options.constraints = false;
-        relationType = 'belongsTo';
-      }
-      // console.log(`${classTail} ${relationType} ${relationName} (${classHead})`);
-      db[classTail][relationType](db[classHead], options);
+      defineRelation(db, modelName, relationName, relations[relationName]);
     });
   });
+};
+
+const defineRelation = (db, modelName, relationName, relation) => {
+  const classTail = upperFirst(modelName);
+  const classHead = upperFirst(relation.model);
+  const options = {};
+  let relationType;
+  if (relation.isInverse) {
+    relationType = relation.isPlural ? 'hasMany' : 'hasOne';
+  } else {
+    if (relation.isPlural) {
+      /* eslint-disable no-console */
+      console.warn(
+        `Direct plural relation (${modelName} -> ${relation.model}) ` +
+          'is not supported. Use a cross table instead',
+      );
+      /* eslint-enable no-console */
+      return;
+    }
+    if (relationName !== relation.model) options.as = relationName;
+    if (relation.sequelizeSkipReferentialIntegrity) {
+      options.constraints = false;
+    }
+    relationType = 'belongsTo';
+  }
+  // console.log(`${classTail} ${relationType} ${relationName} (${classHead})`);
+  db[classTail][relationType](db[classHead], options);
 };
 
 // ====================================
@@ -166,7 +260,7 @@ const addFieldValidations = (field: ProcessedField, newField) => {
         newField.validate.isUrl = { msg: 'INVALID:isUrl' };
         break;
       case 'isIp':
-        newField.validate.isIp = { msg: 'INVALID:isIp' };
+        newField.validate.isIP = { msg: 'INVALID:isIp' };
         break;
       case 'isCreditCard':
         newField.validate.isCreditCard = { msg: 'INVALID:isCreditCard' };
@@ -188,7 +282,7 @@ const addFieldValidations = (field: ProcessedField, newField) => {
         // SECURITY NOTICE: We're using `eval`:
         // I guess if you have access to schema contents,
         // you have access to the whole backend, right?
-        newField.validate.satisfies = eval(val);  // eslint-disable-line no-eval
+        newField.validate.satisfies = eval(val); // eslint-disable-line no-eval
         break;
       default:
         throw new Error(`VALIDATION_UNSUPPORTED:${key}`);

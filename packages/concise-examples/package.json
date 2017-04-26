@@ -18,8 +18,8 @@
   "dependencies": {
     "graphql": "^0.9.3",
     "graphql-tools": "^0.11.0",
-    "pg": "^6.1.5",
     "sequelize": "^3.30.4",
+    "sqlite3": "^3.1.8",
     "concise-yaml": "^0.0.0",
     "concise": "^0.0.0",
     "concise-json": "^0.0.0",

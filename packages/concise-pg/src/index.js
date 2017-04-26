@@ -39,11 +39,13 @@ const writeSchema = ({ models }, options) => {
 
   // Write table definitions
   Object.keys(models).forEach(modelName => {
+    if (!models[modelName].existsInServer) return;
     out += writeTable(models, modelName, options);
   });
 
   // Add foreign key constraints
   Object.keys(models).forEach(modelName => {
+    if (!models[modelName].existsInServer) return;
     out += writeForeignKeyConstraints(models, modelName, options);
   });
   return out;
@@ -64,6 +66,7 @@ const writeTable = (models, modelName, options) => {
     sqlComments.push(writeComment('TABLE', tableName, description));
   }
   Object.keys(fields).forEach(fieldName => {
+    if (!fields[fieldName].existsInServer) return;
     const { sqlField, sqlFieldComment, sqlFieldConstraints } =
       writeField(models, modelName, tableName, fieldName, options);
     if (sqlField) sqlFields.push(sqlField);

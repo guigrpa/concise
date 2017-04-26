@@ -5,8 +5,12 @@ Object {
   "authRules": Array [],
   "models": Object {
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -25,8 +29,12 @@ Object {
       "singular": "person",
     },
     "post": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -53,8 +61,12 @@ Object {
   "authRules": Array [],
   "models": Object {
     "address": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -73,8 +85,12 @@ Object {
       "singular": "address",
     },
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -101,8 +117,12 @@ Object {
   "authRules": Array [],
   "models": Object {
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -111,8 +131,12 @@ Object {
       "singular": "person",
     },
     "post": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -139,8 +163,12 @@ Object {
   "authRules": Array [],
   "models": Object {
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -159,8 +187,12 @@ Object {
       "singular": "person",
     },
     "post": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -189,8 +221,12 @@ Object {
   "authRules": Array [],
   "models": Object {
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -209,8 +245,12 @@ Object {
       "singular": "person",
     },
     "post": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -237,11 +277,17 @@ Object {
   "authRules": Array [],
   "models": Object {
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
         "name": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "type": "string",
         },
       },
@@ -258,8 +304,12 @@ Object {
   "authRules": Array [],
   "models": Object {
     "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
       "fields": Object {
         "name": Object {
+          "existsInClient": true,
+          "existsInServer": true,
           "foo": 3,
           "type": "string",
         },

@@ -17,17 +17,19 @@ const preprocess = (schema: Schema): ProcessedSchema => {
 
 const processModels = models => {
   let out = models;
-  out = processIncludes(out);
+  out = processIncludesAndAddFieldDefaults(out);
   processRelations(out);
   return out;
 };
 
-const processIncludes = models => {
+const processIncludesAndAddFieldDefaults = models => {
   const out = {};
   Object.keys(models).forEach(modelName => {
-    const model = models[modelName];
+    let model = models[modelName];
     if (model.isIncludeOnly) return;
-    out[modelName] = processIncludesInModel(model, models, modelName);
+    model = processIncludesInModel(model, models, modelName);
+    addFieldDefaults(model);
+    out[modelName] = model;
   });
   return out;
 };
@@ -35,10 +37,12 @@ const processIncludes = models => {
 const processIncludesInModel = (model, models, modelName) => {
   const out = merge(
     {
-      singular: modelName,
-      plural: pluralize(modelName),
       fields: {},
       relations: {},
+      existsInServer: true,
+      existsInClient: true,
+      singular: modelName,
+      plural: pluralize(modelName),
     },
     model,
   );
@@ -54,6 +58,16 @@ const processIncludesInModel = (model, models, modelName) => {
   });
   delete out.includes;
   return out;
+};
+
+const addFieldDefaults = (model) => {
+  const { fields } = model;
+  Object.keys(fields).forEach(fieldName => {
+    fields[fieldName] = addDefaults(fields[fieldName], {
+      existsInServer: true,
+      existsInClient: true,
+    });
+  });
 };
 
 const getFkName = (relationName, isPlural) => {
@@ -113,23 +127,20 @@ const processRelations = models => {
           inverseName: relationName,
         });
         const idField2 = models[modelName].fields.id;
-        if (idField2) {
-          inverseRelation.type = idField2.type;
-          const { isPlural } = inverseRelation;
-          const inverseName =
-            (inverse && inverse.name) ||
-            (isPlural ? pluralize(modelName) : modelName);
-          const inverseFkName = getFkName(
-            inverseName,
-            inverseRelation.isPlural != null ? inverseRelation.isPlural : true,
-          );
-          inverseRelation.fkName = inverseFkName;
-          relatedModel.relations[inverseName] = inverseRelation;
-          relation.inverseName = inverseName;
-        }
-      } else {
-        relation.inverseName = null;
+        inverseRelation.type = idField2 ? idField2.type : undefined;
+        const { isPlural } = inverseRelation;
+        const inverseName =
+          (inverse && inverse.name) ||
+          (isPlural ? pluralize(modelName) : modelName);
+        const inverseFkName = getFkName(
+          inverseName,
+          inverseRelation.isPlural != null ? inverseRelation.isPlural : true,
+        );
+        inverseRelation.fkName = inverseFkName;
+        relatedModel.relations[inverseName] = inverseRelation;
+        relation.inverseName = inverseName;
       }
+      if (relation.inverseName === undefined) relation.inverseName = null;
       delete relation.inverse;
       relations[relationName] = relation;
     });
