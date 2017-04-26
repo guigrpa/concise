@@ -3,6 +3,7 @@
 import type { Schema, InputProcessor, OutputProcessor } from 'concise-types';
 import mergeSchemas from './mergeSchemas';
 import preprocessSchema from './preprocessSchema';
+import Authorizer from './authorizer';
 
 class Concise {
   schema: Schema;
@@ -29,7 +30,9 @@ class Concise {
   }
 
   async output(processor: OutputProcessor, options: Object = {}) {
-    const utils = { preprocess: preprocessSchema };
+    const preprocessedSchema = preprocessSchema(this.schema);
+    const authorizer = new Authorizer(preprocessedSchema.authRules);
+    const utils = { preprocessedSchema, authorizer };
     return processor(this.schema, options, utils);
   }
 }

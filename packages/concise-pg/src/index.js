@@ -25,8 +25,7 @@ const output: OutputProcessor = async (
   options: OutputOptions,
   utils: SchemaUtils,
 ) => {
-  const preprocessedSchema = utils.preprocess(schema);
-  const raw = writeSchema(preprocessedSchema, options);
+  const raw = writeSchema(utils.preprocessedSchema, options);
   if (options.file) fs.writeFileSync(options.file, raw, 'utf8');
   return raw;
 };

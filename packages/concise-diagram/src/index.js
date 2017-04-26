@@ -46,9 +46,8 @@ const output: OutputProcessor = async (
   options: OutputOptions,
   utils: SchemaUtils,
 ) => {
-  const preprocessedSchema = utils.preprocess(schema);
   const vizInput = writeDiagram(
-    preprocessedSchema,
+    utils.preprocessedSchema,
     addDefaults(options, DEFAULT_OPTIONS),
   );
   const svg = Viz(vizInput);

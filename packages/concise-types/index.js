@@ -226,5 +226,6 @@ export type OutputProcessor = (
 ) => Promise<any>;
 
 export type SchemaUtils = {
-  preprocess: (schema: Schema) => ProcessedSchema,
+  preprocessedSchema: ProcessedSchema,
+  authorizer: any,
 };

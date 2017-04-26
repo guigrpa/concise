@@ -62,7 +62,7 @@ const output: OutputProcessor = async (
   options: OutputOptions,
   utils: SchemaUtils,
 ) => {
-  const preprocessedSchema = utils.preprocess(schema);
+  const { preprocessedSchema } = utils;
   const { Sequelize, sequelize } = options;
   const db = { Sequelize, sequelize };
   defineModels(db, preprocessedSchema, options);
