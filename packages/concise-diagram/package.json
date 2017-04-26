@@ -16,5 +16,25 @@
     "timm": "^1.2.5",
     "viz.js": "^1.7.1",
     "concise-types": "^0.0.0"
-  }
+  },
+  "description": "A tool belt for concise schemas",
+  "keywords": [
+    "schema",
+    "pg",
+    "postgres",
+    "postgresql",
+    "yaml",
+    "flowtype",
+    "flow",
+    "svg",
+    "diagram",
+    "erd",
+    "graphql",
+    "sequelize"
+  ],
+  "homepage": "https://github.com/guigrpa/concise#readme",
+  "bugs": {
+    "url": "https://github.com/guigrpa/concise/issues"
+  },
+  "repository": "guigrpa/concise"
 }

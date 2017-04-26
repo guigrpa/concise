@@ -6,5 +6,25 @@
   "scripts": {
     "compile": "echo Nothing to be done",
     "compileWatch": "echo Nothing to be done"
-  }
+  },
+  "description": "A tool belt for concise schemas",
+  "keywords": [
+    "schema",
+    "pg",
+    "postgres",
+    "postgresql",
+    "yaml",
+    "flowtype",
+    "flow",
+    "svg",
+    "diagram",
+    "erd",
+    "graphql",
+    "sequelize"
+  ],
+  "homepage": "https://github.com/guigrpa/concise#readme",
+  "bugs": {
+    "url": "https://github.com/guigrpa/concise/issues"
+  },
+  "repository": "guigrpa/concise"
 }
