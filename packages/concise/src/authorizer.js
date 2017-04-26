@@ -7,11 +7,6 @@ import type { AuthRule, AuthRequest, AuthRoutes } from 'concise-types';
 // ====================================
 // Helpers
 // ====================================
-const isObject = value => {
-  const type = typeof value;
-  return value != null && (type === 'object' || type === 'function');
-};
-
 // The request must match all of the rule's filters
 const matchesRule = (req, rule: AuthRule) => {
   if (!matchesFilter(req.viewerId, rule.viewerId)) return false;
@@ -35,12 +30,14 @@ const matchesFilter = (actualValue, filterSpec, isPlural) => {
     : matchSingularFilterSpec(actualValue, filterSpec);
 };
 
-const matchSingularFilterSpec = (actualValue, filterSpec) => {
-  if (!isObject(filterSpec)) return actualValue === filterSpec;
+const matchSingularFilterSpec = (actualValue: any, filterSpec: any) => {
+  if (filterSpec == null || typeof filterSpec !== 'object') {
+    return actualValue === filterSpec;
+  }
   const operators = Object.keys(filterSpec);
   for (let i = 0; i < operators.length; i++) {
     const operator = operators[i];
-    const refValue = filterSpec[operator];
+    const refValue: any = filterSpec[operator];
     let matches = false;
     if (operator === '$is') {
       matches = actualValue === refValue;
@@ -60,14 +57,14 @@ const matchSingularFilterSpec = (actualValue, filterSpec) => {
   return true;
 };
 
-const matchPluralFilterSpec = (actualValues, filterSpec) => {
-  if (!isObject(filterSpec)) {
+const matchPluralFilterSpec = (actualValues: any, filterSpec: any) => {
+  if (filterSpec == null || typeof filterSpec !== 'object') {
     throw new Error('Plural filter in auth rule must be an object');
   }
   const operators = Object.keys(filterSpec);
   for (let i = 0; i < operators.length; i++) {
     const operator = operators[i];
-    const refValue = filterSpec[operator];
+    const refValue: any = filterSpec[operator];
     let matches = false;
     if (operator === '$include') {
       matches = actualValues.indexOf(refValue) >= 0;
@@ -89,12 +86,18 @@ const matchPluralFilterSpec = (actualValues, filterSpec) => {
   return true;
 };
 
-const processRoutes = async (req, fromNode, routes0: AuthRoutes, checkValue) => {
+const processRoutes = async (
+  req,
+  fromNode,
+  routes0: AuthRoutes,
+  checkValue,
+) => {
   if (routes0 == null) return true;
   const routes = Array.isArray(routes0) ? routes0 : [routes0];
   const { checkRoute } = req;
   for (let i = 0; i < routes.length; i++) {
-    if (!checkRoute(fromNode, routes[i], checkValue)) return false;
+    const check = await checkRoute(fromNode, routes[i], checkValue);
+    if (!check) return false;
   }
   return true;
 };
@@ -183,7 +186,7 @@ class Authorizer {
       const fn = typeof can === 'function' ? can : eval(can);
       let check = fn(req);
       if (check == null) return check;
-      if (isObject(check) && check.then) check = await check;
+      if (check && typeof check === 'object' && check.then) check = await check;
       if (check !== true) return check;
     }
 

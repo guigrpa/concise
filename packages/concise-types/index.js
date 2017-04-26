@@ -205,6 +205,12 @@ export type AuthRequest = {
   // where?
   isClientSide: boolean,
 
+  // checkRoute
+  checkRoute: (
+    fromNode: any,
+    route: AuthRoute,
+    checkValue: any,
+  ) => Promise<boolean>,
   // ...may have additional helpers, depending on the plugin
 };
 
@@ -222,10 +228,13 @@ export type AuthRulePluralValue<T> =
   | { $dontIncludeAny: Array<T> };
 
 // when array: AND'd (if OR is desired, repeat rule)
-export type AuthRoutes = string | Array<string>;
+export type AuthRoutes = AuthRoute | Array<AuthRoute>;
+export type AuthRoute = string;
 export type AuthOperation = 'read' | 'write';
 
-type AuthFunction = (authRequest: AuthRequest) => AuthResult | Promise<AuthResult>;
+type AuthFunction = (
+  authRequest: AuthRequest,
+) => AuthResult | Promise<AuthResult>;
 type AuthResult = boolean | null;
 // (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
 
