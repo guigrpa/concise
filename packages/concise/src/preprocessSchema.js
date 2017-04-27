@@ -1,93 +1,83 @@
 // @flow
 
+/* eslint-disable no-param-reassign */
+
 import { clone, addDefaults, merge, omit } from 'timm';
+import cloneDeep from 'lodash.clonedeep';
 import type { Schema, ProcessedSchema } from 'concise-types';
 import { singularize, pluralize } from 'inflection';
 
-const preprocess = (schema: Schema): ProcessedSchema => {
-  const out: Object = {};
-  out.models = {};
-  out.authRules = [];
-  Object.keys(schema).forEach(key => {
-    let val;
-    if (key === 'models') {
-      val = processModels(schema.models);
-    } else {
-      val = schema[key];
-    }
-    out[key] = val;
+const preprocess = (schema0: Schema): ProcessedSchema => {
+  const schema = addDefaults(cloneDeep(schema0), {
+    models: {},
+    authRules: [],
   });
-  return out;
+  addModelDefaults(schema.models);
+  processIncludes(schema.models);
+  addFieldDefaults(schema.models);
+  processRelations(schema.models);
+  return schema;
 };
 
-const processModels = prevModels => {
-  const nextModels = processIncludesAndAddFieldDefaults(prevModels);
-  processRelations(nextModels);
-  return nextModels;
-};
-
-const processIncludesAndAddFieldDefaults = prevModels => {
-  const nextModels = {};
-  Object.keys(prevModels).forEach(modelName => {
-    const prevModel = prevModels[modelName];
-    if (prevModel.isIncludeOnly) return;
-    const nextModel = processIncludesInModel(prevModel, prevModels, modelName);
-    addFieldDefaults(nextModel);
-    nextModels[modelName] = nextModel;
-  });
-  return nextModels;
-};
-
-const processIncludesInModel = (model, models, modelName) => {
-  const out = merge(
-    {
-      existsInServer: true,
-      existsInClient: true,
+const addModelDefaults = models => {
+  Object.keys(models).forEach(modelName => {
+    models[modelName] = addDefaults(models[modelName], {
+      fields: {},
+      relations: {},
       singular: modelName,
       plural: pluralize(modelName),
-    },
-    model,
-  );
-  out.fields = merge({}, model.fields);
-  out.relations = merge({}, model.relations);
-  const includes: any = out.includes != null ? out.includes : {};
-  Object.keys(includes).forEach(includeName => {
-    const include = models[includeName];
-    if (!include) {
-      throw new Error(`INCLUDE_NOT_FOUND ${modelName}/${includeName}`);
-    }
-    const { fields, relations } = include;
-    out.fields = merge({}, fields, out.fields);
-    out.relations = merge({}, relations, out.relations);
-  });
-  delete out.includes;
-  return out;
-};
-
-const addFieldDefaults = model => {
-  const { fields } = model;
-  Object.keys(fields).forEach(fieldName => {
-    fields[fieldName] = addDefaults(fields[fieldName], {
       existsInServer: true,
       existsInClient: true,
     });
   });
 };
 
-const getFkName = (relationName, isPlural) => {
-  const base = isPlural ? singularize(relationName) : relationName;
-  return `${base}${isPlural ? 'Ids' : 'Id'}`;
+const processIncludes = models => {
+  // Extract includes
+  const includes = {};
+  Object.keys(models).forEach(modelName => {
+    const model = models[modelName];
+    if (model.isIncludeOnly) {
+      includes[modelName] = model;
+      delete models[modelName];
+    }
+  });
+
+  // Apply includes
+  Object.keys(models).forEach(modelName => {
+    const model = models[modelName];
+    const modelIncludes = model.includes != null ? model.includes : {};
+    Object.keys(modelIncludes).forEach(includeName => {
+      const include = includes[includeName];
+      if (!include) {
+        throw new Error(`INCLUDE_NOT_FOUND ${modelName}/${includeName}`);
+      }
+      model.fields = merge(cloneDeep(include.fields), model.fields);
+      model.relations = merge(cloneDeep(include.relations), model.relations);
+    });
+    delete model.includes;
+  });
 };
 
-// In-place (down to `relations` level, which has already been re-created by processIncludes())
+const addFieldDefaults = models => {
+  Object.keys(models).forEach(modelName => {
+    const { fields } = models[modelName];
+    Object.keys(fields).forEach(fieldName => {
+      fields[fieldName] = addDefaults(fields[fieldName], {
+        existsInServer: true,
+        existsInClient: true,
+      });
+    });
+  });
+};
+
 const processRelations = models => {
   Object.keys(models).forEach(modelName => {
     const { relations } = models[modelName];
     Object.keys(relations).forEach(relationName => {
       // Relation shorthand
-      let relation = relations[relationName] === true
-        ? {}
-        : clone(relations[relationName]);
+      let relation = relations[relationName];
+      if (relation === true) relation = {};
       if (relation.isInverse) return;
       // Relation defaults
       const fkName = getFkName(
@@ -149,6 +139,14 @@ const processRelations = models => {
       relations[relationName] = relation;
     });
   });
+};
+
+// ====================================
+// Helpers
+// ====================================
+const getFkName = (relationName, isPlural) => {
+  const base = isPlural ? singularize(relationName) : relationName;
+  return `${base}${isPlural ? 'Ids' : 'Id'}`;
 };
 
 // ====================================
