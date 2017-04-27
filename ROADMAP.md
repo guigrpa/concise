@@ -5,7 +5,6 @@
 - v1 release
 
 - v2:
-    - concise-auth
+    - concise-firebase
     - apply auth rules in sequelize, firebase
     - Embedded models via relations (for noSQL databases)
-    - concise-firebase

@@ -37,8 +37,8 @@ export type ProcessedModel = {
   description?: Description,
   fields: MapOf<FieldName, ProcessedField>,
   relations: MapOf<FieldName, ProcessedRelation>,
-  existsInServer: boolean, // default: true
-  existsInClient: boolean, // default: true
+  existsInServer: boolean,
+  existsInClient: boolean,
   singular: string,
   plural: string,
 };
@@ -77,28 +77,6 @@ export type FieldBase = {
   existsInClient?: boolean, // default: true
   isPrimaryKey?: boolean,
   isAutoIncremented?: boolean,
-};
-
-export type Validations = {
-  // Generic
-  isRequired?: boolean,
-  isUnique?: boolean,
-  isOneOf?: Array<any>,
-  // Strings
-  hasAtLeastChars?: number,
-  hasAtMostChars?: number,
-  hasLengthWithinRange?: [number, number], // min, max
-  isEmail?: boolean,
-  isUrl?: boolean,
-  isIp?: boolean, // v4/v6
-  isCreditCard?: boolean,
-  matchesPattern?: [string, string], // pattern, modifiers
-  // Numbers
-  isGte?: number,
-  isLte?: number,
-  isWithinRange?: [number, number], // min, max
-  // Custom, e.g. `val => { if (val === 3) throw new Error('Val must be 3!'); }`
-  satisfies?: string, // SECURITY NOTICE: HANDLE CAREFULLY
 };
 
 export type ProcessedField = Field;
@@ -148,6 +126,31 @@ export type ProcessedRelation = {
 };
 
 // ====================================
+// Validations
+// ====================================
+export type Validations = {
+  // Generic
+  isRequired?: boolean,
+  isUnique?: boolean,
+  isOneOf?: Array<any>,
+  // Strings
+  hasAtLeastChars?: number,
+  hasAtMostChars?: number,
+  hasLengthWithinRange?: [number, number], // min, max
+  isEmail?: boolean,
+  isUrl?: boolean,
+  isIp?: boolean, // v4/v6
+  isCreditCard?: boolean,
+  matchesPattern?: [string, string], // pattern, modifiers
+  // Numbers
+  isGte?: number,
+  isLte?: number,
+  isWithinRange?: [number, number], // min, max
+  // Custom, e.g. `val => { if (val === 3) throw new Error('Val must be 3!'); }`
+  satisfies?: string, // SECURITY NOTICE: HANDLE CAREFULLY
+};
+
+// ====================================
 // AuthRule
 // ====================================
 export type AuthRule = {
@@ -168,21 +171,40 @@ export type AuthRule = {
   // where?
   isClientSide?: AuthRuleSingularValue<boolean>,
 
-  // can? (route checking) - various cases:
-  // - Check that we reach the viewer ID following a certain route from the target
-  //   (e.g. `project|users|edges|node|id` (from a Company instance))
-  // - Check that we reach the viewer ID following a certain route from the root
-  //   (e.g. `adminIds`, think Firebase)
-  // - Check that we reach the target ID following a certain route from the viewer
-  //   (e.g. `_id`, when the user wants to edit his own account)
-  canIfFindsViewerIdFromTargetBefore?: AuthRoutes,
-  canIfFindsViewerIdFromTargetAfter?: AuthRoutes,
-  canIfFindsViewerIdFromRoot?: AuthRoutes,
-  canIfFindsTargetIdFromViewer?: AuthRoutes,
-
-  // can? (generic case)
-  can?: boolean | string | AuthFunction /* custom fn (see above) */,
+  // can? (if multiple, all checks must pass)
+  can: boolean | AuthCheck | Array<AuthCheck>,
 };
+
+export type AuthRuleSingularValue<T> =
+  | T
+  | { $is: T }
+  | { $isnt: T }
+  | { $in: Array<T> }
+  | { $notIn: Array<T> };
+
+export type AuthRulePluralValue<T> =
+  | { $include: T }
+  | { $dontInclude: T }
+  | { $includeAny: Array<T> }
+  | { $dontIncludeAny: Array<T> };
+
+export type AuthCheck =
+  // Check that we reach the viewer ID following a certain route from the target
+  // (e.g. `project|users|edges|node|id` (from a Company instance))
+  | { type: 'TARGET_BEFORE->VIEWER_ID', route: AuthRoute }
+  | { type: 'TARGET_AFTER->VIEWER_ID', route: AuthRoute }
+
+  // Check that we reach the viewer ID following a certain route from the root
+  // (e.g. `adminIds`, think Firebase)
+  | { type: 'ROOT->VIEWER_ID', route: AuthRoute }
+
+  // Check that we reach the target ID following a certain route from the viewer
+  // (e.g. `_id`, when the user wants to edit his own account)
+  | { type: 'VIEWER->TARGET_ID', route: AuthRoute }
+
+  // A function, or a stringified version of it (will be `eval`'ed')
+  // e.g. `''req => req.operation === 'READ'`
+  | { type: 'SATISFIES', fn: AuthFunction | string };
 
 export type AuthRequest = {
   // who?
@@ -214,28 +236,11 @@ export type AuthRequest = {
   // ...may have additional helpers, depending on the plugin
 };
 
-export type AuthRuleSingularValue<T> =
-  | T
-  | { $is: T }
-  | { $isnt: T }
-  | { $in: Array<T> }
-  | { $notIn: Array<T> };
+export type AuthRoute = Array<string>;
+export type AuthOperation = 'READ' | 'WRITE';
 
-export type AuthRulePluralValue<T> =
-  | { $include: T }
-  | { $dontInclude: T }
-  | { $includeAny: Array<T> }
-  | { $dontIncludeAny: Array<T> };
-
-// when array: AND'd (if OR is desired, repeat rule)
-export type AuthRoutes = AuthRoute | Array<AuthRoute>;
-export type AuthRoute = string;
-export type AuthOperation = 'read' | 'write';
-
-type AuthFunction = (
-  authRequest: AuthRequest,
-) => AuthResult | Promise<AuthResult>;
-type AuthResult = boolean | null;
+export type AuthFunction = (req: AuthRequest) => AuthResponse | Promise<AuthResponse>;
+export type AuthResponse = boolean | null;
 // (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
 
 // ====================================

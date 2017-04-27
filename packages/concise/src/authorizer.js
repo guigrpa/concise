@@ -1,14 +1,37 @@
 // @flow
 
-import type { AuthRule, AuthRequest, AuthRoutes } from 'concise-types';
-
 /* eslint-disable no-prototype-builtins, no-eval */
 
+import type {
+  AuthRule,
+  AuthRequest,
+  AuthResponse,
+  AuthCheck,
+} from 'concise-types';
+
 // ====================================
-// Helpers
+// Main
+// ====================================
+class Authorizer {
+  rules: Array<AuthRule>;
+
+  constructor(rules: Array<AuthRule>) {
+    this.rules = rules;
+  }
+
+  async can(req: AuthRequest): Promise<AuthResponse> {
+    // Find first matching rule; if none is found, the request is rejected
+    const rule = this.rules.find(o => matchesRule(req, o));
+    if (!rule) return false;
+    return executeRule(req, rule);
+  }
+}
+
+// ====================================
+// Rule filtering
 // ====================================
 // The request must match all of the rule's filters
-const matchesRule = (req, rule: AuthRule) => {
+const matchesRule = (req: AuthRequest, rule: AuthRule) => {
   if (!matchesFilter(req.viewerId, rule.viewerId)) return false;
   if (!matchesFilter(req.roleNames, rule.roleNames, true)) return false;
   if (!matchesFilter(req.operation, rule.operation)) return false;
@@ -23,21 +46,21 @@ const matchesRule = (req, rule: AuthRule) => {
   return true;
 };
 
-const matchesFilter = (actualValue, filterSpec, isPlural) => {
+const matchesFilter = (actualValue, filterSpec: any, isPlural) => {
   if (filterSpec === undefined) return true;
   return isPlural
-    ? matchPluralFilterSpec(actualValue, filterSpec)
-    : matchSingularFilterSpec(actualValue, filterSpec);
+    ? matchesPlural(actualValue, filterSpec)
+    : matchesSingular(actualValue, filterSpec);
 };
 
-const matchSingularFilterSpec = (actualValue: any, filterSpec: any) => {
+const matchesSingular = (actualValue: any, filterSpec: any) => {
   if (filterSpec == null || typeof filterSpec !== 'object') {
     return actualValue === filterSpec;
   }
   const operators = Object.keys(filterSpec);
   for (let i = 0; i < operators.length; i++) {
     const operator = operators[i];
-    const refValue: any = filterSpec[operator];
+    const refValue = filterSpec[operator];
     let matches = false;
     if (operator === '$is') {
       matches = actualValue === refValue;
@@ -57,14 +80,14 @@ const matchSingularFilterSpec = (actualValue: any, filterSpec: any) => {
   return true;
 };
 
-const matchPluralFilterSpec = (actualValues: any, filterSpec: any) => {
+const matchesPlural = (actualValues: any, filterSpec: any) => {
   if (filterSpec == null || typeof filterSpec !== 'object') {
     throw new Error('Plural filter in auth rule must be an object');
   }
   const operators = Object.keys(filterSpec);
   for (let i = 0; i < operators.length; i++) {
     const operator = operators[i];
-    const refValue: any = filterSpec[operator];
+    const refValue = filterSpec[operator];
     let matches = false;
     if (operator === '$include') {
       matches = actualValues.indexOf(refValue) >= 0;
@@ -86,114 +109,73 @@ const matchPluralFilterSpec = (actualValues: any, filterSpec: any) => {
   return true;
 };
 
-const processRoutes = async (
-  req,
-  fromNode,
-  routes0: AuthRoutes,
-  checkValue,
-) => {
-  if (routes0 == null) return true;
-  const routes = Array.isArray(routes0) ? routes0 : [routes0];
-  const { checkRoute } = req;
-  for (let i = 0; i < routes.length; i++) {
-    const check = await checkRoute(fromNode, routes[i], checkValue);
-    if (!check) return false;
+// ====================================
+// Rule execution
+// ====================================
+const executeRule = async (req, rule) => {
+  const { can } = rule;
+  if (can === true || can === false) return can;
+  const checks = Array.isArray(can) ? can : [can];
+  for (let i = 1; i < checks.length; i++) {
+    const check: AuthCheck = checks[i];
+
+    // Route-based checks
+    if (check.type === 'TARGET_BEFORE->VIEWER_ID') {
+      if (!req.hasOwnProperty('targetBefore')) return null; // missing data
+      if (req.viewerId == null) throwNoViewer();
+      const result = await req.checkRoute(
+        req.targetBefore,
+        check.route,
+        req.viewerId,
+      );
+      if (!result) return false;
+    } else if (check.type === 'TARGET_AFTER->VIEWER_ID') {
+      if (!req.hasOwnProperty('targetBefore')) return null; // missing data
+      if (!req.hasOwnProperty('targetAfter')) return null; // missing data
+      if (req.viewerId == null) throwNoViewer();
+      const result = await req.checkRoute(
+        req.targetAfter,
+        check.route,
+        req.viewerId,
+      );
+      if (!result) return false;
+    } else if (check.type === 'ROOT->VIEWER_ID') {
+      if (req.viewerId == null) throwNoViewer();
+      const result = await req.checkRoute(null, check.route, req.viewerId);
+      if (!result) return false;
+    } else if (check.type === 'VIEWER->TARGET_ID') {
+      if (req.viewer == null) throwNoViewer();
+      if (req.targetId == null) throwNoTarget();
+      const result = await req.checkRoute(
+        req.viewer,
+        check.route,
+        req.targetId,
+      );
+      if (!result) return false;
+
+      // Custom checks
+    } else if (check.type === 'SATISFIES') {
+      const { fn: fnSpec } = check;
+      const fn = typeof fnSpec === 'function' ? fnSpec : eval(fnSpec);
+      const result = await fn(req);
+      if (result !== true) return result; // can be false or null (missing data)
+    }
   }
+
+  // All checks passed
   return true;
 };
 
 // ====================================
-// main
+// Helpers
 // ====================================
-class Authorizer {
-  rules: Array<AuthRule>;
+const throwNoViewer = () => {
+  throw new Error('Auth route failed: no viewer');
+};
 
-  constructor(rules: Array<AuthRule>) {
-    this.rules = rules;
-  }
-
-  async can(req: AuthRequest) {
-    // Find first matching rule; if none is found, the request is rejected
-    const rule = this.rules.find(o => matchesRule(req, o));
-    if (!rule) return false;
-
-    // Process routes
-    const {
-      canIfFindsViewerIdFromTargetBefore,
-      canIfFindsViewerIdFromTargetAfter,
-      canIfFindsViewerIdFromRoot,
-      canIfFindsTargetIdFromViewer,
-    } = rule;
-    if (canIfFindsViewerIdFromTargetBefore) {
-      if (!req.hasOwnProperty('targetBefore')) return null;
-      if (req.viewerId == null) {
-        throw new Error('Auth route failed: no viewerId!');
-      }
-      const check = await processRoutes(
-        req,
-        req.targetBefore,
-        canIfFindsViewerIdFromTargetBefore,
-        req.viewerId,
-      );
-      if (check !== true) return check;
-    }
-    if (canIfFindsViewerIdFromTargetAfter) {
-      if (!req.hasOwnProperty('targetBefore')) return null;
-      if (!req.hasOwnProperty('targetAfter')) return null;
-      if (req.viewerId == null) {
-        throw new Error('Auth route failed: no viewerId!');
-      }
-      const check = await processRoutes(
-        req,
-        req.targetAfter,
-        canIfFindsViewerIdFromTargetAfter,
-        req.viewerId,
-      );
-      if (check !== true) return check;
-    }
-    if (canIfFindsViewerIdFromRoot) {
-      if (req.viewerId == null) {
-        throw new Error('Auth route failed: no viewerId!');
-      }
-      const check = await processRoutes(
-        req,
-        null,
-        canIfFindsViewerIdFromRoot,
-        req.viewerId,
-      );
-      if (check !== true) return check;
-    }
-    if (canIfFindsTargetIdFromViewer) {
-      if (req.viewer == null) {
-        throw new Error('Auth route failed: no viewer!');
-      }
-      if (req.targetId == null) {
-        throw new Error('Auth route failed: no targetId!');
-      }
-      const check = await processRoutes(
-        req,
-        req.viewer,
-        canIfFindsTargetIdFromViewer,
-        req.targetId,
-      );
-      if (check !== true) return check;
-    }
-
-    // Process `can`
-    const { can } = rule;
-    if (can != null) {
-      if (can === true || can === false) return can;
-      const fn = typeof can === 'function' ? can : eval(can);
-      let check = fn(req);
-      if (check == null) return check;
-      if (check && typeof check === 'object' && check.then) check = await check;
-      if (check !== true) return check;
-    }
-
-    // All checks passed
-    return true;
-  }
-}
+const throwNoTarget = () => {
+  throw new Error('Auth route failed: no target');
+};
 
 // ====================================
 // Public
