@@ -118,13 +118,13 @@ const processRelations = models => {
         });
         const idField2 = models[modelName].fields.id;
         inverseRelation.type = idField2 ? idField2.type : undefined;
-        const { isPlural } = inverseRelation;
+        const { isPlural: isInversePlural } = inverseRelation;
         const inverseName =
           (inverse && inverse.name) ||
-          (isPlural ? pluralize(modelName) : modelName);
+          (isInversePlural ? pluralize(modelName) : modelName);
         const inverseFkName = getFkName(
           inverseName,
-          inverseRelation.isPlural != null ? inverseRelation.isPlural : true,
+          isInversePlural != null ? isInversePlural : true,
         );
         inverseRelation.fkName = inverseFkName;
         relatedModel.relations[inverseName] = inverseRelation;
