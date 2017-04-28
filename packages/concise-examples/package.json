@@ -13,20 +13,20 @@
   },
   "devDependencies": {
     "babel-runtime": "^6.23.0",
-    "concise-types": "^0.0.0"
+    "concise-types": "*"
   },
   "dependencies": {
     "graphql": "^0.9.3",
     "graphql-tools": "^0.11.0",
     "sequelize": "^3.30.4",
     "sqlite3": "^3.1.8",
-    "concise-yaml": "^0.0.0",
-    "concise": "^0.0.0",
-    "concise-json": "^0.0.0",
-    "concise-pg": "^0.0.0",
-    "concise-flow": "^0.0.0",
-    "concise-graphql": "^0.0.0",
-    "concise-diagram": "^0.0.0",
-    "concise-sequelize": "^0.0.0"
+    "concise-yaml": "*",
+    "concise": "*",
+    "concise-json": "*",
+    "concise-pg": "*",
+    "concise-flow": "*",
+    "concise-graphql": "*",
+    "concise-diagram": "*",
+    "concise-sequelize": "*"
   }
 }
