@@ -1,7 +1,7 @@
 {
   "name": "concise",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "description": "A tool belt for concise schemas",
