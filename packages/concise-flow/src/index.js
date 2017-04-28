@@ -65,7 +65,7 @@ const writeType = (models, modelName) => {
 };
 
 const writeField = (name, specs: any) => {
-  const isRequired = specs.validations && specs.validations.isRequired ? '' : '?';
+  const isRequired = specs.isRequired ? '' : '?';
   let typeStr = writeFieldType(specs.type);
   if (specs.isPlural) typeStr = `Array<${typeStr}>`;
   const comment = specs.description ? `  // ${specs.description}` : '';

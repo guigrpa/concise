@@ -57,6 +57,22 @@ describe('preprocessSchema', () => {
     expect(preprocessSchema(schema)).toEqual(processedSchema);
   });
 
+  it('sets the right name on a shorthand plural relation', () => {
+    const schema = {
+      models: {
+        person: {
+          fields: { id: { type: 'string' } },
+          relations: { posts: { isPlural: true } },
+        },
+        post: {
+          fields: { id: { type: 'string' } },
+        },
+      },
+    };
+    const processedSchema = preprocessSchema(schema);
+    expect(processedSchema).toMatchSnapshot();
+  });
+
   it('completes custom relations', () => {
     const schema = {
       models: {
@@ -66,10 +82,7 @@ describe('preprocessSchema', () => {
         post: {
           fields: { id: { type: 'string' } },
           relations: {
-            author: {
-              model: 'person',
-              validations: { required: true },
-            },
+            author: { model: 'person', isRequired: true },
           },
         },
       },

@@ -23,7 +23,6 @@ Object {
           "isPlural": true,
           "model": "post",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "person",
@@ -47,7 +46,6 @@ Object {
           "isPlural": false,
           "model": "person",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "post",
@@ -79,7 +77,6 @@ Object {
           "isPlural": false,
           "model": "person",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "address",
@@ -103,7 +100,6 @@ Object {
           "isPlural": false,
           "model": "address",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "person",
@@ -149,7 +145,6 @@ Object {
           "isPlural": false,
           "model": "person",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "post",
@@ -181,7 +176,6 @@ Object {
           "isPlural": true,
           "model": "post",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "person",
@@ -203,11 +197,9 @@ Object {
           "inverseName": "posts",
           "isInverse": false,
           "isPlural": false,
+          "isRequired": true,
           "model": "person",
           "type": "string",
-          "validations": Object {
-            "required": true,
-          },
         },
       },
       "singular": "post",
@@ -239,7 +231,6 @@ Object {
           "isPlural": true,
           "model": "post",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "person",
@@ -263,7 +254,6 @@ Object {
           "isPlural": false,
           "model": "person",
           "type": "string",
-          "validations": Object {},
         },
       },
       "singular": "post",
@@ -321,5 +311,59 @@ Object {
     },
   },
   "schemaFoo": 5,
+}
+`;
+
+exports[`preprocessSchema sets the right name on a shorthand plural relation 1`] = `
+Object {
+  "authRules": Array [],
+  "models": Object {
+    "person": Object {
+      "existsInClient": true,
+      "existsInServer": true,
+      "fields": Object {
+        "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
+          "type": "string",
+        },
+      },
+      "plural": "people",
+      "relations": Object {
+        "posts": Object {
+          "fkName": "postIds",
+          "inverseName": "people",
+          "isInverse": false,
+          "isPlural": true,
+          "model": "post",
+          "type": "string",
+        },
+      },
+      "singular": "person",
+    },
+    "post": Object {
+      "existsInClient": true,
+      "existsInServer": true,
+      "fields": Object {
+        "id": Object {
+          "existsInClient": true,
+          "existsInServer": true,
+          "type": "string",
+        },
+      },
+      "plural": "posts",
+      "relations": Object {
+        "people": Object {
+          "fkName": "personIds",
+          "inverseName": "posts",
+          "isInverse": true,
+          "isPlural": true,
+          "model": "person",
+          "type": "string",
+        },
+      },
+      "singular": "post",
+    },
+  },
 }
 `;

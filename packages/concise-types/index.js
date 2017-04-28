@@ -71,8 +71,8 @@ export type Field =
     };
 
 export type FieldBase = {
+  ...Validations,
   description?: Description,
-  validations?: Validations,
   existsInServer?: boolean, // default: true
   existsInClient?: boolean, // default: true
   isPrimaryKey?: boolean,
@@ -93,9 +93,9 @@ export type ProcessedField = Field;
 export type Relation =
   | true
   | {
+      ...Validations,
       description?: Description,
-      validations?: Validations,
-      model?: ModelName, // default: relation name
+      model?: ModelName, // default: inferred from the relation name + isPlural field
       isPlural?: boolean, // default: false
       fkName?: string,
       inverse?:  // default: true
@@ -113,8 +113,8 @@ export type Relation =
     };
 
 export type ProcessedRelation = {
+  ...Validations,
   description?: Description,
-  validations?: Validations,
   type: FieldType,
   model: ModelName,
   isPlural: boolean,
@@ -191,20 +191,20 @@ export type AuthRulePluralValue<T> =
 export type AuthCheck =
   // Check that we reach the viewer ID following a certain route from the target
   // (e.g. `project|users|edges|node|id` (from a Company instance))
-  | { type: 'TARGET_BEFORE->VIEWER_ID', route: AuthRoute }
-  | { type: 'TARGET_AFTER->VIEWER_ID', route: AuthRoute }
+  | { type: 'targetBefore->viewerId', route: AuthRoute }
+  | { type: 'targetAfter->viewerId', route: AuthRoute }
 
   // Check that we reach the viewer ID following a certain route from the root
   // (e.g. `adminIds`, think Firebase)
-  | { type: 'ROOT->VIEWER_ID', route: AuthRoute }
+  | { type: 'root->viewerId', route: AuthRoute }
 
   // Check that we reach the target ID following a certain route from the viewer
   // (e.g. `_id`, when the user wants to edit his own account)
-  | { type: 'VIEWER->TARGET_ID', route: AuthRoute }
+  | { type: 'viewer->targetId', route: AuthRoute }
 
   // A function, or a stringified version of it (will be `eval`'ed')
   // e.g. `''req => req.operation === 'READ'`
-  | { type: 'SATISFIES', fn: AuthFunction | string };
+  | { type: 'satisfies', fn: AuthFunction | string };
 
 export type AuthRequest = {
   // who?
@@ -237,7 +237,7 @@ export type AuthRequest = {
 };
 
 export type AuthRoute = Array<string>;
-export type AuthOperation = 'READ' | 'WRITE';
+export type AuthOperation = 'read' | 'write';
 
 export type AuthFunction = (req: AuthRequest) => AuthResponse | Promise<AuthResponse>;
 export type AuthResponse = boolean | null;

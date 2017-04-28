@@ -19,15 +19,13 @@ exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
       name:
         description: Name of the user
         type: string
-        validations:
-          isRequired: true
-          isUnique: true
+        isRequired: true
+        isUnique: true
       surname:
         type: string
       aBoolean:
         type: boolean
-        validations:
-          isRequired: true
+        isRequired: true
         defaultValue: false
   project:
     includes:
@@ -37,15 +35,14 @@ exports[`YAML in/out schema1.yaml + schema2.yaml -> yaml 1`] = `
         type: string
       startDate:
         type: date
-        time: false
+        noTime: true
       endDate:
         type: date
-        time: false
+        noTime: true
     relations:
       projectManager:
         model: user
-        validations:
-          isRequired: true
+        isRequired: true
       technicalManager:
         model: user
         inverse: false
@@ -75,15 +72,13 @@ exports[`YAML in/out schema1.yaml -> yaml 1`] = `
       name:
         description: Name of the user
         type: string
-        validations:
-          isRequired: true
-          isUnique: true
+        isRequired: true
+        isUnique: true
       surname:
         type: string
       aBoolean:
         type: boolean
-        validations:
-          isRequired: true
+        isRequired: true
         defaultValue: false
   project:
     includes:
@@ -94,8 +89,7 @@ exports[`YAML in/out schema1.yaml -> yaml 1`] = `
     relations:
       projectManager:
         model: user
-        validations:
-          isRequired: true
+        isRequired: true
       technicalManager:
         model: user
         inverse: false

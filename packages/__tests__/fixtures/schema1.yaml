@@ -16,14 +16,12 @@ models:
       name:
         description: 'Name of the user'
         type: 'string'
-        validations:
-          isRequired: true
-          isUnique: true
+        isRequired: true
+        isUnique: true
       surname: { type: 'string' }
       aBoolean:
         type: 'boolean'
-        validations:
-          isRequired: true
+        isRequired: true
         defaultValue: false
   project:
     includes:
@@ -33,8 +31,7 @@ models:
     relations:
       projectManager:
         model: 'user'
-        validations:
-          isRequired: true
+        isRequired: true
       technicalManager:
         model: 'user'
         inverse: false

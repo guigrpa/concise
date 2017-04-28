@@ -99,8 +99,7 @@ const writeEdge = (
 ) => {
   const relation = models[modelName].relations[relationName];
   if (relation.isInverse) return null;
-  const { validations, description, inverseName, isPlural } = relation;
-  const isRequired = validations && validations.isRequired === true;
+  const { isRequired, inverseName, isPlural } = relation;
   if (
     filterEdges &&
     !filterEdges({
@@ -114,8 +113,12 @@ const writeEdge = (
   }
   const props = [];
   if (edgeLabels && relationName !== relation.model) {
-    props.push(`label="&nbsp;${relationName}&nbsp;&nbsp;"`);
+    const expectedRelationName = isPlural ? models[relation.model].plural : relation.model;
+    if (relationName !== expectedRelationName) {
+      props.push(`label="&nbsp;${relationName}&nbsp;&nbsp;"`);
+    }
   }
+  const description: any = relation.description;
   if (description) {
     props.push(`comment="${description}"`);
     props.push(`edgetooltip="${description}"`);

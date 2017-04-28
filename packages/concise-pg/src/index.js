@@ -121,9 +121,7 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
 const writeField = (models, modelName, tableName, fieldName) => {
   const field = models[modelName].fields[fieldName];
   const segments = [`"${fieldName}"`, writeFieldType(field)];
-  if (field.validations && field.validations.isRequired) {
-    segments.push('NOT NULL');
-  }
+  if (field.isRequired) segments.push('NOT NULL');
   const { defaultValue } = field;
   if (defaultValue != null) {
     if (defaultValue === true || defaultValue === false) {
@@ -146,7 +144,7 @@ const writeField = (models, modelName, tableName, fieldName) => {
       `CONSTRAINT "${modelName}_pk_${fieldName}" PRIMARY KEY ("${fieldName}")`,
     );
   }
-  if (field.validations && field.validations.isUnique) {
+  if (field.isUnique) {
     sqlFieldConstraints.push(
       `CONSTRAINT "${modelName}_unique_${fieldName}" UNIQUE ("${fieldName}")`,
     );
@@ -158,15 +156,15 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
   const relation = models[modelName].relations[relationName];
   const fieldName = `${relationName}Id`;
   const sqlFields = [];
-  const isRequired = relation.validations && relation.validations.isRequired;
 
   // Foreign key
   const segments = [`"${fieldName}"`, writeFieldType(relation)];
-  if (isRequired) segments.push('NOT NULL');
+  if (relation.isRequired) segments.push('NOT NULL');
   sqlFields.push(segments.join(' '));
 
-  const sqlFieldComment = relation.description
-    ? writeComment('FIELD', `${tableName}."${fieldName}"`, relation.description)
+  const description: any = relation.description;
+  const sqlFieldComment = description
+    ? writeComment('FIELD', `${tableName}."${fieldName}"`, description)
     : undefined;
   return { sqlFields, sqlFieldComment };
 };
@@ -180,7 +178,7 @@ const writeFieldType = (field: any) => {
   return field.type;
 };
 
-const writeComment = (type, object, cmt) =>
+const writeComment = (type, object, cmt: any) =>
   `COMMENT ON ${type} ${object} IS '${cmt}';`;
 
 // ====================================

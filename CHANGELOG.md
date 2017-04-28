@@ -1,3 +1,7 @@
+- Schema simplifications:
+  - Include validations in field/relations, not inside a `validations` attributes.
+  - Infer model name automatically from a direct relation's name (and its `isPlural` attribute)
+
 ## 0.1.0 (2017-4-26)
 
 First release.

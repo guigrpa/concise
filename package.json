@@ -62,7 +62,7 @@
     "eslint-plugin-jsx-a11y": "4.0.0",
     "eslint-plugin-react": "6.10.3",
     "extract-docs": "^1.4.0",
-    "flow-bin": "0.44.2",
+    "flow-bin": "0.45.0",
     "flow-copy-source": "^1.1.0",
     "jest": "19.0.2",
     "nyc": "10.2.0",

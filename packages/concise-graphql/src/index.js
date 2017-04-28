@@ -139,15 +139,14 @@ const writeMutationTypes = (models, modelName, op, options) => {
     if (!fields[fieldName].existsInServer) return;
     const spec = omit(
       fields[fieldName],
-      op === 'create' ? ['description'] : ['description', 'validations'],
+      op === 'create' ? ['description'] : ['description', 'isRequired'],
     );
     contents = contents.concat(writeField(fieldName, spec, options));
   });
   Object.keys(relations).forEach(fieldName => {
     const spec = relations[fieldName];
     if (spec.isInverse || spec.isPlural) return;
-    const { validations } = spec;
-    const isRequired = op === 'create' && validations && validations.isRequired;
+    const isRequired = op === 'create' && spec.isRequired;
     contents.push(
       `${spec.fkName}: ID${isRequired ? '!' : ''}`,
     );
@@ -175,7 +174,7 @@ const writeField = (name, specs: any, options) => {
 };
 
 const writeFieldType = (specs, options) => {
-  const { type, model, isPrimaryKey, validations, isPlural } = specs;
+  const { type, model, isPrimaryKey, isRequired, isPlural } = specs;
   let out;
   if (isPrimaryKey) out = 'ID';
   else if (model) out = upperFirst(model);
@@ -185,7 +184,7 @@ const writeFieldType = (specs, options) => {
   if (isPlural) {
     out = options.relay ? `${out}Connection` : `[${out}]`;
   }
-  if (isPrimaryKey || (validations && validations.isRequired)) out += '!';
+  if (isPrimaryKey || isRequired) out += '!';
   return out;
 };
 

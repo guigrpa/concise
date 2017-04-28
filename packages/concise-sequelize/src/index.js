@@ -217,11 +217,10 @@ const getFieldType = (field: ProcessedField) => {
   throw new Error(`UNSUPPORTED_FIELD_TYPE ${type}`);
 };
 
-const addFieldValidations = (field: ProcessedField, newField) => {
+const addFieldValidations = (field: any, newField) => {
   newField.validate = {};
-  const validations = field.validations || {};
-  Object.keys(validations).forEach(key => {
-    const val: any = validations[key];
+  Object.keys(field).forEach(key => {
+    const val: any = field[key];
     switch (key) {
       case 'isRequired':
         newField.allowNull = false;
@@ -285,7 +284,6 @@ const addFieldValidations = (field: ProcessedField, newField) => {
         newField.validate.satisfies = eval(val); // eslint-disable-line no-eval
         break;
       default:
-        throw new Error(`VALIDATION_UNSUPPORTED:${key}`);
     }
   });
   const { type } = field;

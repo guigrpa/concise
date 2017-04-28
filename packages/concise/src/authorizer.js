@@ -120,7 +120,7 @@ const executeRule = async (req, rule) => {
     const check: AuthCheck = checks[i];
 
     // Route-based checks
-    if (check.type === 'TARGET_BEFORE->VIEWER_ID') {
+    if (check.type === 'targetBefore->viewerId') {
       if (!req.hasOwnProperty('targetBefore')) return null; // missing data
       if (req.viewerId == null) throwNoViewer();
       const result = await req.checkRoute(
@@ -129,7 +129,7 @@ const executeRule = async (req, rule) => {
         req.viewerId,
       );
       if (!result) return false;
-    } else if (check.type === 'TARGET_AFTER->VIEWER_ID') {
+    } else if (check.type === 'targetAfter->viewerId') {
       if (!req.hasOwnProperty('targetBefore')) return null; // missing data
       if (!req.hasOwnProperty('targetAfter')) return null; // missing data
       if (req.viewerId == null) throwNoViewer();
@@ -139,11 +139,11 @@ const executeRule = async (req, rule) => {
         req.viewerId,
       );
       if (!result) return false;
-    } else if (check.type === 'ROOT->VIEWER_ID') {
+    } else if (check.type === 'root->viewerId') {
       if (req.viewerId == null) throwNoViewer();
       const result = await req.checkRoute(null, check.route, req.viewerId);
       if (!result) return false;
-    } else if (check.type === 'VIEWER->TARGET_ID') {
+    } else if (check.type === 'viewer->targetId') {
       if (req.viewer == null) throwNoViewer();
       if (req.targetId == null) throwNoTarget();
       const result = await req.checkRoute(
@@ -154,7 +154,7 @@ const executeRule = async (req, rule) => {
       if (!result) return false;
 
       // Custom checks
-    } else if (check.type === 'SATISFIES') {
+    } else if (check.type === 'satisfies') {
       const { fn: fnSpec } = check;
       const fn = typeof fnSpec === 'function' ? fnSpec : eval(fnSpec);
       const result = await fn(req);

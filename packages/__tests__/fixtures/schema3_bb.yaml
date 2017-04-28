@@ -8,14 +8,12 @@ models:
       isDeleted:
         type:             'boolean'
         defaultValue:     false
-        validations:
-          isRequired:     true
+        isRequired:       true
       _ver:
         description:      'Version number'
         type:             'number'
         defaultValue:     1
-        validations:
-          isRequired:     true
+        isRequired:       true
       createdAt:
         type:             'date'
     relations:
@@ -34,8 +32,7 @@ models:
     fields:
       action:
         type:             'string'
-        validations:
-          isRequired:     true
+        isRequired:       true
       url:
         type:             'string'
       result:
@@ -54,19 +51,16 @@ models:
     fields:
       login:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
-          isUnique:       true
+        isRequired:       true
+        hasAtLeastChars: 1
+        isUnique:       true
       hash:
         type:             'string'
   # -----------------------------------------------
   xUserRole:
     relations:
-      user:
-        validations: { isRequired: true }
-      role:
-        validations: { isRequired: true }
+      user: { isRequired: true }
+      role: { isRequired: true }
   # -----------------------------------------------
   role:
     includes:
@@ -74,8 +68,7 @@ models:
     fields:
       name:
         type:             'string'
-        validations:
-          isUnique:       true
+        isUnique:         true
       notes:
         type:             'string'
         isLong:           true
@@ -86,9 +79,8 @@ models:
     fields:
       name:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
       acronym:
         type:             'string'
       t0:
@@ -126,9 +118,8 @@ models:
     fields:
       name:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
       address:
         type:             'string'
       cityForMeetings:
@@ -138,15 +129,14 @@ models:
         isLong:           true
       acronym:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
       pmRate:
         type:             'number'
         isFloat:          true
     relations:
       project:
-        validations: { isRequired: true }
+        isRequired: true
         inverse:
           description:    'All companies in the project'
 
@@ -157,9 +147,8 @@ models:
     fields:
       name:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
       department:
         type:             'string'
       position:
@@ -170,19 +159,17 @@ models:
         type:             'string'
       email:
         type:             'string'
-        validations:
-          isEmail:        true
+        isEmail:          true
       notes:
         type:             'string'
         isLong:           true
       acronym:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
     relations:
       project:
-        validations: { isRequired: true }
+        isRequired: true
         inverse:
           description:    'All people in the project'
       company:
@@ -195,11 +182,9 @@ models:
       common:             true
     relations:
       person:
-        validations:
-          isRequired:     true
+        isRequired:       true
       peopleGroup:
-        validations:
-          isRequired:     true
+        isRequired:       true
   # -----------------------------------------------
   peopleGroup:
     includes:
@@ -207,12 +192,11 @@ models:
     fields:
       name:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
     relations:
       project:
-        validations: { isRequired: true }
+        isRequired: true
   # -----------------------------------------------
   workPackage:
     includes:
@@ -220,16 +204,14 @@ models:
     fields:
       acronym:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
       title:
         type:             'string'
       isHeader:
         type:             'boolean'
         defaultValue:     false
-        validations:
-          isRequired:     true
+        isRequired:       true
       version:
         type:             'string'
       objectives:
@@ -239,8 +221,7 @@ models:
       assumptions:
         type:             'string'
     relations:
-      project:
-        validations: { isRequired: true }
+      project: { isRequired: true }
       parent:
         model:            'workPackage'
         inverse:
@@ -267,9 +248,8 @@ models:
         type:             'string'
       acronym:
         type:             'string'
-        validations:
-          isRequired:     true
-          hasAtLeastChars: 1
+        isRequired:       true
+        hasAtLeastChars:  1
       plannedDelta:
         type:             'number'
         isFloat:          true
@@ -279,19 +259,16 @@ models:
       isPaymentMilestone:
         type:             'boolean'
         defaultValue:     false
-        validations:
-          isRequired:     true
+        isRequired:       true
       isAchieved:
         type:             'boolean'
         defaultValue:     false
-        validations:
-          isRequired:     true
+        isRequired:       true
       closureJustification:
         type:             'string'
         isLong:           true
     relations:
-      project:
-        validations: { isRequired: true }
+      project: { isRequired: true }
   # -----------------------------------------------
   annex:
     includes:

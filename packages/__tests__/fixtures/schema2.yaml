@@ -2,10 +2,9 @@ models:
   project:
     fields:
       name: { type: 'string' }
-      startDate: { type: 'date', time: false }
-      endDate: { type: 'date', time: false }
+      startDate: { type: 'date', noTime: true }
+      endDate: { type: 'date', noTime: true }
     relations:
       creator:
         model: 'user'
         inverse: { name: 'createdProjects' }
-    

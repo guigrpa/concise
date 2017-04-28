@@ -130,7 +130,7 @@ describe('Sequelize output', () => {
         models: {
           person: {
             fields: {
-              name: { type: 'string', validations: { isRequired: true } },
+              name: { type: 'string', isRequired: true },
             },
           },
         },
@@ -140,7 +140,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({});
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isRequired'); }
+      } catch (err) {
+        checkThrown(err, 'isRequired');
+      }
     });
 
     it('isUnique', async () => {
@@ -149,7 +151,7 @@ describe('Sequelize output', () => {
         models: {
           person: {
             fields: {
-              name: { type: 'string', validations: { isUnique: true } },
+              name: { type: 'string', isUnique: true },
             },
           },
         },
@@ -160,7 +162,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ name: 'foo' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isUnique'); }
+      } catch (err) {
+        checkThrown(err, 'isUnique');
+      }
     });
 
     it('isOneOf', async () => {
@@ -171,7 +175,7 @@ describe('Sequelize output', () => {
             fields: {
               name: {
                 type: 'string',
-                validations: { isOneOf: ['foo', 'bar'] },
+                isOneOf: ['foo', 'bar'],
               },
             },
           },
@@ -183,7 +187,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ name: 'qux' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isOneOf'); }
+      } catch (err) {
+        checkThrown(err, 'isOneOf');
+      }
     });
 
     it('hasAtLeastChars', async () => {
@@ -192,7 +198,7 @@ describe('Sequelize output', () => {
         models: {
           person: {
             fields: {
-              name: { type: 'string', validations: { hasAtLeastChars: 1 } },
+              name: { type: 'string', hasAtLeastChars: 1 },
             },
           },
         },
@@ -203,7 +209,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ name: '' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'hasAtLeastChars'); }
+      } catch (err) {
+        checkThrown(err, 'hasAtLeastChars');
+      }
     });
 
     it('isNumber (implicit)', async () => {
@@ -223,7 +231,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ age: 'a' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isNumber'); }
+      } catch (err) {
+        checkThrown(err, 'isNumber');
+      }
     });
 
     it('isLte', async () => {
@@ -232,7 +242,7 @@ describe('Sequelize output', () => {
         models: {
           person: {
             fields: {
-              age: { type: 'number', validations: { isLte: 150 } },
+              age: { type: 'number', isLte: 150 },
             },
           },
         },
@@ -243,7 +253,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ age: 166 });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isLte'); }
+      } catch (err) {
+        checkThrown(err, 'isLte');
+      }
     });
 
     it('satisfies (custom validation)', async () => {
@@ -254,11 +266,7 @@ describe('Sequelize output', () => {
             fields: {
               age: {
                 type: 'number',
-                validations: {
-                  satisfies: `
-                val => { if (val > 150) throw new Error('must be <= 150!'); }
-              `,
-                },
+                satisfies: "val => { if (val > 150) throw new Error('must be <= 150!'); }",
               },
             },
           },
@@ -270,7 +278,9 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ age: 166 });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'satisfies'); }
+      } catch (err) {
+        checkThrown(err, 'satisfies');
+      }
     });
 
     it('other validations', async () => {
@@ -279,15 +289,15 @@ describe('Sequelize output', () => {
         models: {
           person: {
             fields: {
-              a: { type: 'string', validations: { hasAtMostChars: 4 } },
-              b: { type: 'string', validations: { hasLengthWithinRange: [1, 4] } },
-              email: { type: 'string', validations: { isEmail: true } },
-              url: { type: 'string', validations: { isUrl: true } },
-              ipAddress: { type: 'string', validations: { isIp: true } },
-              creditCard: { type: 'string', validations: { isCreditCard: true } },
-              c: { type: 'string', validations: { matchesPattern: ['[a-z][a-z]'] } },
-              num1: { type: 'number', validations: { isGte: 5 } },
-              num2: { type: 'number', validations: { isWithinRange: [12, 20] } },
+              a: { type: 'string', hasAtMostChars: 4 },
+              b: { type: 'string', hasLengthWithinRange: [1, 4] },
+              email: { type: 'string', isEmail: true },
+              url: { type: 'string', isUrl: true },
+              ipAddress: { type: 'string', isIp: true },
+              creditCard: { type: 'string', isCreditCard: true },
+              c: { type: 'string', matchesPattern: ['[a-z][a-z]'] },
+              num1: { type: 'number', isGte: 5 },
+              num2: { type: 'number', isWithinRange: [12, 20] },
               myDate: { type: 'date' },
             },
           },
@@ -299,77 +309,84 @@ describe('Sequelize output', () => {
       try {
         await db.Person.create({ a: '123456789' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'hasAtMostChars'); }
+      } catch (err) {
+        checkThrown(err, 'hasAtMostChars');
+      }
       await db.Person.create({ b: '123' });
       try {
         await db.Person.create({ b: '123456789' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'hasLengthWithinRange'); }
+      } catch (err) {
+        checkThrown(err, 'hasLengthWithinRange');
+      }
       try {
         await db.Person.create({ b: '' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'hasLengthWithinRange'); }
+      } catch (err) {
+        checkThrown(err, 'hasLengthWithinRange');
+      }
       await db.Person.create({ email: 'guille@example.com' });
       try {
         await db.Person.create({ email: 'fefje@@wrong' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isEmail'); }
+      } catch (err) {
+        checkThrown(err, 'isEmail');
+      }
       await db.Person.create({ url: 'http://www.google.com' });
       try {
         await db.Person.create({ url: 'goog' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isUrl'); }
+      } catch (err) {
+        checkThrown(err, 'isUrl');
+      }
       await db.Person.create({ ipAddress: '128.0.0.1' });
       try {
         await db.Person.create({ ipAddress: 'xxx' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isIp'); }
+      } catch (err) {
+        checkThrown(err, 'isIp');
+      }
       await db.Person.create({ creditCard: '5492165749242439' });
       try {
         await db.Person.create({ creditCard: 'xxx' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isCreditCard'); }
+      } catch (err) {
+        checkThrown(err, 'isCreditCard');
+      }
       await db.Person.create({ c: 'dd' });
       try {
         await db.Person.create({ c: '1' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'matchesPattern'); }
+      } catch (err) {
+        checkThrown(err, 'matchesPattern');
+      }
       await db.Person.create({ num1: 6 });
       try {
         await db.Person.create({ num1: 1 });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isGte'); }
+      } catch (err) {
+        checkThrown(err, 'isGte');
+      }
       await db.Person.create({ num2: 15 });
       try {
         await db.Person.create({ num2: 1 });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isWithinRange'); }
+      } catch (err) {
+        checkThrown(err, 'isWithinRange');
+      }
       try {
         await db.Person.create({ num2: 221 });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isWithinRange'); }
+      } catch (err) {
+        checkThrown(err, 'isWithinRange');
+      }
       await db.Person.create({ myDate: new Date() });
       try {
         await db.Person.create({ myDate: '.' });
         throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'isDate'); }
-    });
-
-    it('invalid rules should be rejected', async () => {
-      const concise = new Concise();
-      concise.addSchema({
-        models: {
-          person: {
-            fields: {
-              age: { type: 'number', validations: { invalidRule: true } },
-            },
-          },
-        },
-      });
-      try {
-        db = await concise.output(output, { Sequelize, sequelize });
-        throw new Error(DID_NOT_THROW);
-      } catch (err) { checkThrown(err, 'concise.output'); }
+      } catch (err) {
+        checkThrown(err, 'isDate');
+      }
     });
   });
 
@@ -381,7 +398,11 @@ describe('Sequelize output', () => {
       person: {
         fields: {
           name: { type: 'string' },
-          isAlive: { type: 'boolean', defaultValue: true, validations: { isRequired: true } },
+          isAlive: {
+            type: 'boolean',
+            defaultValue: true,
+            isRequired: true,
+          },
         },
       },
     },
@@ -487,7 +508,7 @@ describe('Sequelize output', () => {
       await db.sequelize.sync();
       const person = await db.Person.create({ name: 'John' });
       expect(person.isAlive).toEqual(true);
-      await person.die();  // never thought I'd ever write this ;)
+      await person.die(); // never thought I'd ever write this ;)
       expect(person.isAlive).toEqual(false);
     });
 

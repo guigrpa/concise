@@ -80,15 +80,12 @@ const processRelations = models => {
       if (relation === true) relation = {};
       if (relation.isInverse) return;
       // Relation defaults
-      const fkName = getFkName(
-        relationName,
-        relation.isPlural != null ? relation.isPlural : false,
-      );
+      const { isPlural = false } = relation;
+      const fkName = getFkName(relationName, isPlural);
       relation = addDefaults(relation, {
-        model: relationName,
+        model: isPlural ? singularize(relationName) : relationName,
         fkName,
         isPlural: false,
-        validations: {},
         isInverse: false,
       });
       const relatedModelName = relation.model;
@@ -116,7 +113,6 @@ const processRelations = models => {
         inverseRelation = addDefaults(inverseRelation, {
           model: modelName,
           isPlural: true,
-          validations: {},
           isInverse: true,
           inverseName: relationName,
         });
