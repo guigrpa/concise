@@ -1,6 +1,6 @@
 // @flow
 
-/* eslint-disable prefer-template, no-param-reassign */
+/* eslint-disable prefer-template, no-param-reassign, no-console */
 
 import fs from 'fs';
 import type { Schema, OutputProcessor, SchemaUtils } from 'concise-types';
@@ -108,47 +108,66 @@ const getFieldConstraints = field => {
   }
 
   // Other validations
-  if (field.isOneOf != null) {
-    const choiceConstraints = field.isOneOf.map(o => `newData.val() === ${o}`);
+  const {
+    isOneOf,
+    hasAtLeastChars,
+    hasAtMostChars,
+    hasLengthWithinRange,
+    isEmail,
+    isUrl,
+    isIp,
+    isCreditCard,
+    matchesPattern,
+    isGte,
+    isLte,
+    isWithinRange,
+    satisfies,
+  } = field;
+  if (isOneOf != null) {
+    const choiceConstraints = isOneOf.map(o => `newData.val() === ${o}`);
     constraints.push(`(${choiceConstraints.join(' || ')})`);
   }
-  if (field.hasAtLeastChars != null) {
-    constraints.push(`newData.val().length >= ${field.hasAtLeastChars}`);
+  if (hasAtLeastChars != null) {
+    constraints.push(`newData.val().length >= ${hasAtLeastChars}`);
   }
-  if (field.hasAtMostChars != null) {
-    constraints.push(`newData.val().length <= ${field.hasAtMostChars}`);
+  if (hasAtMostChars != null) {
+    constraints.push(`newData.val().length <= ${hasAtMostChars}`);
   }
-  if (field.hasLengthWithinRange != null) {
-    constraints.push(`newData.val().length >= ${field.hasLengthWithinRange[0]}`);
-    constraints.push(`newData.val().length <= ${field.hasLengthWithinRange[1]}`);
+  if (hasLengthWithinRange != null) {
+    constraints.push(`newData.val().length >= ${hasLengthWithinRange[0]}`);
+    constraints.push(`newData.val().length <= ${hasLengthWithinRange[1]}`);
   }
-  if (field.isEmail) {
-    constraints.push('newData.val().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$/i)');
+  if (isEmail) {
+    constraints.push(
+      'newData.val().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$/i)',
+    );
   }
-  if (field.isUrl) {
+  if (isUrl) {
     console.log('WARNING: isUrl validation is currently unsupported');
   }
-  if (field.isIp) {
+  if (isIp) {
     console.log('WARNING: isIp validation is currently unsupported');
   }
-  if (field.isCreditCard) {
+  if (isCreditCard) {
     console.log('WARNING: isCreditCard validation is currently unsupported');
   }
-  if (field.matchesPattern != null) {
-    constraints.push(`newData.val().matches(/${field.matchesPattern[0]}/${field.matchesPattern[1]})`);
+  if (matchesPattern != null) {
+    constraints.push(
+      `newData.val().matches(/${matchesPattern[0]}/${matchesPattern[1]})`,
+    );
   }
-  if (field.isGte != null) {
-    constraints.push(`newData.val() >= ${field.isGte}`);
+  if (isGte != null) {
+    constraints.push(`newData.val() >= ${isGte}`);
   }
-  if (field.isLte != null) {
-    constraints.push(`newData.val() <= ${field.isLte}`);
+  if (isLte != null) {
+    constraints.push(`newData.val() <= ${isLte}`);
   }
-  if (field.isWithinRange != null) {
-    constraints.push(`newData.val() >= ${field.isWithinRange[0]}`);
-    constraints.push(`newData.val() <= ${field.isWithinRange[1]}`);
+  if (isWithinRange != null) {
+    constraints.push(`newData.val() >= ${isWithinRange[0]}`);
+    constraints.push(`newData.val() <= ${isWithinRange[1]}`);
   }
-  if (field.satisfies != null) {
-    constraints.push(field.satisfies);
+  if (satisfies != null) {
+    constraints.push(satisfies);
   }
   return constraints;
 };
