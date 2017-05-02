@@ -27,6 +27,7 @@
     "concise-flow": "*",
     "concise-graphql": "*",
     "concise-diagram": "*",
-    "concise-sequelize": "*"
+    "concise-sequelize": "*",
+    "concise-firebase": "*"
   }
 }

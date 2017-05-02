@@ -6,13 +6,17 @@ models:
   user:
     includes: { common: true }
     fields:
-      name: { type: string, isRequired: true }
-      username: { type: string, isRequired: true }
+      email: { type: string, isRequired: true, isEmail: true }
       password: { type: string, isRequired: true }
+      firstName: { type: string, hasAtMostChars: 99 }
+      lastName: { type: string, hasAtMostChars: 99 }
+      displayName: { type: string, hasAtMostChars: 99 }
   space:
     includes: { common: true }
     fields:
-      name: { type: string, isRequired: true }
+      name: { type: string, isRequired: true, hasLengthWithinRange: [1, 99] }
+      open: { type: boolean, isRequired: true, defaultValue: true }
+      notice: { type: string, isLong: true, hasAtMostChars: 999}
     relations:
       owner:
         model: user
