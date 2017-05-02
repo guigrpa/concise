@@ -18,6 +18,7 @@ import type {
 Output-only.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `filterEdges?` (`{ from: ModelName, to: ModelName, as: FieldName, isRequired: boolean } => boolean`):
   return `true` if a given edge must be shown. Default: all edges are shown
 * `edgeLabels?` (`boolean` = `true`): show edge labels

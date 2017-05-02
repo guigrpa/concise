@@ -7,6 +7,7 @@ import type { Schema, InputProcessor, OutputProcessor } from 'concise-types';
 Input/output.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `prettyJson?` (`boolean` = `false`): prettify JSON output
 -- */
 type InputOptions = {

@@ -9,6 +9,7 @@ import type { Schema, OutputProcessor, SchemaUtils } from 'concise-types';
 Output-only.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `schema?` (`string`): PostgreSQL schema; if unspecified, no schema is used
   in the SQL definitions (which corresponds to the `public` schema)
 -- */

@@ -11,6 +11,7 @@ import upperFirst from 'lodash.upperfirst';
 Output-only.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `relay?` (`boolean` = `false`): include `Node` interface
   and `node` root field, define connections, etc.
 * `storyboard?` (`boolean` = `false`): include `storyId` field

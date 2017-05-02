@@ -108,9 +108,6 @@ Input options:
 * `raw?` (`string`): if specified, its value is used as raw input schema
 * **Note**: either `file` or `raw` should be specified for input processors
 
-Output options:
-
-* `file?` (`string`): if specified, output will be written to the specified path
 
 #### concise-yaml
 

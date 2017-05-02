@@ -9,7 +9,8 @@ import upperFirst from 'lodash.upperfirst';
 /* --
 Output-only.
 
-No specific options.
+Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 -- */
 type OutputOptions = {
   file?: string,
