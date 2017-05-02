@@ -1,3 +1,5 @@
+- Add Firebase initial support, with automatic generation of `.validate` rules (`concise-firebase`)
+
 ## 0.2.0 (2017-4-28)
 
 - Schema simplifications:
