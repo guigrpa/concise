@@ -15,7 +15,7 @@ A tool belt for concise schemas.
     - Flow types (`concise-flow`)
     - GraphQL schema language (`concise-graphql`)
     - Entity-relationship diagram (`concise-diagram`)
-    - Firebase database rules (*coming up!*)
+    - Firebase database rules (`concise-firebase`)
 * Update your schema in one place!
 
 
@@ -108,9 +108,6 @@ Input options:
 * `raw?` (`string`): if specified, its value is used as raw input schema
 * **Note**: either `file` or `raw` should be specified for input processors
 
-Output options:
-
-* `file?` (`string`): if specified, output will be written to the specified path
 
 #### concise-yaml
 
@@ -123,6 +120,7 @@ No specific options.
 Input/output.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `prettyJson?` (`boolean` = `false`): prettify JSON output
 
 #### concise-pg
@@ -130,6 +128,7 @@ Output options:
 Output-only.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `schema?` (`string`): PostgreSQL schema; if unspecified, no schema is used
   in the SQL definitions (which corresponds to the `public` schema)
 
@@ -149,13 +148,15 @@ Output options:
 
 Output-only.
 
-No specific options.
+Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 
 #### concise-graphql
 
 Output-only.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `relay?` (`boolean` = `false`): include `Node` interface
   and `node` root field, define connections, etc.
 * `storyboard?` (`boolean` = `false`): include `storyId` field
@@ -166,9 +167,17 @@ Output options:
 Output-only.
 
 Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 * `filterEdges?` (`{ from: ModelName, to: ModelName, as: FieldName, isRequired: boolean } => boolean`):
   return `true` if a given edge must be shown. Default: all edges are shown
 * `edgeLabels?` (`boolean` = `true`): show edge labels
+
+#### concise-firebase
+
+Output-only.
+
+Output options:
+* `file?` (`string`): if specified, output will be written to the specified path
 
 
 ## Examples
