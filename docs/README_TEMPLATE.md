@@ -15,7 +15,7 @@ A tool belt for concise schemas.
     - Flow types (`concise-flow`)
     - GraphQL schema language (`concise-graphql`)
     - Entity-relationship diagram (`concise-diagram`)
-    - Firebase database rules (*coming up!*)
+    - Firebase database rules (`concise-firebase`)
 * Update your schema in one place!
 
 
@@ -136,6 +136,10 @@ Input options:
 #### concise-diagram
 
 [[[./packages/concise-diagram/src/index.js]]]
+
+#### concise-firebase
+
+[[[./packages/concise-firebase/src/index.js]]]
 
 
 ## Examples

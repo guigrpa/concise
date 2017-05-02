@@ -17,7 +17,8 @@
     "diagram",
     "erd",
     "graphql",
-    "sequelize"
+    "sequelize",
+    "firebase"
   ],
   "homepage": "https://github.com/guigrpa/concise#readme",
   "bugs": {
