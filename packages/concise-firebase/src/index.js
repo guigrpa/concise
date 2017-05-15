@@ -13,6 +13,7 @@ Output options:
 -- */
 type OutputOptions = {
   file?: string,
+  ignorePrimaryKey?: boolean,
 };
 
 const VALIDATE = '.validate';
@@ -27,7 +28,7 @@ const output: OutputProcessor = async (
   options: OutputOptions,
   utils: SchemaUtils
 ) => {
-  const rules = writeRulesForAllModels(utils.preprocessedSchema);
+  const rules = writeRulesForAllModels(utils.preprocessedSchema, options);
   if (options.file) {
     fs.writeFileSync(options.file, JSON.stringify(rules, null, 2), 'utf8');
   }
@@ -37,23 +38,23 @@ const output: OutputProcessor = async (
 // ====================================
 // Rule writer
 // ====================================
-const writeRulesForAllModels = ({ models }) => {
+const writeRulesForAllModels = ({ models }, options) => {
   const rules = {};
   Object.keys(models).forEach(modelName => {
     if (!models[modelName].existsInServer) return;
     rules[modelName] = {
-      [`$${modelName}Id`]: writeRulesForModel(models, modelName),
+      [`$${modelName}Id`]: writeRulesForModel(models, modelName, options),
     };
   });
   return { rules };
 };
 
-const writeRulesForModel = (models, modelName) => {
+const writeRulesForModel = (models, modelName, options) => {
   const model = models[modelName];
   const modelRules = {};
 
   // Required fields
-  const requiredFields = getRequiredFields(model);
+  const requiredFields = getRequiredFields(model, options);
   if (requiredFields.length) {
     const list = requiredFields.map(o => `'${o}'`).join(', ');
     modelRules[VALIDATE] = `newData.hasChildren([${list}])`;
@@ -179,11 +180,12 @@ const getFieldConstraints = field => {
 // ====================================
 // Helpers
 // ====================================
-const getRequiredFields = ({ fields, relations }) => {
+const getRequiredFields = ({ fields, relations }, { ignorePrimaryKey }) => {
   const required = [];
   Object.keys(fields).forEach(name => {
     const field = fields[name];
     if (!field.existsInServer) return;
+    if (ignorePrimaryKey && field.isPrimaryKey) return;
     if (field.isRequired || field.isPrimaryKey) {
       required.push(name);
     }
