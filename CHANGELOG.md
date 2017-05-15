@@ -1,3 +1,5 @@
+## 0.2.2 (2017-5-15)
+
 - Firebase: include root `rules` property
 - Firebase: bugfix: correctly write rules for `isOneOf` validation
 
