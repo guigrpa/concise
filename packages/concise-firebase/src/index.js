@@ -25,7 +25,7 @@ const ISO_8601 =
 const output: OutputProcessor = async (
   schema: Schema,
   options: OutputOptions,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => {
   const rules = writeRulesForAllModels(utils.preprocessedSchema);
   if (options.file) {
@@ -45,7 +45,7 @@ const writeRulesForAllModels = ({ models }) => {
       [`$${modelName}Id`]: writeRulesForModel(models, modelName),
     };
   });
-  return rules;
+  return { rules };
 };
 
 const writeRulesForModel = (models, modelName) => {
@@ -124,7 +124,11 @@ const getFieldConstraints = field => {
     satisfies,
   } = field;
   if (isOneOf != null) {
-    const choiceConstraints = isOneOf.map(o => `newData.val() === ${o}`);
+    const choiceConstraints = type === 'string' ||
+      type === 'uuid' ||
+      type === 'date'
+      ? isOneOf.map(o => `newData.val() === '${o}'`)
+      : isOneOf.map(o => `newData.val() === ${o}`);
     constraints.push(`(${choiceConstraints.join(' || ')})`);
   }
   if (hasAtLeastChars != null) {
@@ -139,7 +143,7 @@ const getFieldConstraints = field => {
   }
   if (isEmail) {
     constraints.push(
-      'newData.val().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$/i)',
+      'newData.val().matches(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}$/i)'
     );
   }
   if (isUrl) {
@@ -153,7 +157,7 @@ const getFieldConstraints = field => {
   }
   if (matchesPattern != null) {
     constraints.push(
-      `newData.val().matches(/${matchesPattern[0]}/${matchesPattern[1]})`,
+      `newData.val().matches(/${matchesPattern[0]}/${matchesPattern[1]})`
     );
   }
   if (isGte != null) {

@@ -1,3 +1,6 @@
+- Firebase: include root `rules` property
+- Firebase: bugfix: correctly write rules for `isOneOf` validation
+
 ## 0.2.1 (2017-5-2)
 
 - Add Firebase initial support, with automatic generation of `.validate` rules (`concise-firebase`)
