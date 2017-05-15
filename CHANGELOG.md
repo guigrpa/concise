@@ -1,3 +1,5 @@
+## 0.2.3 (2017-5-15)
+
 - Firebase: add `ignorePrimaryKey` option
 
 ## 0.2.2 (2017-5-15)
