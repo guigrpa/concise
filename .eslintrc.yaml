@@ -32,6 +32,10 @@ rules:
   object-property-newline: off
   class-methods-use-this: off
   arrow-parens: off
+  prefer-destructuring: off
+  function-paren-newline: off
+  object-curly-newline: off
+  curly: off
   react/sort-comp: off
   react/jsx-first-prop-new-line: off
   react/jsx-indent: off
