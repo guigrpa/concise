@@ -27,9 +27,8 @@
   "repository": "guigrpa/concise",
   "scripts": {
     "status": "oao status",
-    "travis": "yarn bootstrap && yarn compile && yarn test",
-    "build": "yarn bootstrap && yarn compile && yarn lint && yarn flow && yarn test && yarn xxl && yarn prepareRelease",
-    "bootstrap": "oao bootstrap",
+    "travis": "yarn compile && yarn test",
+    "build": "yarn compile && yarn lint && yarn flow && yarn test && yarn xxl && yarn prepareRelease",
     "compile": "oao all --parallel \"yarn compile\"",
     "compileWatch": "oao all --parallel \"yarn compileWatch\"",
     "lint": "eslint packages",
@@ -74,6 +73,7 @@
     "sqlite3": "^4.0.0",
     "xxl": "^1.2.0"
   },
+  "workspaces": ["packages/*"],
   "jest": {
     "clearMocks": true,
     "testRegex": "packages/.*__tests__/.*\\.(test|spec)\\.(js|jsx)$",
