@@ -266,7 +266,8 @@ describe('Sequelize output', () => {
             fields: {
               age: {
                 type: 'number',
-                satisfies: "val => { if (val > 150) throw new Error('must be <= 150!'); }",
+                satisfies:
+                  "val => { if (val > 150) throw new Error('must be <= 150!'); }",
               },
             },
           },

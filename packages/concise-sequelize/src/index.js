@@ -96,6 +96,8 @@ const defineModel = (db, schema, modelName, options) => {
   addDefinitionOptions(definitionOptions, modelName, options, context);
   const fields = defineFields(db, model);
   db[className] = db.sequelize.define(modelName, fields, definitionOptions);
+  addModelMethods(db[className], '$all', options, context);
+  addModelMethods(db[className], modelName, options, context);
 };
 
 const defineFields = (db, model) => {
@@ -139,23 +141,31 @@ const addDefinitionOptions = (
       extensions.indexes(context)
     );
   }
-  if (extensions.classMethods) {
-    definitionOptions.classMethods = merge(
-      definitionOptions.classMethods,
-      extensions.classMethods(context)
-    );
-  }
-  if (extensions.instanceMethods) {
-    definitionOptions.instanceMethods = merge(
-      definitionOptions.instanceMethods,
-      extensions.instanceMethods(context)
-    );
-  }
   if (extensions.hooks) {
     definitionOptions.hooks = merge(
       definitionOptions.hooks,
       extensions.hooks(context)
     );
+  }
+};
+
+const addModelMethods = (Model, modelName, options, context) => {
+  const extensions =
+    options && options.extensions && options.extensions[modelName];
+  if (!extensions) return;
+  if (extensions.classMethods) {
+    const classMethods = extensions.classMethods(context);
+    const keys = Object.keys(classMethods);
+    keys.forEach(key => {
+      Model[key] = classMethods[key];
+    });
+  }
+  if (extensions.instanceMethods) {
+    const instanceMethods = extensions.instanceMethods(context);
+    const keys = Object.keys(instanceMethods);
+    keys.forEach(key => {
+      Model.prototype[key] = instanceMethods[key];
+    });
   }
 };
 

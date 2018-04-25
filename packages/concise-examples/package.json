@@ -17,7 +17,7 @@
     "prettier": "^1.12.1"
   },
   "dependencies": {
-    "sequelize": "^3.30.4",
+    "sequelize": "^4.37.6",
     "sqlite3": "^4.0.0",
     "concise-yaml": "*",
     "concise": "*",
