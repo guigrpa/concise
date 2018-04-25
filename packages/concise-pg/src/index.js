@@ -67,8 +67,7 @@ const writeTable = (models, modelName, options) => {
       models,
       modelName,
       tableName,
-      fieldName,
-      options
+      fieldName
     );
     if (sqlField) sqlFields.push(sqlField);
     if (sqlFieldComment) sqlComments.push(sqlFieldComment);
@@ -82,8 +81,7 @@ const writeTable = (models, modelName, options) => {
       models,
       modelName,
       tableName,
-      relationName,
-      options
+      relationName
     );
     if (someSqlFields) sqlFields = sqlFields.concat(someSqlFields);
     if (sqlFieldComment) sqlComments.push(sqlFieldComment);
