@@ -44,7 +44,8 @@
     "jestWatch": "jest --watch --coverage",
     "prepareRelease": "yarn docs && oao prepublish",
     "docs": "extract-docs --template docs/README_TEMPLATE.md --output README.md",
-    "release": "oao publish"
+    "release": "oao publish",
+    "prettier": "prettier --single-quote --trailing-comma es5 --write \"packages/**/src/**/*.js\""
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
@@ -68,6 +69,7 @@
     "jest": "19.0.2",
     "nyc": "10.2.0",
     "oao": "^1.5.1",
+    "prettier": "^1.12.1",
     "sequelize": "3.30.4",
     "sqlite3": "^4.0.0",
     "xxl": "^1.2.0"

@@ -20,10 +20,15 @@ const run = async () => {
     // await concise.input(input, {
     //   file: path.join(__dirname, '../../__tests__/fixtures/schema2.yaml'),
     // });
-    const sequelize = new Sequelize('database', 'username', 'password', { dialect: 'sqlite' });
+    const sequelize = new Sequelize('database', 'username', 'password', {
+      dialect: 'sqlite',
+    });
     const db = await concise.output(output, { Sequelize, sequelize });
     await db.sequelize.sync();
-    const person = await db.Person.create({ name: 'Juan Pérez', acronym: 'JP' });
+    const person = await db.Person.create({
+      name: 'Juan Pérez',
+      acronym: 'JP',
+    });
     console.log(person.get());
   } catch (err) {
     console.error(err);

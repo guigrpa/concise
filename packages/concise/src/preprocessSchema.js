@@ -93,13 +93,13 @@ const processRelations = models => {
       const relatedModel = models[relatedModelName];
       if (!relatedModel) {
         throw new Error(
-          `RELATED_MODEL_NOT_FOUND ${modelName}/${relationName}/${relatedModelName}`,
+          `RELATED_MODEL_NOT_FOUND ${modelName}/${relationName}/${relatedModelName}`
         );
       }
       const idField = relatedModel.fields.id;
       if (!idField) {
         throw new Error(
-          `ID_FIELD_NOT_FOUND ${modelName}/${relationName}/${relatedModelName}`,
+          `ID_FIELD_NOT_FOUND ${modelName}/${relationName}/${relatedModelName}`
         );
       }
       relation.type = idField.type;
@@ -107,9 +107,10 @@ const processRelations = models => {
       // Create inverse relation, if needed
       const { inverse } = relation;
       if (inverse !== false) {
-        let inverseRelation = inverse == null || inverse === true
-          ? {} // inverse shorthand
-          : omit(clone(inverse), ['name']);
+        let inverseRelation =
+          inverse == null || inverse === true
+            ? {} // inverse shorthand
+            : omit(clone(inverse), ['name']);
         inverseRelation = addDefaults(inverseRelation, {
           model: modelName,
           isPlural: true,
@@ -124,7 +125,7 @@ const processRelations = models => {
           (isInversePlural ? pluralize(modelName) : modelName);
         const inverseFkName = getFkName(
           inverseName,
-          isInversePlural != null ? isInversePlural : true,
+          isInversePlural != null ? isInversePlural : true
         );
         inverseRelation.fkName = inverseFkName;
         relatedModel.relations[inverseName] = inverseRelation;

@@ -18,6 +18,9 @@
     "timm": "^1.2.5",
     "concise-types": "*"
   },
+  "devDependencies": {
+    "prettier": "^1.12.1"
+  },
   "description": "A tool belt for concise schemas",
   "keywords": [
     "schema",

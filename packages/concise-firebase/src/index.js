@@ -125,11 +125,10 @@ const getFieldConstraints = field => {
     satisfies,
   } = field;
   if (isOneOf != null) {
-    const choiceConstraints = type === 'string' ||
-      type === 'uuid' ||
-      type === 'date'
-      ? isOneOf.map(o => `newData.val() === '${o}'`)
-      : isOneOf.map(o => `newData.val() === ${o}`);
+    const choiceConstraints =
+      type === 'string' || type === 'uuid' || type === 'date'
+        ? isOneOf.map(o => `newData.val() === '${o}'`)
+        : isOneOf.map(o => `newData.val() === ${o}`);
     constraints.push(`(${choiceConstraints.join(' || ')})`);
   }
   if (hasAtLeastChars != null) {

@@ -13,7 +13,8 @@
   },
   "devDependencies": {
     "babel-runtime": "^6.23.0",
-    "concise-types": "*"
+    "concise-types": "*",
+    "prettier": "^1.12.1"
   },
   "dependencies": {
     "graphql": "^0.9.3",

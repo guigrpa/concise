@@ -231,7 +231,7 @@ export type AuthRequest = {
   checkRoute: (
     fromNode: any,
     route: AuthRoute,
-    checkValue: any,
+    checkValue: any
   ) => Promise<boolean>,
   // ...may have additional helpers, depending on the plugin
 };
@@ -239,7 +239,9 @@ export type AuthRequest = {
 export type AuthRoute = Array<string>;
 export type AuthOperation = 'read' | 'write';
 
-export type AuthFunction = (req: AuthRequest) => AuthResponse | Promise<AuthResponse>;
+export type AuthFunction = (
+  req: AuthRequest
+) => AuthResponse | Promise<AuthResponse>;
 export type AuthResponse = boolean | null;
 // (`null` meaning undecided yet, e.g. ask me again later with the `fieldValue`)
 
@@ -255,7 +257,7 @@ export type InputProcessor = (options: Object) => Promise<Schema>;
 export type OutputProcessor = (
   schema: Schema,
   options: Object,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => Promise<any>;
 
 export type SchemaUtils = {

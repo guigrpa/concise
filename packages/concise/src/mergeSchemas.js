@@ -27,7 +27,9 @@ const mergeSchemas = (a: Schema, b: Schema): Schema => {
       description,
       includes: includes ? merge(model.includes || {}, includes) : undefined,
       fields: fields ? merge(model.fields || {}, fields) : undefined,
-      relations: relations ? merge(model.relations || {}, relations) : undefined,
+      relations: relations
+        ? merge(model.relations || {}, relations)
+        : undefined,
     });
     models = timmSet(models, modelName, model);
   });

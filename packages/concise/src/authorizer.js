@@ -72,7 +72,7 @@ const matchesSingular = (actualValue: any, filterSpec: any) => {
       matches = refValue.indexOf(actualValue) < 0;
     } else {
       throw new Error(
-        `Unknown operator '${operator}' in auth filter (singular)`,
+        `Unknown operator '${operator}' in auth filter (singular)`
       );
     }
     if (!matches) return false;
@@ -126,7 +126,7 @@ const executeRule = async (req, rule) => {
       const result = await req.checkRoute(
         req.targetBefore,
         check.route,
-        req.viewerId,
+        req.viewerId
       );
       if (!result) return false;
     } else if (check.type === 'targetAfter->viewerId') {
@@ -136,7 +136,7 @@ const executeRule = async (req, rule) => {
       const result = await req.checkRoute(
         req.targetAfter,
         check.route,
-        req.viewerId,
+        req.viewerId
       );
       if (!result) return false;
     } else if (check.type === 'root->viewerId') {
@@ -149,7 +149,7 @@ const executeRule = async (req, rule) => {
       const result = await req.checkRoute(
         req.viewer,
         check.route,
-        req.targetId,
+        req.targetId
       );
       if (!result) return false;
 

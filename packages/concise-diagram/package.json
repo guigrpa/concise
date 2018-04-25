@@ -17,6 +17,9 @@
     "viz.js": "^1.7.1",
     "concise-types": "*"
   },
+  "devDependencies": {
+    "prettier": "^1.12.1"
+  },
   "description": "A tool belt for concise schemas",
   "keywords": [
     "schema",

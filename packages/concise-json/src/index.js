@@ -37,7 +37,7 @@ const input: InputProcessor = async (options: InputOptions) => {
 
 const output: OutputProcessor = async (
   schema: Schema,
-  options: OutputOptions,
+  options: OutputOptions
 ) => {
   const { prettyJson = true } = options;
   const raw = prettyJson

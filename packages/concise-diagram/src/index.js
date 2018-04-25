@@ -45,11 +45,11 @@ const DEFAULT_OPTIONS = {
 const output: OutputProcessor = async (
   schema: Schema,
   options: OutputOptions,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => {
   const vizInput = writeDiagram(
     utils.preprocessedSchema,
-    addDefaults(options, DEFAULT_OPTIONS),
+    addDefaults(options, DEFAULT_OPTIONS)
   );
   const svg = Viz(vizInput);
   if (options.file) {
@@ -96,7 +96,7 @@ const writeEdge = (
   models,
   modelName,
   relationName,
-  { filterEdges, edgeLabels },
+  { filterEdges, edgeLabels }
 ) => {
   const relation = models[modelName].relations[relationName];
   if (relation.isInverse) return null;
@@ -114,7 +114,9 @@ const writeEdge = (
   }
   const props = [];
   if (edgeLabels && relationName !== relation.model) {
-    const expectedRelationName = isPlural ? models[relation.model].plural : relation.model;
+    const expectedRelationName = isPlural
+      ? models[relation.model].plural
+      : relation.model;
     if (relationName !== expectedRelationName) {
       props.push(`label="&nbsp;${relationName}&nbsp;&nbsp;"`);
     }
@@ -131,7 +133,7 @@ const writeEdge = (
     const inverse = models[relation.model].relations[inverseName];
     if (!inverse) {
       throw new Error(
-        `INVERSE_RELATION_NOT_FOUND ${relation.model}/${inverseName}`,
+        `INVERSE_RELATION_NOT_FOUND ${relation.model}/${inverseName}`
       );
     }
     props.push('dir=both');

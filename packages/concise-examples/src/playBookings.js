@@ -17,7 +17,7 @@ const run = async () => {
   await concise.input(input, {
     file: path.join(
       __dirname,
-      '../../__tests__/fixtures/schema4_bookings.yaml',
+      '../../__tests__/fixtures/schema4_bookings.yaml'
     ),
   });
   await concise.output(outputSvg, {

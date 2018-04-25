@@ -37,7 +37,7 @@ type SequelizeExtensions = {
   indexes: (context: SequelizeExtensionContext) => Array<Object>,
   classMethods: (context: SequelizeExtensionContext) => MapOf<string, Function>,
   instanceMethods: (
-    context: SequelizeExtensionContext,
+    context: SequelizeExtensionContext
   ) => MapOf<string, Function>,
   hooks: (context: SequelizeExtensionContext) => MapOf<string, Function>,
 };
@@ -60,7 +60,7 @@ type SequelizeExtensionContext = {
 const output: OutputProcessor = async (
   schema: Schema,
   options: OutputOptions,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => {
   const { preprocessedSchema } = utils;
   const { Sequelize, sequelize } = options;
@@ -122,7 +122,7 @@ const addDefinitionOptions = (
   definitionOptions,
   modelName,
   options,
-  context,
+  context
 ) => {
   const extensions =
     options && options.extensions && options.extensions[modelName];
@@ -130,31 +130,31 @@ const addDefinitionOptions = (
   if (extensions.validate) {
     definitionOptions.validate = merge(
       definitionOptions.validate,
-      extensions.validate(context),
+      extensions.validate(context)
     );
   }
   if (extensions.indexes) {
     definitionOptions.indexes = addLast(
       definitionOptions.indexes,
-      extensions.indexes(context),
+      extensions.indexes(context)
     );
   }
   if (extensions.classMethods) {
     definitionOptions.classMethods = merge(
       definitionOptions.classMethods,
-      extensions.classMethods(context),
+      extensions.classMethods(context)
     );
   }
   if (extensions.instanceMethods) {
     definitionOptions.instanceMethods = merge(
       definitionOptions.instanceMethods,
-      extensions.instanceMethods(context),
+      extensions.instanceMethods(context)
     );
   }
   if (extensions.hooks) {
     definitionOptions.hooks = merge(
       definitionOptions.hooks,
-      extensions.hooks(context),
+      extensions.hooks(context)
     );
   }
 };
@@ -184,7 +184,7 @@ const defineRelation = (db, modelName, relationName, relation) => {
       /* eslint-disable no-console */
       console.warn(
         `Direct plural relation (${modelName} -> ${relation.model}) ` +
-          'is not supported. Use a cross table instead',
+          'is not supported. Use a cross table instead'
       );
       /* eslint-enable no-console */
       return;

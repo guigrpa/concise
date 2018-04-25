@@ -47,7 +47,7 @@ const RELAY_FIXTURES =
 const output: OutputProcessor = async (
   schema: Schema,
   options: OutputOptions,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => {
   const raw = writeTypes(utils.preprocessedSchema, options);
   if (options.file) fs.writeFileSync(options.file, raw, 'utf8');
@@ -87,7 +87,7 @@ const writeRootQuery = (models, { relay }) => {
       '  node(\n' +
         '    # The ID of an object\n' +
         '    id: ID!\n' +
-        '  ): Node\n',
+        '  ): Node\n'
     );
   }
   let out = `# Root query\ntype Query {\n${querySpecs.join('')}}\n\n`;
@@ -103,12 +103,12 @@ const writeType = (models, modelName, options) => {
   Object.keys(fields).forEach(fieldName => {
     if (!fields[fieldName].existsInServer) return;
     allSpecs = allSpecs.concat(
-      writeField(fieldName, fields[fieldName], options),
+      writeField(fieldName, fields[fieldName], options)
     );
   });
   Object.keys(relations).forEach(fieldName => {
     allSpecs = allSpecs.concat(
-      writeField(fieldName, relations[fieldName], options),
+      writeField(fieldName, relations[fieldName], options)
     );
   });
   const contents = allSpecs.length ? `\n  ${allSpecs.join('\n  ')}\n` : '';
@@ -140,7 +140,7 @@ const writeMutationTypes = (models, modelName, op, options) => {
     if (!fields[fieldName].existsInServer) return;
     const spec = omit(
       fields[fieldName],
-      op === 'create' ? ['description'] : ['description', 'isRequired'],
+      op === 'create' ? ['description'] : ['description', 'isRequired']
     );
     contents = contents.concat(writeField(fieldName, spec, options));
   });
@@ -148,9 +148,7 @@ const writeMutationTypes = (models, modelName, op, options) => {
     const spec = relations[fieldName];
     if (spec.isInverse || spec.isPlural) return;
     const isRequired = op === 'create' && spec.isRequired;
-    contents.push(
-      `${spec.fkName}: ID${isRequired ? '!' : ''}`,
-    );
+    contents.push(`${spec.fkName}: ID${isRequired ? '!' : ''}`);
   });
   if (options.storyboard) contents.push('storyId: String');
   out +=
@@ -213,10 +211,10 @@ const writeRootMutation = models => {
     if (!models[modelName].existsInServer) return;
     const name = upperFirst(modelName);
     contents.push(
-      `create${name}(input: Create${name}Input!): Create${name}Payload`,
+      `create${name}(input: Create${name}Input!): Create${name}Payload`
     );
     contents.push(
-      `update${name}(input: Update${name}Input!): Update${name}Payload`,
+      `update${name}(input: Update${name}Input!): Update${name}Payload`
     );
   });
   return 'type Mutation {\n' + contents.map(o => `  ${o}\n`).join('') + '}\n\n';

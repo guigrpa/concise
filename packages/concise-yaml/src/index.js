@@ -35,7 +35,7 @@ const input: InputProcessor = async (options: InputOptions) => {
 
 const output: OutputProcessor = async (
   schema: Schema,
-  options: OutputOptions,
+  options: OutputOptions
 ) => {
   const raw = yaml.safeDump(schema);
   if (options.file) fs.writeFileSync(options.file, raw, 'utf8');

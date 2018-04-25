@@ -24,7 +24,7 @@ type OutputOptions = {
 const output: OutputProcessor = async (
   schema: Schema,
   options: OutputOptions,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => {
   const raw = writeSchema(utils.preprocessedSchema, options);
   if (options.file) fs.writeFileSync(options.file, raw, 'utf8');
@@ -57,38 +57,45 @@ const writeTable = (models, modelName, options) => {
   const sqlComments = [];
   let tableName = `"${modelName}"`;
   if (options.schema) tableName = `"${options.schema}".${tableName}`;
-  const {
-    description,
-    fields = {},
-    relations = {},
-  } = models[modelName];
+  const { description, fields = {}, relations = {} } = models[modelName];
   if (description) {
     sqlComments.push(writeComment('TABLE', tableName, description));
   }
   Object.keys(fields).forEach(fieldName => {
     if (!fields[fieldName].existsInServer) return;
-    const { sqlField, sqlFieldComment, sqlFieldConstraints } =
-      writeField(models, modelName, tableName, fieldName, options);
+    const { sqlField, sqlFieldComment, sqlFieldConstraints } = writeField(
+      models,
+      modelName,
+      tableName,
+      fieldName,
+      options
+    );
     if (sqlField) sqlFields.push(sqlField);
     if (sqlFieldComment) sqlComments.push(sqlFieldComment);
-    if (sqlFieldConstraints) sqlConstraints = sqlConstraints.concat(sqlFieldConstraints);
+    if (sqlFieldConstraints)
+      sqlConstraints = sqlConstraints.concat(sqlFieldConstraints);
   });
   Object.keys(relations).forEach(relationName => {
-    if (
-      relations[relationName].isInverse ||
-      relations[relationName].isPlural
-    ) return;
-    const { sqlFields: someSqlFields, sqlFieldComment } =
-      writeForeignKey(models, modelName, tableName, relationName, options);
+    if (relations[relationName].isInverse || relations[relationName].isPlural)
+      return;
+    const { sqlFields: someSqlFields, sqlFieldComment } = writeForeignKey(
+      models,
+      modelName,
+      tableName,
+      relationName,
+      options
+    );
     if (someSqlFields) sqlFields = sqlFields.concat(someSqlFields);
     if (sqlFieldComment) sqlComments.push(sqlFieldComment);
   });
   const sqlTableEntries = sqlFields.concat(sqlConstraints);
-  return `CREATE TABLE ${tableName} (\n` +
+  return (
+    `CREATE TABLE ${tableName} (\n` +
     `${sqlTableEntries.map(o => `  ${o}`).join(',\n')}\n` +
     ');\n' +
     sqlComments.map(o => `${o}\n`).join('') +
-    '\n';
+    '\n'
+  );
 };
 
 const writeForeignKeyConstraints = (models, modelName, options) => {
@@ -103,17 +110,18 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
     const fieldName = `${relationName}Id`;
 
     let remoteTableName = `"${relation.model}"`;
-    if (options.schema) remoteTableName = `"${options.schema}".${remoteTableName}`;
+    if (options.schema)
+      remoteTableName = `"${options.schema}".${remoteTableName}`;
     constraints.push(
       `ALTER TABLE ${tableName}\n` +
-      `  ADD CONSTRAINT "${modelName}_fk_${fieldName}"\n` +
-      `  FOREIGN KEY (${fieldName})\n` +
-      `  REFERENCES ${remoteTableName}\n` +
-      '  ON UPDATE CASCADE ON DELETE NO ACTION;\n'
-        // ON UPDATE CASCADE: when the PK changes, change the FK
-        // ON DELETE NO ACTION: referencing rows are not altered;
-        // but if there are referencing rows at the time the referenced row must be deleted,
-        // the operation will fail
+        `  ADD CONSTRAINT "${modelName}_fk_${fieldName}"\n` +
+        `  FOREIGN KEY (${fieldName})\n` +
+        `  REFERENCES ${remoteTableName}\n` +
+        '  ON UPDATE CASCADE ON DELETE NO ACTION;\n'
+      // ON UPDATE CASCADE: when the PK changes, change the FK
+      // ON DELETE NO ACTION: referencing rows are not altered;
+      // but if there are referencing rows at the time the referenced row must be deleted,
+      // the operation will fail
     );
   });
   return constraints.join('');
@@ -142,12 +150,12 @@ const writeField = (models, modelName, tableName, fieldName) => {
   const sqlFieldConstraints = [];
   if (field.isPrimaryKey) {
     sqlFieldConstraints.push(
-      `CONSTRAINT "${modelName}_pk_${fieldName}" PRIMARY KEY ("${fieldName}")`,
+      `CONSTRAINT "${modelName}_pk_${fieldName}" PRIMARY KEY ("${fieldName}")`
     );
   }
   if (field.isUnique) {
     sqlFieldConstraints.push(
-      `CONSTRAINT "${modelName}_unique_${fieldName}" UNIQUE ("${fieldName}")`,
+      `CONSTRAINT "${modelName}_unique_${fieldName}" UNIQUE ("${fieldName}")`
     );
   }
   return { sqlField, sqlFieldComment, sqlFieldConstraints };
@@ -172,7 +180,8 @@ const writeForeignKey = (models, modelName, tableName, relationName) => {
 
 const writeFieldType = (field: any) => {
   const { type } = field;
-  if (type === 'string') return field.isLong ? 'text' : 'character varying(255)';
+  if (type === 'string')
+    return field.isLong ? 'text' : 'character varying(255)';
   if (type === 'number') return field.isFloat ? 'double precision' : 'integer';
   if (type === 'date') return 'timestamp with time zone';
   if (type === 'json') return 'jsonb';

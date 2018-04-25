@@ -22,7 +22,7 @@ type OutputOptions = {
 const output: OutputProcessor = async (
   schema: Schema,
   options: OutputOptions,
-  utils: SchemaUtils,
+  utils: SchemaUtils
 ) => {
   const raw = writeTypes(utils.preprocessedSchema);
   if (options.file) fs.writeFileSync(options.file, raw, 'utf8');
@@ -41,11 +41,7 @@ const writeTypes = ({ models }) => {
 };
 
 const writeType = (models, modelName) => {
-  const {
-    description,
-    fields = {},
-    relations = {},
-  } = models[modelName];
+  const { description, fields = {}, relations = {} } = models[modelName];
   const upperModelName = upperFirst(modelName);
   const allSpecs = [];
   Object.keys(fields).forEach(fieldName => {
@@ -56,13 +52,13 @@ const writeType = (models, modelName) => {
     if (relation.isInverse) return;
     allSpecs.push(writeField(relation.fkName, relation));
   });
-  const contents = allSpecs.length
-    ? `\n  ${allSpecs.join('\n  ')}\n`
-    : '';
-  return '' +
+  const contents = allSpecs.length ? `\n  ${allSpecs.join('\n  ')}\n` : '';
+  return (
+    '' +
     `// ${upperModelName}\n` +
     (description ? `// ${description}\n` : '') +
-    `type ${upperModelName} = {${contents}};\n\n`;
+    `type ${upperModelName} = {${contents}};\n\n`
+  );
 };
 
 const writeField = (name, specs: any) => {
