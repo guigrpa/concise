@@ -9,7 +9,7 @@
     "compileWatch": "yarn compile:clean && yarn compile:runWatch",
     "compile:clean": "rm -rf ./lib",
     "compile:run": "../../node_modules/.bin/babel src -d lib --ignore \"**/__mocks__/**\",\"**/__tests__/**\"",
-    "compile:runWatch": "yarn compile:run -- --watch"
+    "compile:runWatch": "yarn compile:run --watch"
   },
   "devDependencies": {
     "babel-runtime": "^6.23.0",
