@@ -1,3 +1,5 @@
+## 0.3.0 (2018-4-27)
+
 - Sequelize: update to support Sequelize v4.
 - Bump all deps.
 
