@@ -192,16 +192,16 @@ export type AuthRulePluralValue<T> =
 
 export type AuthCheck =
   // Check that we reach the viewer ID following a certain route from the target
-  // (e.g. `project|users|edges|node|id` (from a Company instance))
+  // (e.g. from a Company instance, route `project|users|edges|node|id`)
   | { type: 'targetBefore->viewerId', route: AuthRoute }
   | { type: 'targetAfter->viewerId', route: AuthRoute }
 
   // Check that we reach the viewer ID following a certain route from the root
-  // (e.g. `adminIds`, think Firebase)
+  // (e.g. from the root, route `adminIds`, think Firebase)
   | { type: 'root->viewerId', route: AuthRoute }
 
   // Check that we reach the target ID following a certain route from the viewer
-  // (e.g. `_id`, when the user wants to edit his own account)
+  // (e.g. from the viewer, route `_id`, when the user wants to edit his own account)
   | { type: 'viewer->targetId', route: AuthRoute }
 
   // A function, or a stringified version of it (will be `eval`'ed')

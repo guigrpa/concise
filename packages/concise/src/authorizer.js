@@ -19,8 +19,11 @@ class Authorizer {
     this.rules = rules;
   }
 
+  // Determine if a request for a certain operation can
+  // be authorised to the user (the viewer) or is rejected.
+  // Find the first matching rule and execute it.
+  // If not rule is found, the request is rejected.
   async can(req: AuthRequest): Promise<AuthResponse> {
-    // Find first matching rule; if none is found, the request is rejected
     const rule = this.rules.find(o => matchesRule(req, o));
     if (!rule) return false;
     return executeRule(req, rule);
@@ -30,7 +33,8 @@ class Authorizer {
 // ====================================
 // Rule filtering
 // ====================================
-// The request must match all of the rule's filters
+// The request must match all of the rule's specified filters
+// (concerning the who, what and where of potential requests)
 const matchesRule = (req: AuthRequest, rule: AuthRule) => {
   if (!matchesFilter(req.viewerId, rule.viewerId)) return false;
   if (!matchesFilter(req.roleNames, rule.roleNames, true)) return false;
@@ -114,7 +118,14 @@ const matchesPlural = (actualValues: any, filterSpec: any) => {
 // ====================================
 const executeRule = async (req, rule) => {
   const { can } = rule;
+
+  // Many rules can have a simple, immediate YES/NO result
   if (can === true || can === false) return can;
+
+  // For others, some additional checks must pass first. Note that
+  // checks may result in a YES, a NO, or a DON'T KNOW (`null`).
+  // A DON'T KNOW may occur when we don't have enough information.
+  // In principle, it should be taken as a NO.
   const checks = Array.isArray(can) ? can : [can];
   for (let i = 1; i < checks.length; i++) {
     const check: AuthCheck = checks[i];
