@@ -1,3 +1,5 @@
+## 0.4.0 (2018-5-5)
+
 - Schema: add `isMassAssignable` attribute to fields
 - Sequelize: honour `existsInClient` and `existsInServer` in `model.toJSON()` and `isMassAssignable` in `model.set()`
 - GraphQL: don't include models/fields if either `existsInServer` or `existsInClient` are unset.
