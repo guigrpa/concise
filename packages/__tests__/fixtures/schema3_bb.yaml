@@ -157,6 +157,7 @@ models:
         type:             'string'
       mobilePhone:
         type:             'string'
+        isPublished: false
       email:
         type:             'string'
         isEmail:          true

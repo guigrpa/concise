@@ -48,6 +48,65 @@ describe('Sequelize output', () => {
   });
 
   // =========================================================
+  // Field attributes
+  // =========================================================
+  describe('field attributes', () => {
+    it('omits fields from JSON representation with isPublished: false', async () => {
+      const concise = new Concise();
+      concise.addSchema({
+        models: {
+          person: {
+            fields: {
+              id: {
+                type: 'number',
+                isAutoIncremented: true,
+                isPrimaryKey: true,
+              },
+              name: { type: 'string' },
+              age: { type: 'number', isPublished: false },
+            },
+          },
+        },
+      });
+      db = await concise.output(output, { Sequelize, sequelize });
+      await db.sequelize.sync();
+      const person = await db.Person.create({ name: 'Guille', age: 10 });
+      const json = person.toJSON();
+      expect(json.name).toEqual('Guille');
+      expect(json.age).toBeUndefined();
+    });
+
+    it('disallows updating fields with isMassAssignable: false', async () => {
+      const concise = new Concise();
+      concise.addSchema({
+        models: {
+          person: {
+            fields: {
+              id: {
+                type: 'number',
+                isAutoIncremented: true,
+                isPrimaryKey: true,
+              },
+              name: { type: 'string' },
+              age: { type: 'number', isMassAssignable: false },
+            },
+          },
+        },
+      });
+      db = await concise.output(output, { Sequelize, sequelize });
+      await db.sequelize.sync();
+      const person = await db.Person.create({ name: 'Guille', age: 10 });
+      person.set('name', 'Jack');
+      expect(person.name).toEqual('Jack');
+      person.set('age', 12); // attributes can be set one by one ...
+      expect(person.age).toEqual(12);
+      person.set({ name: 'John', age: 15 }); // ... but not mass-assigned
+      expect(person.name).toEqual('John');
+      expect(person.age).toEqual(12);
+    });
+  });
+
+  // =========================================================
   // Relations
   // =========================================================
   describe('relations', () => {

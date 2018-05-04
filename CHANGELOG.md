@@ -1,3 +1,6 @@
+- Schema: add `isPublished` and `isMassAssignable` attribute to fields
+- Sequelize: honour `isPublished` in `model.toJSON()` and `isMassAssignable` in `model.set()`
+
 ## 0.3.0 (2018-4-27)
 
 - Sequelize: update to support Sequelize v4.

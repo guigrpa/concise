@@ -2,7 +2,7 @@
 
 /* eslint-disable prefer-template, no-param-reassign */
 
-import { merge, addLast } from 'timm';
+import { merge, addLast, omit } from 'timm';
 import type {
   Schema,
   OutputProcessor,
@@ -150,8 +150,43 @@ const addDefinitionOptions = (
 };
 
 const addModelMethods = (Model, modelName, options, context) => {
+  // Default instance methods
+  // ------------------------
+  if (modelName === '$all') {
+    const { fields } = context.model;
+
+    // toJSON
+    const notPublishedFields = Object.keys(fields).filter(
+      fieldName => !fields[fieldName].isPublished
+    );
+    const originalToJSON = Model.prototype.toJSON;
+    Model.prototype.toJSON = function toJSON() {
+      let json = originalToJSON.call(this);
+      json = omit(json, notPublishedFields);
+      return json;
+    };
+
+    // set()
+    const notMassAssignableFields = Object.keys(fields).filter(
+      fieldName =>
+        !fields[fieldName].isMassAssignable || !fields[fieldName].isPublished
+    );
+    const originalSet = Model.prototype.set;
+    Model.prototype.set = function set(keyOrAttrs, value, opts) {
+      if (typeof keyOrAttrs === 'string')
+        return originalSet.call(this, keyOrAttrs, value, opts);
+      const updateAttrs = omit(keyOrAttrs, notMassAssignableFields);
+      Object.keys(updateAttrs).forEach(attr => {
+        this[attr] = updateAttrs[attr];
+      });
+      return this;
+    };
+  }
+
+  // Custom extensions
+  // -----------------
   const extensions =
-    options && options.extensions && options.extensions[modelName];
+    (options && options.extensions && options.extensions[modelName]) || {};
   if (!extensions) return;
   if (extensions.classMethods) {
     const classMethods = extensions.classMethods(context);
