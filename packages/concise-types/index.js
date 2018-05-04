@@ -76,7 +76,6 @@ export type FieldBase = {
   existsInServer?: boolean, // default: true
   existsInClient?: boolean, // default: true
   isMassAssignable?: boolean, // default: true
-  isPublished?: boolean, // default: true
   isPrimaryKey?: boolean,
   isAutoIncremented?: boolean,
 };

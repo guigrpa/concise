@@ -1,6 +1,5 @@
 - Flow: input types?
 - Improve docs
-- Honor `existsInServer|existsInClient` somewhere else?
 - Honor `isPublished|isMassAssignable` somewhere else?
 
 - v1 release

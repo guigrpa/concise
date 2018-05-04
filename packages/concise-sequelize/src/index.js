@@ -157,7 +157,7 @@ const addModelMethods = (Model, modelName, options, context) => {
 
     // toJSON
     const notPublishedFields = Object.keys(fields).filter(
-      fieldName => !fields[fieldName].isPublished
+      fieldName => !fields[fieldName].existsInClient
     );
     const originalToJSON = Model.prototype.toJSON;
     Model.prototype.toJSON = function toJSON() {
@@ -169,7 +169,7 @@ const addModelMethods = (Model, modelName, options, context) => {
     // set()
     const notMassAssignableFields = Object.keys(fields).filter(
       fieldName =>
-        !fields[fieldName].isMassAssignable || !fields[fieldName].isPublished
+        !fields[fieldName].isMassAssignable || !fields[fieldName].existsInClient
     );
     const originalSet = Model.prototype.set;
     Model.prototype.set = function set(keyOrAttrs, value, opts) {

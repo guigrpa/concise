@@ -51,7 +51,7 @@ describe('Sequelize output', () => {
   // Field attributes
   // =========================================================
   describe('field attributes', () => {
-    it('omits fields from JSON representation with isPublished: false', async () => {
+    it('omits fields from JSON representation when it doesnt exist in the client', async () => {
       const concise = new Concise();
       concise.addSchema({
         models: {
@@ -63,7 +63,7 @@ describe('Sequelize output', () => {
                 isPrimaryKey: true,
               },
               name: { type: 'string' },
-              age: { type: 'number', isPublished: false },
+              age: { type: 'number', existsInClient: false },
             },
           },
         },

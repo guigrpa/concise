@@ -67,7 +67,6 @@ const addFieldDefaults = models => {
         existsInServer: true,
         existsInClient: true,
         isMassAssignable: true,
-        isPublished: true,
       });
     });
   });
