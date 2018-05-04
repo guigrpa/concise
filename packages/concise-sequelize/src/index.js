@@ -155,7 +155,8 @@ const addModelMethods = (Model, modelName, options, context) => {
   if (modelName === '$all') {
     const { fields } = context.model;
 
-    // toJSON
+    // toJSON() -- we filter out those fields that don't existsInClient
+    // (we typically use this function to transmit a model to the client)
     const notPublishedFields = Object.keys(fields).filter(
       fieldName => !fields[fieldName].existsInClient
     );
@@ -166,7 +167,9 @@ const addModelMethods = (Model, modelName, options, context) => {
       return json;
     };
 
-    // set()
+    // set() -- we filter out those fields that are explicitly not
+    // mass-assignable, or that don't existsInClient (we typically
+    // use mass assignment to update a bunch fields with attrs sent by a client)
     const notMassAssignableFields = Object.keys(fields).filter(
       fieldName =>
         !fields[fieldName].isMassAssignable || !fields[fieldName].existsInClient
