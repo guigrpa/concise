@@ -11,6 +11,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -34,6 +36,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -65,6 +69,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -88,6 +94,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -119,6 +127,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -133,6 +143,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -164,6 +176,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -187,6 +201,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -219,6 +235,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -242,6 +260,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -273,11 +293,15 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
         "name": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -301,6 +325,8 @@ Object {
           "existsInClient": true,
           "existsInServer": true,
           "foo": 3,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -325,6 +351,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },
@@ -348,6 +376,8 @@ Object {
         "id": Object {
           "existsInClient": true,
           "existsInServer": true,
+          "isMassAssignable": true,
+          "isPublished": true,
           "type": "string",
         },
       },

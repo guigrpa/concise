@@ -66,6 +66,8 @@ const addFieldDefaults = models => {
       fields[fieldName] = addDefaults(fields[fieldName], {
         existsInServer: true,
         existsInClient: true,
+        isMassAssignable: true,
+        isPublished: true,
       });
     });
   });
