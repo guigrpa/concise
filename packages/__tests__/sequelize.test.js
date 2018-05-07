@@ -96,11 +96,13 @@ describe('Sequelize output', () => {
       db = await concise.output(output, { Sequelize, sequelize });
       await db.sequelize.sync();
       const person = await db.Person.create({ name: 'Guille', age: 10 });
-      person.set('name', 'Jack');
+      const person2 = await db.Person.findOne({ where: { id: person.id } });
+      expect(person2.age).toEqual(10);
+      person.massAssign({ name: 'Jack' });
       expect(person.name).toEqual('Jack');
-      person.set('age', 12); // attributes can be set one by one ...
+      person.age = 12; // attributes can be set one by one ...
       expect(person.age).toEqual(12);
-      person.set({ name: 'John', age: 15 }); // ... but not mass-assigned
+      person.massAssign({ name: 'John', age: 15 }); // ... but not mass-assigned
       expect(person.name).toEqual('John');
       expect(person.age).toEqual(12);
     });

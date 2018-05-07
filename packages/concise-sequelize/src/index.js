@@ -167,18 +167,15 @@ const addModelMethods = (Model, modelName, options, context) => {
       return json;
     };
 
-    // set() -- we filter out those fields that are explicitly not
+    // massAssign() -- we filter out those fields that are explicitly not
     // mass-assignable, or that don't existsInClient (we typically
     // use mass assignment to update a bunch fields with attrs sent by a client)
     const notMassAssignableFields = Object.keys(fields).filter(
       fieldName =>
         !fields[fieldName].isMassAssignable || !fields[fieldName].existsInClient
     );
-    const originalSet = Model.prototype.set;
-    Model.prototype.set = function set(keyOrAttrs, value, opts) {
-      if (typeof keyOrAttrs === 'string')
-        return originalSet.call(this, keyOrAttrs, value, opts);
-      const updateAttrs = omit(keyOrAttrs, notMassAssignableFields);
+    Model.prototype.massAssign = function set(attrs) {
+      const updateAttrs = omit(attrs, notMassAssignableFields);
       Object.keys(updateAttrs).forEach(attr => {
         this[attr] = updateAttrs[attr];
       });
