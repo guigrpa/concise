@@ -144,6 +144,10 @@ Output options:
   extensions (or customizations). **Description to be completed (see
   typedefs and tests for the time being)**
 
+---------------------
+
+--------------
+
 #### concise-flow
 
 Output-only.
