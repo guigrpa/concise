@@ -4,6 +4,7 @@
 
 import fs from 'fs';
 import Viz from 'viz.js';
+import { Module, render } from 'viz.js/full.render';
 import { addDefaults } from 'timm';
 import type {
   Schema,
@@ -51,7 +52,8 @@ const output: OutputProcessor = async (
     utils.preprocessedSchema,
     addDefaults(options, DEFAULT_OPTIONS)
   );
-  const svg = Viz(vizInput);
+  const viz = new Viz({ Module, render });
+  const svg = await viz.renderString(vizInput);
   if (options.file) {
     fs.writeFileSync(options.file, svg, 'utf8');
   }
