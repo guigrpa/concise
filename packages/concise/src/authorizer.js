@@ -24,7 +24,7 @@ class Authorizer {
   // Find the first matching rule and execute it.
   // If not rule is found, the request is rejected.
   async can(req: AuthRequest): Promise<AuthResponse> {
-    const rule = this.rules.find(o => matchesRule(req, o));
+    const rule = this.rules.find((o) => matchesRule(req, o));
     if (!rule) return false;
     return executeRule(req, rule);
   }

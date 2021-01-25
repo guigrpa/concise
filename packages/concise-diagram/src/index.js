@@ -63,7 +63,7 @@ const output: OutputProcessor = async (
 // ====================================
 const writeDiagram = ({ models }, options) => {
   const modelNames = Object.keys(models);
-  const nodes = modelNames.map(modelName => {
+  const nodes = modelNames.map((modelName) => {
     let node = modelName;
     const { description } = models[modelName];
     const props = [];
@@ -75,9 +75,9 @@ const writeDiagram = ({ models }, options) => {
     return node;
   });
   const edges = [];
-  modelNames.forEach(modelName => {
+  modelNames.forEach((modelName) => {
     const { relations } = models[modelName];
-    Object.keys(relations).forEach(relationName => {
+    Object.keys(relations).forEach((relationName) => {
       const edge = writeEdge(models, modelName, relationName, options);
       if (edge) edges.push(edge);
     });
@@ -86,8 +86,8 @@ const writeDiagram = ({ models }, options) => {
     'digraph "" {\n' + // `""` removes the background tooltip
     '  node [shape=box, fontname="sans-serif"];\n' +
     '  edge [fontsize=9, fontname="sans-serif"];\n' +
-    nodes.map(o => `  ${o};\n`).join('') +
-    edges.map(o => `  ${o};\n`).join('') +
+    nodes.map((o) => `  ${o};\n`).join('') +
+    edges.map((o) => `  ${o};\n`).join('') +
     '}\n'
   );
 };

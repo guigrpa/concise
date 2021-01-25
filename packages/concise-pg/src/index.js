@@ -38,13 +38,13 @@ const writeSchema = ({ models }, options) => {
   let out = '';
 
   // Write table definitions
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     if (!models[modelName].existsInServer) return;
     out += writeTable(models, modelName, options);
   });
 
   // Add foreign key constraints
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     if (!models[modelName].existsInServer) return;
     out += writeForeignKeyConstraints(models, modelName, options);
   });
@@ -61,7 +61,7 @@ const writeTable = (models, modelName, options) => {
   if (description) {
     sqlComments.push(writeComment('TABLE', tableName, description));
   }
-  Object.keys(fields).forEach(fieldName => {
+  Object.keys(fields).forEach((fieldName) => {
     if (!fields[fieldName].existsInServer) return;
     const { sqlField, sqlFieldComment, sqlFieldConstraints } = writeField(
       models,
@@ -74,7 +74,7 @@ const writeTable = (models, modelName, options) => {
     if (sqlFieldConstraints)
       sqlConstraints = sqlConstraints.concat(sqlFieldConstraints);
   });
-  Object.keys(relations).forEach(relationName => {
+  Object.keys(relations).forEach((relationName) => {
     if (relations[relationName].isInverse || relations[relationName].isPlural)
       return;
     const { sqlFields: someSqlFields, sqlFieldComment } = writeForeignKey(
@@ -89,9 +89,9 @@ const writeTable = (models, modelName, options) => {
   const sqlTableEntries = sqlFields.concat(sqlConstraints);
   return (
     `CREATE TABLE ${tableName} (\n` +
-    `${sqlTableEntries.map(o => `  ${o}`).join(',\n')}\n` +
+    `${sqlTableEntries.map((o) => `  ${o}`).join(',\n')}\n` +
     ');\n' +
-    sqlComments.map(o => `${o}\n`).join('') +
+    sqlComments.map((o) => `${o}\n`).join('') +
     '\n'
   );
 };
@@ -101,7 +101,7 @@ const writeForeignKeyConstraints = (models, modelName, options) => {
   if (options.schema) tableName = `"${options.schema}".${tableName}`;
   const constraints = [];
   const { relations } = models[modelName];
-  Object.keys(relations).forEach(relationName => {
+  Object.keys(relations).forEach((relationName) => {
     const relation = relations[relationName];
     if (relation.isInverse) return;
     if (relation.isInverse || relation.isPlural) return;

@@ -19,7 +19,7 @@
     "concise-types": "*"
   },
   "devDependencies": {
-    "prettier": "^1.12.1"
+    "prettier": "^2.2.1"
   },
   "description": "A tool belt for concise schemas",
   "keywords": [

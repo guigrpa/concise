@@ -40,7 +40,7 @@ const output: OutputProcessor = async (
 // ====================================
 const writeRulesForAllModels = ({ models }, options) => {
   const rules = {};
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     if (!models[modelName].existsInServer) return;
     rules[modelName] = {
       [`$${modelName}Id`]: writeRulesForModel(models, modelName, options),
@@ -56,7 +56,7 @@ const writeRulesForModel = (models, modelName, options) => {
   // Required fields
   const requiredFields = getRequiredFields(model, options);
   if (requiredFields.length) {
-    const list = requiredFields.map(o => `'${o}'`).join(', ');
+    const list = requiredFields.map((o) => `'${o}'`).join(', ');
     modelRules[VALIDATE] = `newData.hasChildren([${list}])`;
   }
 
@@ -68,7 +68,7 @@ const writeRulesForModel = (models, modelName, options) => {
 
 const writeRulesForModelFields = (modelRules, { fields, relations }) => {
   const rules = {};
-  Object.keys(fields).forEach(name => {
+  Object.keys(fields).forEach((name) => {
     const field = fields[name];
     if (field.isPrimaryKey) return;
     const constraints = getFieldConstraints(field);
@@ -77,7 +77,7 @@ const writeRulesForModelFields = (modelRules, { fields, relations }) => {
       modelRules[name][VALIDATE] = constraints.join(' && ');
     }
   });
-  Object.keys(relations).forEach(name => {
+  Object.keys(relations).forEach((name) => {
     const relation = relations[name];
     const { fkName, isPlural } = relation;
     if (modelRules[fkName] == null) modelRules[fkName] = {};
@@ -92,7 +92,7 @@ const writeRulesForModelFields = (modelRules, { fields, relations }) => {
   return rules;
 };
 
-const getFieldConstraints = field => {
+const getFieldConstraints = (field) => {
   const constraints = [];
 
   // Type rules
@@ -127,8 +127,8 @@ const getFieldConstraints = field => {
   if (isOneOf != null) {
     const choiceConstraints =
       type === 'string' || type === 'uuid' || type === 'date'
-        ? isOneOf.map(o => `newData.val() === '${o}'`)
-        : isOneOf.map(o => `newData.val() === ${o}`);
+        ? isOneOf.map((o) => `newData.val() === '${o}'`)
+        : isOneOf.map((o) => `newData.val() === ${o}`);
     constraints.push(`(${choiceConstraints.join(' || ')})`);
   }
   if (hasAtLeastChars != null) {
@@ -181,7 +181,7 @@ const getFieldConstraints = field => {
 // ====================================
 const getRequiredFields = ({ fields, relations }, { ignorePrimaryKey }) => {
   const required = [];
-  Object.keys(fields).forEach(name => {
+  Object.keys(fields).forEach((name) => {
     const field = fields[name];
     if (!field.existsInServer) return;
     if (ignorePrimaryKey && field.isPrimaryKey) return;
@@ -189,7 +189,7 @@ const getRequiredFields = ({ fields, relations }, { ignorePrimaryKey }) => {
       required.push(name);
     }
   });
-  Object.keys(relations).forEach(name => {
+  Object.keys(relations).forEach((name) => {
     const relation = relations[name];
     if (relation.isRequired) required.push(relation.fkName);
   });

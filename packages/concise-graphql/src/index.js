@@ -62,7 +62,7 @@ const writeTypes = ({ models }, options) => {
   const relay = options.relay;
   if (relay) out += RELAY_FIXTURES;
   out += writeRootQuery(models, options);
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const model = models[modelName];
     if (!model.existsInServer || !model.existsInClient) return;
     out += writeType(models, modelName, options);
@@ -75,7 +75,7 @@ const writeTypes = ({ models }, options) => {
 
 const writeRootQuery = (models, { relay }) => {
   const querySpecs = [];
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const model = models[modelName];
     if (!model.existsInServer || !model.existsInClient) return;
     const typeStr = relay
@@ -101,12 +101,12 @@ const writeType = (models, modelName, options) => {
   const upperModelName = upperFirst(modelName);
   const implementsStr = options.relay ? ' implements Node' : '';
   let allSpecs = [];
-  Object.keys(fields).forEach(fieldName => {
+  Object.keys(fields).forEach((fieldName) => {
     const field = fields[fieldName];
     if (!field.existsInServer || !field.existsInClient) return;
     allSpecs = allSpecs.concat(writeField(fieldName, field, options));
   });
-  Object.keys(relations).forEach(fieldName => {
+  Object.keys(relations).forEach((fieldName) => {
     const relation = relations[fieldName];
     allSpecs = allSpecs.concat(writeField(fieldName, relation, options));
   });
@@ -134,7 +134,7 @@ const writeMutationTypes = (models, modelName, op, options) => {
   const upperOp = upperFirst(op);
   const { fields, relations } = models[modelName];
   let contents = [];
-  Object.keys(fields).forEach(fieldName => {
+  Object.keys(fields).forEach((fieldName) => {
     if (fieldName === 'id' && op === 'create') return;
     const field = fields[fieldName];
     if (!field.existsInServer || !field.existsInClient) return;
@@ -144,7 +144,7 @@ const writeMutationTypes = (models, modelName, op, options) => {
     );
     contents = contents.concat(writeField(fieldName, spec, options));
   });
-  Object.keys(relations).forEach(fieldName => {
+  Object.keys(relations).forEach((fieldName) => {
     const spec = relations[fieldName];
     if (spec.isInverse || spec.isPlural) return;
     const isRequired = op === 'create' && spec.isRequired;
@@ -153,7 +153,7 @@ const writeMutationTypes = (models, modelName, op, options) => {
   if (options.storyboard) contents.push('storyId: String');
   out +=
     `input ${upperModelName}${upperOp}Input {\n` +
-    contents.map(o => `  ${o}\n`).join('') +
+    contents.map((o) => `  ${o}\n`).join('') +
     '  clientMutationId: String\n' +
     '}\n\n';
   out +=
@@ -187,9 +187,9 @@ const writeFieldType = (specs, options) => {
   return out;
 };
 
-const writeRelayConnections = models => {
+const writeRelayConnections = (models) => {
   let out = '';
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const model = models[modelName];
     if (!model.existsInServer || !model.existsInClient) return;
     const upperModelName = upperFirst(modelName);
@@ -206,9 +206,9 @@ const writeRelayConnections = models => {
   return out;
 };
 
-const writeRootMutation = models => {
+const writeRootMutation = (models) => {
   const contents = [];
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const model = models[modelName];
     if (!model.existsInServer || !model.existsInClient) return;
     const name = upperFirst(modelName);
@@ -219,7 +219,9 @@ const writeRootMutation = models => {
       `update${name}(input: Update${name}Input!): Update${name}Payload`
     );
   });
-  return 'type Mutation {\n' + contents.map(o => `  ${o}\n`).join('') + '}\n\n';
+  return (
+    'type Mutation {\n' + contents.map((o) => `  ${o}\n`).join('') + '}\n\n'
+  );
 };
 
 // ====================================

@@ -74,7 +74,7 @@ const output: OutputProcessor = async (
 // Define models
 // ====================================
 const defineModels = (db, schema, options) => {
-  Object.keys(schema.models).forEach(modelName => {
+  Object.keys(schema.models).forEach((modelName) => {
     defineModel(db, schema, modelName, options);
   });
 };
@@ -103,7 +103,7 @@ const defineModel = (db, schema, modelName, options) => {
 const defineFields = (db, model) => {
   const { fields } = model;
   const out = {};
-  Object.keys(fields).forEach(fieldName => {
+  Object.keys(fields).forEach((fieldName) => {
     const field = fields[fieldName];
     if (!field.existsInServer) return;
     const newField = {};
@@ -158,7 +158,7 @@ const addModelMethods = (Model, modelName, options, context) => {
     // toJSON() -- we filter out those fields that don't existsInClient
     // (we typically use this function to transmit a model to the client)
     const notPublishedFields = Object.keys(fields).filter(
-      fieldName => !fields[fieldName].existsInClient
+      (fieldName) => !fields[fieldName].existsInClient
     );
     const originalToJSON = Model.prototype.toJSON;
     Model.prototype.toJSON = function toJSON() {
@@ -171,12 +171,12 @@ const addModelMethods = (Model, modelName, options, context) => {
     // mass-assignable, or that don't existsInClient (we typically
     // use mass assignment to update a bunch fields with attrs sent by a client)
     const notMassAssignableFields = Object.keys(fields).filter(
-      fieldName =>
+      (fieldName) =>
         !fields[fieldName].isMassAssignable || !fields[fieldName].existsInClient
     );
     Model.prototype.massAssign = function set(attrs) {
       const updateAttrs = omit(attrs, notMassAssignableFields);
-      Object.keys(updateAttrs).forEach(attr => {
+      Object.keys(updateAttrs).forEach((attr) => {
         this[attr] = updateAttrs[attr];
       });
       return this;
@@ -191,14 +191,14 @@ const addModelMethods = (Model, modelName, options, context) => {
   if (extensions.classMethods) {
     const classMethods = extensions.classMethods(context);
     const keys = Object.keys(classMethods);
-    keys.forEach(key => {
+    keys.forEach((key) => {
       Model[key] = classMethods[key];
     });
   }
   if (extensions.instanceMethods) {
     const instanceMethods = extensions.instanceMethods(context);
     const keys = Object.keys(instanceMethods);
-    keys.forEach(key => {
+    keys.forEach((key) => {
       Model.prototype[key] = instanceMethods[key];
     });
   }
@@ -209,9 +209,9 @@ const addModelMethods = (Model, modelName, options, context) => {
 // ====================================
 const defineRelations = (db, schema) => {
   const { models } = schema;
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const { relations } = models[modelName];
-    Object.keys(relations).forEach(relationName => {
+    Object.keys(relations).forEach((relationName) => {
       defineRelation(db, modelName, relationName, relations[relationName]);
     });
   });
@@ -264,7 +264,7 @@ const getFieldType = (field: ProcessedField) => {
 
 const addFieldValidations = (field: any, newField) => {
   newField.validate = {};
-  Object.keys(field).forEach(key => {
+  Object.keys(field).forEach((key) => {
     const val: any = field[key];
     switch (key) {
       case 'isRequired':

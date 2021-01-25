@@ -11,7 +11,7 @@ const mergeSchemas = (a: Schema, b: Schema): Schema => {
 
   // Merge models
   let models = out.models;
-  Object.keys(b.models).forEach(modelName => {
+  Object.keys(b.models).forEach((modelName) => {
     let model = models[modelName];
     const bModel: Object = b.models[modelName];
 

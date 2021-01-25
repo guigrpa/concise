@@ -34,7 +34,7 @@ const output: OutputProcessor = async (
 // ====================================
 const writeTypes = ({ models }) => {
   let out = '';
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     out += writeType(models, modelName);
   });
   return out;
@@ -44,10 +44,10 @@ const writeType = (models, modelName) => {
   const { description, fields = {}, relations = {} } = models[modelName];
   const upperModelName = upperFirst(modelName);
   const allSpecs = [];
-  Object.keys(fields).forEach(fieldName => {
+  Object.keys(fields).forEach((fieldName) => {
     allSpecs.push(writeField(fieldName, fields[fieldName]));
   });
-  Object.keys(relations).forEach(fieldName => {
+  Object.keys(relations).forEach((fieldName) => {
     const relation = relations[fieldName];
     if (relation.isInverse) return;
     allSpecs.push(writeField(relation.fkName, relation));
@@ -69,7 +69,7 @@ const writeField = (name, specs: any) => {
   return `${name}${isRequired}: ${typeStr},${comment}`;
 };
 
-const writeFieldType = type => {
+const writeFieldType = (type) => {
   if (type === 'uuid') return 'string';
   if (type === 'json') return 'any';
   if (type === 'date') return 'Date';

@@ -19,8 +19,8 @@ const preprocess = (schema0: Schema): ProcessedSchema => {
   return schema;
 };
 
-const addModelDefaults = models => {
-  Object.keys(models).forEach(modelName => {
+const addModelDefaults = (models) => {
+  Object.keys(models).forEach((modelName) => {
     models[modelName] = addDefaults(models[modelName], {
       fields: {},
       relations: {},
@@ -32,10 +32,10 @@ const addModelDefaults = models => {
   });
 };
 
-const processIncludes = models => {
+const processIncludes = (models) => {
   // Extract includes
   const includes = {};
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const model = models[modelName];
     if (model.isIncludeOnly) {
       includes[modelName] = model;
@@ -44,10 +44,10 @@ const processIncludes = models => {
   });
 
   // Apply includes
-  Object.keys(models).forEach(modelName => {
+  Object.keys(models).forEach((modelName) => {
     const model = models[modelName];
     const modelIncludes = model.includes != null ? model.includes : {};
-    Object.keys(modelIncludes).forEach(includeName => {
+    Object.keys(modelIncludes).forEach((includeName) => {
       const include = includes[includeName];
       if (!include) {
         throw new Error(`INCLUDE_NOT_FOUND ${modelName}/${includeName}`);
@@ -59,10 +59,10 @@ const processIncludes = models => {
   });
 };
 
-const addFieldDefaults = models => {
-  Object.keys(models).forEach(modelName => {
+const addFieldDefaults = (models) => {
+  Object.keys(models).forEach((modelName) => {
     const { fields } = models[modelName];
-    Object.keys(fields).forEach(fieldName => {
+    Object.keys(fields).forEach((fieldName) => {
       fields[fieldName] = addDefaults(fields[fieldName], {
         existsInServer: true,
         existsInClient: true,
@@ -72,10 +72,10 @@ const addFieldDefaults = models => {
   });
 };
 
-const processRelations = models => {
-  Object.keys(models).forEach(modelName => {
+const processRelations = (models) => {
+  Object.keys(models).forEach((modelName) => {
     const { relations } = models[modelName];
-    Object.keys(relations).forEach(relationName => {
+    Object.keys(relations).forEach((relationName) => {
       // Relation shorthand
       let relation = relations[relationName];
       if (relation === true) relation = {};

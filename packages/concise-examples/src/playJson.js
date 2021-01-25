@@ -5,7 +5,7 @@ import Concise from 'concise';
 import { input } from 'concise-yaml';
 import { output } from 'concise-json';
 
-const run = async name => {
+const run = async (name) => {
   const concise = new Concise();
   await concise.input(input, {
     file: path.join(__dirname, `../../__tests__/fixtures/${name}.yaml`),

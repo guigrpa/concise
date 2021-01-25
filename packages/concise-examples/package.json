@@ -14,7 +14,7 @@
   "devDependencies": {
     "babel-runtime": "^6.23.0",
     "concise-types": "*",
-    "prettier": "^1.12.1"
+    "prettier": "^2.2.1"
   },
   "dependencies": {
     "sequelize": "^4.37.6",
