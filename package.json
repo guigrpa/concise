@@ -65,11 +65,11 @@
     "flow-copy-source": "^2.0.9",
     "jest": "^24.9.0",
     "nyc": "^11.7.1",
-    "oao": "^1.5.1",
+    "oao": "^2.0.0",
     "prettier": "^2.2.1",
     "sequelize": "^4.37.6",
     "sqlite3": "^4.0.0",
-    "xxl": "^1.2.0"
+    "xxl": "^1.3.0"
   },
   "workspaces": [
     "packages/*"
