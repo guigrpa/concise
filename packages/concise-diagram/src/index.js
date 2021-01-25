@@ -1,6 +1,7 @@
 // @flow
 
 /* eslint-disable prefer-template */
+/* eslint-disable no-console */
 
 import fs from 'fs';
 import Viz from 'viz.js';
@@ -53,7 +54,13 @@ const output: OutputProcessor = async (
     addDefaults(options, DEFAULT_OPTIONS)
   );
   const viz = new Viz({ Module, render });
-  const svg = await viz.renderString(vizInput);
+  let svg;
+  try {
+    svg = await viz.renderString(vizInput);
+  } catch (err) {
+    console.error(`Error generating diagram: ${err.message}`);
+    throw err;
+  }
   if (options.file) {
     fs.writeFileSync(options.file, svg, 'utf8');
   }
