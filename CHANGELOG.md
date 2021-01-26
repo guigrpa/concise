@@ -1,3 +1,5 @@
+- Sequelize: support `geometry` and `geography` data types.
+
 ## 0.4.1 (2018-5-7)
 
 ## 0.4.0 (2018-5-5)

@@ -254,6 +254,8 @@ const getFieldType = (field: ProcessedField) => {
   if (type === 'uuid') return 'STRING';
   if (type === 'json') return 'JSONB';
   if (type === 'number') return field.isFloat ? 'DOUBLE' : 'INTEGER';
+  if (type === 'geography') return 'GEOGRAPHY';
+  if (type === 'geometry') return 'GEOMETRY';
   if (type === 'date') {
     if (field.noDate) return 'TIME';
     if (field.noTime) return 'DATEONLY';
