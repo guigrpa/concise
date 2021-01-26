@@ -1,6 +1,6 @@
 {
   "name": "concise-pg",
-  "version": "0.3.0",
+  "version": "0.4.2",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "main": "lib/index.js",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
-    "concise-types": "*"
+    "concise-types": "^0.4.2"
   },
   "devDependencies": {
     "prettier": "^2.2.1"

@@ -1,6 +1,6 @@
 {
   "name": "concise-sequelize",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "main": "lib/index.js",
@@ -15,7 +15,7 @@
     "babel-runtime": "^6.23.0",
     "lodash.upperfirst": "4.3.1",
     "timm": "^1.7.1",
-    "concise-types": "*"
+    "concise-types": "^0.4.2"
   },
   "devDependencies": {
     "prettier": "^2.2.1"

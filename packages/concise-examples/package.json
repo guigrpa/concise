@@ -1,7 +1,7 @@
 {
   "name": "concise-examples",
   "private": true,
-  "version": "0.3.0",
+  "version": "0.4.2",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "scripts": {
@@ -13,20 +13,20 @@
   },
   "devDependencies": {
     "babel-runtime": "^6.23.0",
-    "concise-types": "*",
+    "concise-types": "^0.4.2",
     "prettier": "^2.2.1"
   },
   "dependencies": {
     "sequelize": "^4.37.6",
     "sqlite3": "^4.0.0",
-    "concise-yaml": "*",
-    "concise": "*",
-    "concise-json": "*",
-    "concise-pg": "*",
-    "concise-flow": "*",
-    "concise-graphql": "*",
-    "concise-diagram": "*",
-    "concise-sequelize": "*",
-    "concise-firebase": "*"
+    "concise-yaml": "^0.4.2",
+    "concise": "^0.4.2",
+    "concise-json": "^0.4.2",
+    "concise-pg": "^0.4.2",
+    "concise-flow": "^0.4.2",
+    "concise-graphql": "^0.4.2",
+    "concise-diagram": "^0.4.2",
+    "concise-sequelize": "^0.4.2",
+    "concise-firebase": "^0.4.2"
   }
 }
