@@ -1,3 +1,5 @@
+## 0.4.3 (2021-1-27)
+
 - Sequelize: honor `isRequired` in relations.
 
 ## 0.4.2 (2021-1-26)

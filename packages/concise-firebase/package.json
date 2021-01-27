@@ -1,6 +1,6 @@
 {
   "name": "concise-firebase",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "main": "lib/index.js",
@@ -14,7 +14,7 @@
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "timm": "^1.7.1",
-    "concise-types": "^0.4.2"
+    "concise-types": "^0.4.3"
   },
   "devDependencies": {
     "prettier": "^2.2.1"
