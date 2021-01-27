@@ -238,6 +238,7 @@ const defineRelation = (db, modelName, relationName, relation) => {
     if (relation.sequelizeSkipReferentialIntegrity) {
       options.constraints = false;
     }
+    if (relation.isRequired) options.foreignKey = { allowNull: false };
     relationType = 'belongsTo';
   }
   // console.log(`${classTail} ${relationType} ${relationName} (${classHead})`);

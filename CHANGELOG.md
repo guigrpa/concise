@@ -1,3 +1,5 @@
+- Sequelize: honor `isRequired` in relations.
+
 ## 0.4.2 (2021-1-26)
 
 - Sequelize: support `geometry` and `geography` data types.
