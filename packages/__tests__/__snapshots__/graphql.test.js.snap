@@ -15,7 +15,7 @@ type User {
   name: String!
   surname: String
   aBoolean: Boolean!
-  projects: [Project]
+  projects: [Project]!
   createdProjects: [Project]
 }
 
@@ -116,7 +116,7 @@ type User {
   name: String!
   surname: String
   aBoolean: Boolean!
-  projects: [Project]
+  projects: [Project]!
 }
 
 input UserCreateInput {

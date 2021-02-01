@@ -181,6 +181,7 @@ Object {
           "inverseName": "author",
           "isInverse": true,
           "isPlural": true,
+          "isRequired": true,
           "model": "post",
           "type": "string",
         },
