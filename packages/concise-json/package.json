@@ -1,6 +1,6 @@
 {
   "name": "concise-json",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "author": "Guillermo Grau Panea",
   "license": "MIT",
   "main": "lib/index.js",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.23.0",
-    "concise-types": "^0.4.3"
+    "concise-types": "^0.4.4"
   },
   "devDependencies": {
     "prettier": "^2.2.1"

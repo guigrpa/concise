@@ -1,3 +1,5 @@
+## 0.4.4 (2021-2-1)
+
 - General: copy `isRequired` from a relation to its inverse.
 - Sequelize: honor `isRequired` in inverse relations (this ensures that `NOT NULL` is properly configured in the database for this type of relations). See also https://github.com/sequelize/sequelize/issues/2837#issuecomment-500229635.
 
