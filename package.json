@@ -30,7 +30,7 @@
     "travis": "yarn compile && yarn test",
     "build": "yarn compile && yarn lint && yarn flow && yarn test && yarn xxl && yarn prepareRelease",
     "compile": "oao all --parallel \"yarn compile\"",
-    "compileWatch": "oao all --parallel \"yarn compileWatch\"",
+    "compileWatch": "oao all --parallel --parallel-limit 30 \"yarn compileWatch\"",
     "lint": "eslint packages",
     "flow": "flow check || exit 0",
     "xxl": "xxl --src packages --exclude node_modules,/lib/",
