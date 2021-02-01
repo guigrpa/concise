@@ -224,6 +224,7 @@ const defineRelation = (db, modelName, relationName, relation) => {
   let relationType;
   if (relation.isInverse) {
     relationType = relation.isPlural ? 'hasMany' : 'hasOne';
+    if (relation.isRequired) options.foreignKey = { allowNull: false };
   } else {
     if (relation.isPlural) {
       /* eslint-disable no-console */

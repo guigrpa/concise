@@ -116,6 +116,7 @@ const processRelations = (models) => {
           model: modelName,
           isPlural: true,
           isInverse: true,
+          isRequired: relation.isRequired,
           inverseName: relationName,
         });
         const idField2 = models[modelName].fields.id;
