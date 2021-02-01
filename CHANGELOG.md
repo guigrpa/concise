@@ -1,3 +1,5 @@
+## 0.4.5 (2021-2-1)
+
 ## 0.4.4 (2021-2-1)
 
 - General: copy `isRequired` from a relation to its inverse.
